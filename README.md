@@ -2,8 +2,11 @@
 Projeto da disciplina de POO 
 
 # Resumo das classes
-- Produto
 - Cliente
+- Produto
+- ProdutoFisico
+- ProdutoDigital
+- ItemPedido
 - Carrinho
 - Pedido
 - Pagamento
@@ -11,24 +14,6 @@ Projeto da disciplina de POO
 - Relatório
 
 # Classes
-- ## Produto
-    ### Atributos
-    - SKU
-    - Nome
-    - Categoria
-    - Preço (>0)
-    - Estoque (>=0)
-    - Status
-
-    ### Métodos
-    - Ajuste de estoque
-    - Validação
-
-    - cadastrar_produto()
-    - ler_produto()
-    - atualizar_produto()
-    - remover_produto()
-
 - ## Cliente
     ### Atributos
     - ID
@@ -39,12 +24,38 @@ Projeto da disciplina de POO
     - Endereço (CEP, Cidade, UF)
 
     ### Métodos
-    - Validação
-
     - cadastrar_cliente()
-    - ler_cliente()
+    - exibir_cliente()
     - atualizar_cliente()
     - remover_cliente()
+
+- ## Produto
+    ### Atributos
+    - SKU
+    - Nome
+    - Categoria
+    - Preço (>0)
+    - Estoque (>=0)
+    - Status
+
+    ### Métodos
+    - cadastrar_produto()
+    - exibir_produto()
+    - atualizar_produto()
+    - remover_produto()
+
+- ## ProdutoDigital
+    ProdutoDigital -> Produto
+
+- ## ProdutoFisico
+    ProdutoFisico -> Produto
+    ### Atributos
+    - Peso
+
+- ## ItemPedido
+    ### Atributos
+    - Item
+    - Quantidade
 
 - ## Carrinho
     ### Atributos
@@ -77,7 +88,6 @@ Projeto da disciplina de POO
     - Valor
 
     ### Métodos
-    - Validação (total pago ≥ total do pedido)
     - pedido_pago() (Mudar o estado do Pedido para Pago)
 
 - ## NotaFiscal
@@ -89,4 +99,10 @@ Projeto da disciplina de POO
 
 - ## Relatório
     ### Atributos
+    - Faturamento
+    - Produtos mais vendidos
+    - Vendas por categoria
+
+    ### Métodos
+    -exibir_relatório()
     
