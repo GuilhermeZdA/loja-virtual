@@ -1,27 +1,38 @@
 # SISTEMA DE LOJA VIRTUAL SIMPLIFICADA
-Projeto da disciplina de POO 
 
-# Resumo das classes
-- Cliente
-- Produto
-- ProdutoFisico
-- ProdutoDigital
-- ItemPedido
-- Carrinho
-- Pedido
-- Pagamento
-- NotaFiscal
-- Relatório
+## Descrição
+O projeto Sistema de Loja Virtual Simplificada possibilita o cliente cadastrar-se ao informar alguns dados pessoais para fornecer a capacidade de adicionar produtos da loja dentro de um carrinho virtual, depois efetuar um pedido de pagamento, o qual pode receber descontos por cupons ou acréscimos devido ao frete. Por fim, o cliente recebe uma nota fiscal, enquanto o dono da loja tem acesso a um relatório das vendas.
+
+## Objetivo
+Criar um sistema que facilite o comércio fisico e virtual ao automatizar, organizar e otimizar várias etapas de uma transação comercial. O sistema facilita a análise de dados de venda.
+
+# Lista das classes
+1. Cliente
+2. Produto
+3. ProdutoDigital
+4. ProdutoFisico
+5. ItemCarrinho
+6. Carrinho
+7. Pedido
+8. ItemPedido
+9. Cupom
+10. Pagamento
+11. NotaFiscal
+12. Relatorio
+13. Endereco
+14. Frete
 
 # Classes
+As classes que estruturaram esse sistema estão detalhadas logo abaixo e nesse [diagrama](https://miro.com/app/board/uXjVHjQXB5Y=/) criado utilizando a plataforma Miro.
+
 - ## Cliente
     ### Atributos
-    - ID
-    - Nome
-    - Categoria
-    - Email
-    - CPF
-    - Endereço (CEP, Cidade, UF)
+    - id
+    - nome
+    - categoria
+    - email
+    - cpf
+    - endereço (CEP, Cidade, UF)
 
     ### Métodos
     - cadastrar_cliente()
@@ -31,12 +42,12 @@ Projeto da disciplina de POO
 
 - ## Produto
     ### Atributos
-    - SKU
-    - Nome
-    - Categoria
-    - Preço (>0)
-    - Estoque (>=0)
-    - Status
+    - sku
+    - nome
+    - categoria
+    - preço (>0)
+    - qtd_stoque (>=0)
+    - status
 
     ### Métodos
     - cadastrar_produto()
@@ -46,21 +57,25 @@ Projeto da disciplina de POO
 
 - ## ProdutoDigital
     ProdutoDigital -> Produto
+    ### Atributos
+    - codigo
 
 - ## ProdutoFisico
     ProdutoFisico -> Produto
     ### Atributos
-    - Peso
+    - peso
 
-- ## ItemPedido
+- ## ItemCarrinho
     ### Atributos
-    - Item
-    - Quantidade
+    - item
+    - qtd
 
 - ## Carrinho
     ### Atributos
-    - Subtotal (Preço do carrinho)
-    - Produtos
+    - cliente
+    - itens
+    - preco_total
+    - peso_total
 
     ### Métodos
     - adicionar_carrinho()
@@ -69,40 +84,82 @@ Projeto da disciplina de POO
 
 - ## Pedido
     ### Atributos
-    - Cliente
-    - Produtos
-    - Frete
-    - Desconto
-    - Total
-    - Estado (CRIADO, PAGO, ENVIADO, ENTREGUE, CANCELADO)
+    - carrinho
+    - frete
+    - desconto
+    - total
+    - estado (CRIADO, PAGO, ENVIADO, ENTREGUE, CANCELADO)
 
     ### Métodos
     - cancelar_pedido() (somente se CRIADO ou PAGO)
+    - buscar_frete()
+    - buscar_cupom()
+    - calcular_total()
+
+- ## ItemPedido
+    ### Atributos
+    - itens
+
+- ## Cupom
+    ### Atributos
+    - codigo
+    - tipo (Valor/Percentual)
+    - valor
+    - validade
+    - categoria
+    - qtd_usos
+
+    ### Métodos
+    - usar_cupom()
+
+- ## Frete
+    ### Atributos
+    - endereço
+    - peso_total
+    - valor
+    
+    ### Métodos
     - calcular_frete()
-    - gerar_nota()
 
 - ## Pagamento
     ### Atributos
-    - Data
-    - Forma (PIX, CREDITO, DEBITO, BOLETO)
-    - Valor
+    - data
+    - forma (PIX, CREDITO, DEBITO, BOLETO)
+    - valor
 
     ### Métodos
-    - pedido_pago() (Mudar o estado do Pedido para Pago)
+    - efetuar_pagamento() (Mudar o estado do Pedido para Pago)
+    - gerar_nota()
 
 - ## NotaFiscal
     ### Atributos
-    - Código de Rastreio (Se o pedido for Enviado)
-
+    - valor_pago
+    - produtos
+    - data
+    
     ### Métodos
-    - pedido_entregue() (Se a data for alcançada, pedido é Entregue)
+    - exibir_nota()
 
-- ## Relatório
+- ## Relatorio
     ### Atributos
-    - Faturamento
-    - Produtos mais vendidos
-    - Vendas por categoria
+    - faturamento
+    - top_vendidos
 
     ### Métodos
-    -exibir_relatório()
+    - exibir_relatório()
+
+- ## Endereco
+    ### Atributos
+    - cep
+    - cidade
+    - uf
+
+- ## Frete
+    ### Atributos
+    - endereco
+    - peso_total
+    - valor
+
+    ### Métodos
+    - calcular_frete()
     
