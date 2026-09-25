@@ -23,7 +23,7 @@ Criar um sistema que facilite o comércio fisico e virtual ao automatizar, organ
 14. Frete
 
 # Classes
-As classes que estruturaram esse sistema estão detalhadas logo abaixo e nesse [diagrama](https://miro.com/app/board/uXjVHjQXB5Y=/) criado utilizando a plataforma Miro.
+As classes que estruturaram esse sistema estão detalhadas logo abaixo e nesse [diagrama](https://miro.com/app/board/uXjVHjQXB5Y=/?share_link_id=994540664978) criado utilizando a plataforma Miro.
 
 - ## Cliente
     ### Atributos
@@ -45,7 +45,7 @@ As classes que estruturaram esse sistema estão detalhadas logo abaixo e nesse [
     - sku
     - nome
     - categoria
-    - preço (>0)
+    - preço_unidade (>0)
     - qtd_stoque (>=0)
     - status
 
@@ -58,7 +58,7 @@ As classes que estruturaram esse sistema estão detalhadas logo abaixo e nesse [
 - ## ProdutoDigital
     ProdutoDigital -> Produto
     ### Atributos
-    - codigo
+    - codigo_uso
 
 - ## ProdutoFisico
     ProdutoFisico -> Produto
@@ -93,12 +93,14 @@ As classes que estruturaram esse sistema estão detalhadas logo abaixo e nesse [
     ### Métodos
     - cancelar_pedido() (somente se CRIADO ou PAGO)
     - buscar_frete()
-    - buscar_cupom()
+    - usar_cupom()
     - calcular_total()
 
 - ## ItemPedido
     ### Atributos
-    - itens
+    - item
+    - qtd
+    - preco_unidade
 
 - ## Cupom
     ### Atributos
@@ -108,18 +110,6 @@ As classes que estruturaram esse sistema estão detalhadas logo abaixo e nesse [
     - validade
     - categoria
     - qtd_usos
-
-    ### Métodos
-    - usar_cupom()
-
-- ## Frete
-    ### Atributos
-    - endereço
-    - peso_total
-    - valor
-    
-    ### Métodos
-    - calcular_frete()
 
 - ## Pagamento
     ### Atributos
@@ -162,4 +152,3 @@ As classes que estruturaram esse sistema estão detalhadas logo abaixo e nesse [
 
     ### Métodos
     - calcular_frete()
-    
