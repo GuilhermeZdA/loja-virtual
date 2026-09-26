@@ -18,11 +18,12 @@ class Pedido:
 
     Essa classe é responsável por agrupar e organizar todos os dados da compra, gerenciar descontos de cupons e acréscimos do frete e controlar o estado do processo.
 
-    carrinho (Carrinho): O carrinho com os produtos do cliente.
-    frete (float): O valor do frete para a entrega dos produtos (BRL).
-    desconto (float): O valor do desconto do cupom (BRL).
-    total (float): O preço total da compra após os acréscimos e desconotos.
-    estado (str): A situação atual do pedido (CRIADO, PAGO, ENVIADO, ENTREGUE, CANCELADO).
+    Atributos:
+        carrinho (Carrinho): O carrinho com os produtos do cliente.
+        frete (float): O valor do frete para a entrega dos produtos (BRL).
+        desconto (float): O valor do desconto do cupom (BRL).
+        total (float): O preço total da compra após os acréscimos e desconotos.
+        estado (str): A situação atual do pedido (CRIADO, PAGO, ENVIADO, ENTREGUE, CANCELADO).
 
     """
     pass
