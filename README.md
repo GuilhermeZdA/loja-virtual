@@ -22,8 +22,13 @@ Criar um sistema que facilite o comércio fisico e virtual ao automatizar, organ
 13. Endereco
 14. Frete
 
-# Classes
-As classes que estruturaram esse sistema estão detalhadas logo abaixo e nesse [diagrama](https://miro.com/app/board/uXjVHjQXB5Y=/?share_link_id=994540664978) criado utilizando a plataforma Miro.
+# Diagrama de classes
+
+### **Para uma visão mais detalhada, o [link](https://miro.com/app/board/uXjVHjQXB5Y=/?share_link_id=994540664978) de acesso do diagrama pelo Miro.**
+
+![Diagrama UML](img/diagrama.jpg)
+
+# Classes detalhadas
 
 - ## Cliente
     ### Atributos
