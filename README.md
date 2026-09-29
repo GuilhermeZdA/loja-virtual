@@ -1,10 +1,10 @@
 # SISTEMA DE LOJA VIRTUAL SIMPLIFICADA
 
 ## Descrição
-O projeto Sistema de Loja Virtual Simplificada possibilita o cliente cadastrar-se ao informar alguns dados pessoais para fornecer a capacidade de adicionar produtos da loja dentro de um carrinho virtual, depois efetuar um pedido de pagamento, o qual pode receber descontos por cupons ou acréscimos devido ao frete. Por fim, o cliente recebe uma nota fiscal, enquanto o dono da loja tem acesso a um relatório das vendas.
+O projeto Sistema de Loja Virtual Simplificada possibilita que um cliente cadastre-se ao informar alguns dados pessoais para fornecer a capacidade de adicionar produtos da loja dentro de um carrinho virtual, depois efetuar um pedido de pagamento, o qual pode receber descontos por cupons ou acréscimos devido ao frete. Por fim, o cliente recebe uma nota fiscal, enquanto o dono da loja tem acesso a um relatório das vendas.
 
 ## Objetivo
-Criar um sistema que facilite o comércio fisico e virtual ao automatizar, organizar e otimizar várias etapas de uma transação comercial. O sistema facilita a análise de dados de venda.
+Criar um sistema que facilite o comércio físico e virtual ao automatizar, organizar e otimizar várias etapas de uma transação comercial, como a criação de relatórios de venda, a realização do pedido de compra e o pagamento e a alocação de produtos no carrinho. Assim, o sistema facilita a compra pelos clientes e a organização do comércio pelo comerciante.
 
 # Lista das classes
 1. Cliente
