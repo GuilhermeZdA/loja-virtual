@@ -1,3 +1,5 @@
+import re
+
 class Produto:
     """
     A representação de um produto genérico dentro do catálogo da loja.
@@ -12,7 +14,27 @@ class Produto:
         qtd_estoque (int): Quantidade de produtos disponiveis no estoque.
         status (string): Informa a disponibilidade do produto para venda (ATIVO/INATIVO).
     """
-    pass
+    def __init__(self, sku: str, nome: str, categoria: str, preco: float):
+        self.sku = sku
+        self.nome = nome
+        self.categoria = categoria
+        self.preco = preco
+        
+    @property
+    def sku(self):
+        return self._sku
+
+    @sku.setter
+    def sku(self, valor: str):
+        padrao =  r"^[A-Z]{3}-\d{3,5}$"
+        if isinstance(valor, str):
+            if re.match(padrao, valor):
+                self._sku = valor
+            else:
+                raise ValueError("Erro! Padrão incorreto de SKU")
+        else:
+            raise TypeError("Erro! O valor digitado deve ser uma string")
+    
 
 
 class ProdutoDigital(Produto):
