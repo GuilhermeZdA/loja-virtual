@@ -1,3 +1,5 @@
+from classes.frete import Endereco
+
 class Cliente:
     """
     A representação de um cliente da loja.
@@ -11,4 +13,5 @@ class Cliente:
         cpf (str): CPF do cliente.
         endereco (Endereco): Dados do endereço do cliente (CEP, UF, Cidade).
     """
-    pass
+    def __init__(self, id: str, nome: str, email: str, cpf: str, endereco: Endereco):
+        pass

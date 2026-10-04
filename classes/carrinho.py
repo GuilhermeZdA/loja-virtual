@@ -1,3 +1,5 @@
+import cliente
+
 class ItemCarrinho:
     """
     A representação de um produto dentro de um carrinho.
