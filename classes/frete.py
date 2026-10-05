@@ -80,4 +80,19 @@ class Frete:
         peso_total (float): A soma das massas dos produtos físicos.
         valor (float): O preço do frete. 
     """
-    pass
+    def __init__(self, endereco: Endereco, peso_total: float):
+        self.endereco = endereco
+        self.peso_total = peso_total
+        self.valor = 0
+
+
+    @property # Atributo endereço
+    def endereco(self):
+        return self.__endereco
+
+    @endereco.setter
+    def endereco(self, local: Endereco):
+        if isinstance(local, Endereco):
+            self.__endereco = local
+        else:
+            raise TypeError("Erro! O valor deve ser um objeto da classe Endereco")
