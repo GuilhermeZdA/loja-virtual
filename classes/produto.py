@@ -47,7 +47,7 @@ class Produto:
     @nome.setter
     def nome(self, novo_nome: str):
         if isinstance(novo_nome, str):
-            novo_nome = novo_nome.strip() # Retirar os espaçoes sobrando
+            novo_nome = novo_nome.strip() # Retirar os espaços sobrando
             espaco = "  " # Evitar espaços repetidos
             if not espaco in novo_nome and len(novo_nome) > 0:
                 self._nome = novo_nome
