@@ -2,6 +2,7 @@ from produto import Produto, ProdutoFisico, ProdutoDigital
 from carrinho import Carrinho
 from frete import Frete
 from pedido import Cupom
+from pagamento import Pagamento
 
 class ItemPedido:
     """
@@ -14,10 +15,24 @@ class ItemPedido:
         qtd (int): Armazena a quantidade de produtos no momento do pedido de compra.
         preco_unidade (float): O preço de uma unidade do produto no momento do pedido de compra.
     """
-    def __init__(self):
-        self.item = self.item
-        self.qtd = self.qtd
-        self.preco_unidade = self.preco_unidade
+    def __init__(self, item: ProdutoDigital | ProdutoFisico, qtd: int, preco_unidade: float):
+        self._item = item
+        self._qtd = qtd
+        self._preco_unidade = preco_unidade
+
+    @property
+    def item(self):
+        return self._item
+
+
+    @property
+    def qtd(self):
+        return self._qtd
+
+
+    @property
+    def preco_unidade(self):
+        return self._preco_unidade
 
 
 class Pedido:
@@ -79,12 +94,12 @@ class Pedido:
 
     @property
     def total(self):
-        return self._total
+        return self.calcular_total()
 
 
     @property
     def estado(self):
-        return self._estado
+        return self.altenar_estado()
 
     def buscar_cupom(self, codigo: str) -> float: # Vai utilizar o código para localizar o cupom no banco de dados
         pass
@@ -98,7 +113,10 @@ class Pedido:
     def cancelar_pedido(self) -> None: # Vai apagar o pedido do banco de dados?
         pass
 
-    def altenar_estado(self) -> None: # Vai analisar o que está acontecendo com o pedido e alternar seu estado
+    def confirmar_pedido(self) -> Pagamento:
+        pass
+    
+    def altenar_estado(self) -> str: # Vai analisar o que está acontecendo com o pedido e alternar seu estado
         pass
 
     def gerar_itempedido(self, carrinho: Carrinho) -> ItemPedido:
@@ -140,7 +158,7 @@ class Cupom:
         else:
             raise TypeError("Erro! O valor digitado deve ser um texto")
         
-    # Os atributos depois de definidos devem ser imutaveis
+    # Os atributos depois de definidos devem ser imutaveis depois de decido seus valores iniciais
 
     @property
     def tipo(self):
@@ -155,6 +173,7 @@ class Cupom:
     @property
     def validade(self):
         return self._validade
+
 
     @property
     def qtd_usos(self):

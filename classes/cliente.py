@@ -31,7 +31,7 @@ class Cliente:
             padrao = r"^\d{5}$" # O ID deve conter 5 dígitos
             valor = valor.strip()
             if re.fullmatch(padrao, valor):
-                self._id = id
+                self._id = valor
             else:
                 raise ValueError("Erro! Padrão incorreto de ID")
         else:
@@ -60,10 +60,10 @@ class Cliente:
         return self._email
 
     @email.setter
-    def email(self, novo_email):
+    def email(self, novo_email: str):
         if isinstance(novo_email, str):
             if "@" in novo_email: # Analisa a presença de '@'
-                self._email = self.email
+                self._email = novo_email
             else:
                 raise ValueError("O email digitado deve conter '@'")
         else:
@@ -75,7 +75,7 @@ class Cliente:
         return self.__cpf
 
     @cpf.setter
-    def cpf(self, valor):
+    def cpf(self, valor: str):
         if isinstance(valor, str):
             if self.validar_cpf(valor):
                 self.__cpf = valor

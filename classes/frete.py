@@ -20,13 +20,13 @@ class Endereco:
         self.uf = uf
         self.cidade = cidade
 
-
+    # Atributo CEP
     @property
     def cep(self):
         return self._cep
 
     @cep.setter
-    def cep(self, valor):
+    def cep(self, valor: str):
         if isinstance(valor, str):
             padrao = r"^\d{8}$"
             if re.fullmatch(padrao, valor):
@@ -36,13 +36,13 @@ class Endereco:
         else:
             raise TypeError("Erro! O valor digitado deve ser um texto")
 
-
+    # Atributo UF
     @property
     def uf(self):
         return self._uf
 
     @uf.setter
-    def uf(self, unidade):
+    def uf(self, unidade: str):
         if isinstance(unidade, str):
             unidade = unidade.strip().upper()
             if unidade in Endereco.estados:
@@ -52,12 +52,13 @@ class Endereco:
         else:
             raise TypeError("Erro! O valor digitado deve ser um texto")
 
+    # Atributo Cidade
     @property
     def cidade(self):
         return self._cidade
 
     @cidade.setter
-    def cidade(self, cid):
+    def cidade(self, cid: str):
         if isinstance(cid, str):
             espaco = "  "
             if espaco in cid or len(cid) < 0:
@@ -66,7 +67,6 @@ class Endereco:
                 self._cidade = cid
         else:
             raise TypeError("Erro! O valor digitado deve ser um texto")
-
 
 
 class Frete:
@@ -80,13 +80,13 @@ class Frete:
         peso_total (float): A soma das massas dos produtos físicos.
         valor (float): O preço do frete. 
     """
-    def __init__(self, endereco: Endereco, peso_total: float):
+    def __init__(self, endereco: Endereco):
         self.endereco = endereco
-        self.peso_total = peso_total
+        self.peso_total = 0
         self.valor = 0
 
-
-    @property # Atributo endereço
+    # Atributo endereço
+    @property 
     def endereco(self):
         return self.__endereco
 
@@ -96,3 +96,20 @@ class Frete:
             self.__endereco = local
         else:
             raise TypeError("Erro! O valor deve ser um objeto da classe Endereco")
+
+
+    @property
+    def peso_total(self):
+        return self.calcular_peso()
+
+    
+    @property
+    def valor(self):
+        return self.calcular_valor()
+
+
+    def calcular_peso(self) -> float: 
+        pass
+
+    def calcular_valor(self) -> float:
+        pass
