@@ -1,3 +1,5 @@
+import json
+import pathlib
 import re
 from classes.frete import Endereco
 
@@ -14,12 +16,12 @@ class Cliente:
         cpf (str): CPF do cliente.
         endereco (Endereco): Dados do endereço do cliente (CEP, UF, Cidade).
     """
-    def __init__(self, id: str, nome: str, email: str, cpf: str, endereco: Endereco):
+    def __init__(self, id: str, nome: str, email: str, cpf: str):
         self.id = id
         self.nome = nome
         self.email = email
         self.cpf = cpf
-        self.endereco = endereco
+        #self.endereco = endereco
 
     @property
     def id(self):
@@ -116,3 +118,7 @@ class Cliente:
         if str(decimo_digito) == cpf[9] and str(undecimo_digito) == cpf[10]:
             return True
         return False
+
+    def adicionar_cliente(self):
+        caminho = pathlib.Path("pessoas.json")
+        caminhoabs = caminho.resolve()
