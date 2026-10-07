@@ -1,7 +1,7 @@
+from .frete import Endereco
+from caminhos import CLIENTES
 import json
-import pathlib
 import re
-from classes.frete import Endereco
 
 class Cliente:
     """
@@ -10,35 +10,16 @@ class Cliente:
     Essa classe armazena todos os dados pessoais do cliente.
 
     Atributos:
-        id (str): Número de identificação do cliente.
         nome (str): Nome do cliente.
         email (str): Email do cliente.
         cpf (str): CPF do cliente.
         endereco (Endereco): Dados do endereço do cliente (CEP, UF, Cidade).
     """
-    def __init__(self, id: str, nome: str, email: str, cpf: str):
-        self.id = id
+    def __init__(self, nome: str, email: str, cpf: str, endereco: Endereco):
         self.nome = nome
         self.email = email
         self.cpf = cpf
-        #self.endereco = endereco
-
-    @property
-    def id(self):
-        return self._id
-
-    @id.setter
-    def id(self, valor: str):
-        if isinstance(valor, str):
-            padrao = r"^\d{5}$" # O ID deve conter 5 dígitos
-            valor = valor.strip()
-            if re.fullmatch(padrao, valor):
-                self._id = valor
-            else:
-                raise ValueError("Erro! Padrão incorreto de ID")
-        else:
-            raise TypeError("Erro! O valor digitado deve ser um texto")
-
+        self.endereco = endereco
 
     @property # Atributo nome
     def nome(self):
@@ -98,7 +79,7 @@ class Cliente:
         else:
             raise TypeError("Erro! O valor deve ser um objeto da classe Endereco")
 
-
+    @staticmethod
     def validar_cpf(cpf: str) -> bool:
 
         cpf = "".join(filter(str.isdigit, cpf))
@@ -119,6 +100,27 @@ class Cliente:
             return True
         return False
 
+    @staticmethod
+    def carregar_cliente(caminho):
+        with open(caminho, 'r', encoding= "utf-8") as arquivo:
+            dados = json.load(arquivo)
+        return dados
+
+    def gerar_dict(self):
+        return {
+
+            self.cpf : {
+            "nome" : self.nome,
+            "email" : self.email,
+            }
+
+        }
+
     def adicionar_cliente(self):
-        caminho = pathlib.Path("pessoas.json")
-        caminhoabs = caminho.resolve()
+        caminho = CLIENTES
+        pessoas = self.carregar_cliente(caminho)
+
+        pessoas.update(self.gerar_dict())
+        with open(caminho, "w", encoding = "utf-8") as arquivo:
+            json.dump(pessoas, arquivo)
+        print("deu certo")

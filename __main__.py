@@ -1,8 +1,12 @@
-from classes.produto import Produto, ProdutoDigital, ProdutoFisico
+from classes.cliente import Cliente
+from classes.frete import Endereco
 
 def main():
-    p1 = ProdutoFisico("AAA123", "Banana", "Alimento", 5.0, 30)
-    print(p1.__dict__)
+    e1 = Endereco("63260000", "CE", "Brejo")
+    c1 = Cliente("Guilherme", "gui@gmail.com", "11423355695", e1)
+
+    c1.adicionar_cliente()
+
 
 
 if __name__ == "__main__":
