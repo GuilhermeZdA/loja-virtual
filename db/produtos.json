@@ -1,0 +1,9 @@
+{
+    "ABC1234": {
+        "nome": "Uva",
+        "categoria": "ALIMENTO",
+        "qtd_estoque": 10,
+        "preco": 2.5,
+        "status": "ATIVO"
+    }
+}

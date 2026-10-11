@@ -101,26 +101,29 @@ class Cliente:
         return False
 
     @staticmethod
-    def carregar_cliente(caminho):
+    def carregar_cliente(caminho) -> dict:
         with open(caminho, 'r', encoding= "utf-8") as arquivo:
             dados = json.load(arquivo)
         return dados
 
-    def gerar_dict(self):
+    def gerar_dict(self) -> dict:
         return {
-
             self.cpf : {
             "nome" : self.nome,
             "email" : self.email,
+            "endereco": {
+                "cep": self.endereco.cep,
+                "uf" : self.endereco.uf,
+                "cidade" : self.endereco.cidade
+                }
             }
-
         }
 
     def adicionar_cliente(self):
         caminho = CLIENTES
         pessoas = self.carregar_cliente(caminho)
-
         pessoas.update(self.gerar_dict())
+
         with open(caminho, "w", encoding = "utf-8") as arquivo:
-            json.dump(pessoas, arquivo)
+            json.dump(pessoas, arquivo, indent = 4) # indent = 4 deixa bonito
         print("deu certo")

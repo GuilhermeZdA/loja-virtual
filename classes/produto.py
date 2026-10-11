@@ -1,3 +1,5 @@
+from caminhos import PRODUTOS
+import json
 import re
 
 class Produto:
@@ -16,10 +18,17 @@ class Produto:
     """
     categorias = ["ELETRONICO", "VESTUARIO", "DECORACAO", "ALIMENTO", "HIGIENE"]
 
-    def __init__(self, sku: str, nome: str, categoria: str, preco: float):
+    def __init__(self,
+                sku: str,
+                nome: str,
+                categoria: str,
+                qtd_estoque: str,
+                preco: float):
+        
         self.sku = sku
         self.nome = nome
         self.categoria = categoria
+        self.qtd_estoque = qtd_estoque
         self.preco = preco
 
     # Fazer a validação de casos repetidos quando implementar o banco de dados
@@ -73,6 +82,21 @@ class Produto:
             raise TypeError("Erro! O valor digitado deve ser um texto")
 
 
+    @property # Atributo qtd_estoque
+    def qtd_estoque(self):
+        return self._qtd_estoque
+
+    @qtd_estoque.setter
+    def qtd_estoque(self, valor: int):
+        if isinstance(valor, int):
+            if valor >= 0:
+                self._qtd_estoque = valor
+            else:
+                raise ValueError("Erro! A quantidade de produtos não pode ser negativo")
+        else:
+            raise TypeError("Erro! O valor deve ser um número inteiro")
+
+
     @property # Atributo preço
     def preco(self):
         return self._preco
@@ -87,7 +111,45 @@ class Produto:
                 raise TypeError("Erro! O preço do produto deve ser positivo")
         else:
             raise ValueError("Erro! O valor digitado deve ser um inteiro ou um número de ponto flutuante")
-            
+
+
+    @property # Atributo status
+    def status(self):
+        return self.analisar_status()
+
+
+    def analisar_status(self) -> str:
+        if self.qtd_estoque > 0:
+            return "ATIVO"
+        elif self.qtd_estoque == 0:
+            return "INATIVO"
+
+    # FUNÇÕES PARA O BANCO DE DADOS
+    @staticmethod
+    def carregar_produtos(caminho) -> dict:
+        with open(caminho, 'r', encoding = "utf-8") as arquivo:
+            dados = json.load(arquivo)
+        return dados
+
+    def get_dict(self) -> dict:
+        return {
+            self.sku : {
+                "nome" : self.nome,
+                "categoria" : self.categoria,
+                "qtd_estoque" : self.qtd_estoque,
+                "preco" : self.preco,
+                "status" : self.status
+            }
+        }
+
+    def adicionar_produto(self):
+        caminho = PRODUTOS
+        produtos = self.carregar_produtos(caminho)
+        produtos.update(self.get_dict())
+
+        with open(caminho, 'w', encoding = "utf-8") as arquivo:
+            json.dump(produtos, arquivo, indent = 4)
+        print("deu certo") 
 
 
 class ProdutoDigital(Produto):
