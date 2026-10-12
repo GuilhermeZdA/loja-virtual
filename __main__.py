@@ -10,7 +10,9 @@ def main():
     # c1.adicionar_cliente()
     # c2.adicionar_cliente()
     p1 = Produto("ABC1234", "Uva", "ALIMENTO", 10, 2.50)
-    p1.adicionar_produto() 
+    p1 -= 14
+    p1.adicionar_produto()
+    p1.exibir_produtos()
 
 
 

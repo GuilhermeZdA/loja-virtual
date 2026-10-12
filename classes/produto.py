@@ -92,7 +92,7 @@ class Produto:
             if valor >= 0:
                 self._qtd_estoque = valor
             else:
-                raise ValueError("Erro! A quantidade de produtos não pode ser negativo")
+                self._qtd_estoque = 0
         else:
             raise TypeError("Erro! O valor deve ser um número inteiro")
 
@@ -124,6 +124,20 @@ class Produto:
         elif self.qtd_estoque == 0:
             return "INATIVO"
 
+    def __iadd__(self, valor: int):
+        if isinstance(valor, int):
+            self.qtd_estoque += valor
+            return self
+        else:
+            return NotImplemented
+
+    def __isub__(self, valor: int):
+        if isinstance(valor, int):
+            self.qtd_estoque -= valor
+            return self
+        else:
+            return NotImplemented
+
     # FUNÇÕES PARA O BANCO DE DADOS
     @staticmethod
     def carregar_produtos(caminho) -> dict:
@@ -131,7 +145,7 @@ class Produto:
             dados = json.load(arquivo)
         return dados
 
-    def get_dict(self) -> dict:
+    def get_dict(self) -> dict: # TEM QUE ATUALIZAR PRA DIGITAL E FISICO
         return {
             self.sku : {
                 "nome" : self.nome,
@@ -149,8 +163,35 @@ class Produto:
 
         with open(caminho, 'w', encoding = "utf-8") as arquivo:
             json.dump(produtos, arquivo, indent = 4)
-        print("deu certo") 
+        print("deu certo")
 
+    def exibir_produtos(self) -> None:
+        caminho = PRODUTOS
+        produtos = self.carregar_produtos(caminho)
+
+        print("=" * 110)
+        print(f'{"SKU":^9}{"NOME":^40}{"CATEGORIA":^15}{"PREÇO":^15}{"QUANTIDADE":^15}{"STATUS":^11}')
+        print("=" * 110)
+
+        for key, item in produtos.items():
+            print(f'{key:^9}{item["nome"]:^40}{item["categoria"]:^15}{item["preco"]:^15}{item["qtd_estoque"]:^15}{item["status"]:^11}')
+            print("-" * 110)
+
+    def remover_produtos(self) -> str:
+        caminho = PRODUTOS
+        produtos = self.carregar_produtos(caminho)
+        encontrado = False
+
+        if self.sku in produtos:
+            del produtos[self.sku]
+            encontrado = True
+
+        if encontrado:
+            with open(caminho, 'w', encoding = "utf-8") as arquivo:
+                json.dump(produtos, arquivo, ensure_ascii = False,indent = 4)
+            return "dados foram apagados"
+
+        return "dados não encontrados"
 
 class ProdutoDigital(Produto):
     """
@@ -165,6 +206,7 @@ class ProdutoDigital(Produto):
     def __init__(self, sku, nome, categoria, preco, codigo_uso):
         super().__init__(sku, nome, categoria, preco)
         self.codigo_uso = codigo_uso
+
 
     @property # Atributo código_uso
     def codigo_uso(self):
@@ -195,6 +237,7 @@ class ProdutoFisico(Produto):
     def __init__(self, sku, nome, categoria, preco, peso):
         super().__init__(sku, nome, categoria, preco)
         self.peso = peso
+
 
     @property # Atributo peso
     def peso(self):
