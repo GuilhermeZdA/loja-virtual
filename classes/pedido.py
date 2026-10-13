@@ -3,7 +3,7 @@ from carrinho import Carrinho
 from frete import Frete
 from pedido import Cupom
 from pagamento import Pagamento
-from caminhos import PEDIDOS
+from caminhos import PEDIDOS, CUPOM
 from random import randint
 import json
 
@@ -201,6 +201,7 @@ class Cupom:
         self.validade = validade
         self.qtd_usos = qtd_usos
 
+
     @property # Atributo código_uso
     def codigo(self):
         return self.__codigo
@@ -217,23 +218,134 @@ class Cupom:
         else:
             raise TypeError("Erro! O valor digitado deve ser um texto")
         
-    # Os atributos depois de definidos devem ser imutaveis depois de decido seus valores iniciais
 
     @property
     def tipo(self):
         return self._tipo
+
+    @tipo.setter
+    def tipo(self, novo_tipo):
+        if isinstance(novo_tipo, str):
+            if novo_tipo == "$":
+                self._tipo = novo_tipo
+            elif novo_tipo == "%":
+                self._tipo = novo_tipo
+            else:
+                raise ValueError("Erro! Existem apenas os tipos '$' e '%'")
+        else:
+            raise TypeError("Erro! O valor deve ser um texto")
 
 
     @property
     def valor(self):
         return self._valor
 
+    @valor.setter
+    def valor(self, novo_valor):
+        if isinstance(novo_valor, (int, float)):
+            novo_valor = float(novo_valor)
+            if novo_valor > 0:
+                if self.tipo == "$":
+                    self._valor = novo_valor
+                elif self.tipo == "%":
+                    if novo_valor > 30:
+                        self._valor = 30
+                    else:
+                        self._valor = novo_valor
+                else:
+                    raise ValueError("Erro! Tipo de valor indefinido")
+            else:
+                raise ValueError("Erro! O valor deve ser maior que 0")
+        else:
+            raise TypeError("Erro! O valor deve ser um número")
+
 
     @property
     def validade(self):
         return self._validade
 
+    @validade.setter
+    def validade(self, data):
+        if isinstance(data, str):
+            self._validade = data
+        else:
+            raise TypeError("Erro! O valor deve ser um texto")
+
 
     @property
     def qtd_usos(self):
         return self._qtd_usos
+
+    @qtd_usos.setter
+    def qtd_usos(self, valor):
+        if isinstance(valor, int):
+            if valor > 0:
+                self._qtd_usos = valor
+            else:
+                self._qtd_usos = 0
+        else:
+            raise TypeError("Erro! O valor deve ser um número inteiro")
+
+
+    @staticmethod
+    def carregar_cupom(caminho) -> dict:
+        with open(caminho, 'r', encoding = "utf-8") as arquivo:
+            dados = json.load(arquivo)
+        return dados
+
+    def gerar_dict(self) -> dict:
+        return {
+            self.codigo : {
+                "tipo" : self.tipo,
+                "valor" : self.valor,
+                "validade" : self.validade,
+                "usos" : self.qtd_usos
+            }
+        }
+
+    def adicionar_cupom(self) -> None:
+        caminho = CUPOM
+        cupons = self.carregar_cupom(caminho)
+        cupons.update(self.gerar_dict())
+
+        with open(caminho, 'w', encoding = "utf-8") as arquivo:
+            json.dump(cupons, arquivo, ensure_ascii = False, indent = 4)
+        print("Deu certo")
+
+    def exibir_cupom(self) -> None:
+        caminho = CUPOM
+        cupons = self.carregar_cupom(caminho)
+
+        print("=" * 90)
+        print(f'{"CÓDIGO":^10}{"TIPO":^10}{"VALOR":^15}{"VALIDADE":^20}{"QUANTIDADE DE USOS":^25}')
+        print("=" * 90)
+
+        for key, value in cupons.items():
+            print(f'{key:^10}{value["tipo"]:^10}{value["valor"]:^15}{value["validade"]:^20}{value["usos"]:^25}')
+            print("-" * 90)
+
+    def remover_cupom(self) -> str:
+        caminho = CUPOM
+        cupons = self.carregar_cupom(caminho)
+        encontrado = False
+
+        if self.codigo in cupons:
+            del cupons[self.codigo]
+            encontrado = True
+
+        if encontrado:
+            with open(caminho, 'w', encoding = "utf-8") as arquivo:
+                json.dump(cupons, arquivo, ensure_ascii = False, indent = 4)
+            return "dados apagados com sucesso"
+        
+        return "dados não encontrados"
+
+    def atualizar_banco(self):
+        caminho = CUPOM
+        dados = self.carregar_cupom(caminho)
+        dados.update(self.gerar_dict())
+
+        with open(caminho, 'w', encoding = "utf-8") as arquivo:
+            json.dump(dados, arquivo, ensure_ascii = False, indent = 4)
+
+        print("dados atualizados")
