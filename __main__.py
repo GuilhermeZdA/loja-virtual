@@ -1,20 +1,12 @@
 from classes.cliente import Cliente
 from classes.frete import Endereco
 from classes.produto import Produto
+from classes.pedido import Cupom
 
 def main():
-    # e1 = Endereco("63260000", "CE", "Brejo")
-    # c1 = Cliente("Guilherme", "gui@gmail.com", "11423355695", e1)
-    # c2 = Cliente("augutusf", "shdf@jaosd.com", "52998224725", e1)
-
-    # c1.adicionar_cliente()
-    # c2.adicionar_cliente()
-    p1 = Produto("ABC1234", "Uva", "ALIMENTO", 10, 2.50)
-    p1 -= 14
-    p1.adicionar_produto()
-    p1.exibir_produtos()
-
-
+    e1 = Endereco("63260000", "CE", "Brejos")
+    c1 = Cliente("gui", "guimail@gmail.com", "36972168309", e1)
+    c1.exibir_cliente()
 
 if __name__ == "__main__":
     main()

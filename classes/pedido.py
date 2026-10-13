@@ -1,8 +1,5 @@
-from produto import Produto, ProdutoFisico, ProdutoDigital
-from carrinho import Carrinho
-from frete import Frete
-from pedido import Cupom
-from pagamento import Pagamento
+from .produto import Produto, ProdutoFisico, ProdutoDigital
+from .carrinho import Carrinho
 from caminhos import PEDIDOS, CUPOM
 from random import randint
 import json
@@ -79,14 +76,14 @@ class Pedido:
     def id_(self):
         return self._id_
 
-
+    # MUDAR O RACIOCINIO DO FRETE E DESCONTO
     @property
     def frete(self):
         return self._frete
 
     @frete.setter
-    def frete(self, novo_frete: Frete):
-        if isinstance(novo_frete, Frete):
+    def frete(self, novo_frete: float):
+        if isinstance(novo_frete, float):
             self._frete = novo_frete # Preciso entender mais disso aqui
         else:
             raise TypeError("Erro! Só é aceito objetos da classe frete")
@@ -97,8 +94,8 @@ class Pedido:
         return self._desconto
 
     @desconto.setter
-    def desconto(self, novo_desc: Cupom):
-        if isinstance(novo_desc, Cupom):
+    def desconto(self, novo_desc: float):
+        if isinstance(novo_desc, float):
             self._desconto = novo_desc # Preciso entender mais disso aqui
         else:
             raise TypeError("Erro! Só é aceito objetos da classe cupom")
@@ -125,7 +122,7 @@ class Pedido:
     def cancelar_pedido(self) -> None: # Vai apagar o pedido do banco de dados?
         pass
 
-    def confirmar_pedido(self) -> Pagamento:
+    def confirmar_pedido(self):
         pass
     
     def altenar_estado(self) -> str: # Vai analisar o que está acontecendo com o pedido e alternar seu estado

@@ -1,5 +1,5 @@
-from cliente import Cliente
-from produto import Produto, ProdutoDigital, ProdutoFisico
+from .cliente import Cliente
+from .produto import Produto, ProdutoDigital, ProdutoFisico
 
 class ItemCarrinho:
     """
