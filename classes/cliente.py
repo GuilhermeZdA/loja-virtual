@@ -125,5 +125,5 @@ class Cliente:
         pessoas.update(self.gerar_dict())
 
         with open(caminho, "w", encoding = "utf-8") as arquivo:
-            json.dump(pessoas, arquivo, indent = 4) # indent = 4 deixa bonito
+            json.dump(pessoas, arquivo, ensure_ascii = False, indent = 4) # indent = 4 deixa bonito
         print("deu certo")

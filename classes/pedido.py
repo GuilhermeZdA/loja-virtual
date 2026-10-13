@@ -3,6 +3,9 @@ from carrinho import Carrinho
 from frete import Frete
 from pedido import Cupom
 from pagamento import Pagamento
+from caminhos import PEDIDOS
+from random import randint
+import json
 
 class ItemPedido:
     """
@@ -42,6 +45,7 @@ class Pedido:
     Essa classe é responsável por agrupar e organizar todos os dados da compra, gerenciar descontos de cupons e acréscimos do frete e controlar o estado do processo.
 
     Atributos:
+        id_ (str): O identificador individual de cada pedido
         carrinho (Carrinho): O carrinho com os produtos do cliente.
         frete (float): O valor do frete para a entrega dos produtos (BRL).
         desconto (float): O valor do desconto do cupom (BRL).
@@ -49,10 +53,14 @@ class Pedido:
         estado (str): A situação atual do pedido (CRIADO, PAGO, ENVIADO, ENTREGUE, CANCELADO).
 
     """
+    lista_estados = ["CRIADO", "PAGO", "ENVIADO", "ENTREGUE", "CANCELADO"]
+
+
     def __init__(self, carrinho: Carrinho):
         self.carrinho = carrinho
-        self.frete = None
-        self.desconto = None
+        self._id_ = self.gerar_id() #TESTAR
+        self.frete = 0
+        self.desconto = 0
         self.total = 0
         self.estado = ""
 
@@ -66,6 +74,10 @@ class Pedido:
             self._carrinho = novo_carrinho
         else:
             raise TypeError("Erro! Só é aceito objetos da classe carrinho")
+
+    @property
+    def id_(self):
+        return self._id_
 
 
     @property
@@ -121,6 +133,53 @@ class Pedido:
 
     def gerar_itempedido(self, carrinho: Carrinho) -> ItemPedido:
         pass
+
+    # BANCO DE DADOS
+    def gerar_id(self) -> str: #TESTAR
+        caminho = PEDIDOS
+        dados = self.carregar_pedidos(caminho)
+        novo_id = 0
+
+        if not dados: # JSON vazio
+            novo_id = "1"
+            return novo_id
+
+        for ids in dados.keys():
+            ids = int(ids)
+            if ids - novo_id >= 2:
+                novo_id += 1
+                break
+            if novo_id < ids:
+                novo_id = ids
+
+        return str(novo_id)
+
+    @staticmethod
+    def carregar_pedidos(caminho) -> dict:
+        with open(caminho, 'r', encoding = "utf-8") as arquivo:
+            dados = json.load(arquivo)
+        return dados
+
+    def gerar_dict(self) -> dict:
+        return {
+            self.id_ : {
+                "carrinho" : {},
+                "frete" : self.frete,
+                "desconto" : self.desconto,
+                "total" : self.total,
+                "estado" : self.estado
+            }
+        }
+
+    def adicionar_pedidos(self):
+        caminho = PEDIDOS
+        pedidos = self.carregar_pedidos(caminho)
+        pedidos.update(self.gerar_dict())
+
+        with open(caminho, 'w', encoding = "utf-8") as arquivo:
+            json.dump(pedidos, arquivo, ensure_ascii = False , indent = 4)
+        print("deu certo")
+
 
 class Cupom:
     """

@@ -162,7 +162,7 @@ class Produto:
         produtos.update(self.get_dict())
 
         with open(caminho, 'w', encoding = "utf-8") as arquivo:
-            json.dump(produtos, arquivo, indent = 4)
+            json.dump(produtos, arquivo, ensure_ascii = False, indent = 4)
         print("deu certo")
 
     def exibir_produtos(self) -> None:
@@ -188,7 +188,7 @@ class Produto:
 
         if encontrado:
             with open(caminho, 'w', encoding = "utf-8") as arquivo:
-                json.dump(produtos, arquivo, ensure_ascii = False,indent = 4)
+                json.dump(produtos, arquivo, ensure_ascii = False, indent = 4)
             return "dados foram apagados"
 
         return "dados não encontrados"
