@@ -1,6 +1,5 @@
 from .produto import Produto, ProdutoFisico, ProdutoDigital
 from .carrinho import Carrinho
-from caminhos import PEDIDOS, CUPOM
 from random import randint
 import json
 
@@ -110,7 +109,8 @@ class Pedido:
     def estado(self):
         return self.altenar_estado()
 
-    def buscar_cupom(self, codigo: str) -> float: # Vai utilizar o código para localizar o cupom no banco de dados
+
+    def usar_cupom(self, cod: str): # PRECISO DO CALCULAR TOTAL
         pass
 
     def buscar_frete(self) -> float: # Vai calcular o frete caso haja produtos fisicos
@@ -131,32 +131,6 @@ class Pedido:
     def gerar_itempedido(self, carrinho: Carrinho) -> ItemPedido:
         pass
 
-    # BANCO DE DADOS
-    def gerar_id(self) -> str: #TESTAR
-        caminho = PEDIDOS
-        dados = self.carregar_pedidos(caminho)
-        novo_id = 0
-
-        if not dados: # JSON vazio
-            novo_id = "1"
-            return novo_id
-
-        for ids in dados.keys():
-            ids = int(ids)
-            if ids - novo_id >= 2:
-                novo_id += 1
-                break
-            if novo_id < ids:
-                novo_id = ids
-
-        return str(novo_id)
-
-    @staticmethod
-    def carregar_pedidos(caminho) -> dict:
-        with open(caminho, 'r', encoding = "utf-8") as arquivo:
-            dados = json.load(arquivo)
-        return dados
-
     def gerar_dict(self) -> dict:
         return {
             self.id_ : {
@@ -167,15 +141,6 @@ class Pedido:
                 "estado" : self.estado
             }
         }
-
-    def adicionar_pedidos(self):
-        caminho = PEDIDOS
-        pedidos = self.carregar_pedidos(caminho)
-        pedidos.update(self.gerar_dict())
-
-        with open(caminho, 'w', encoding = "utf-8") as arquivo:
-            json.dump(pedidos, arquivo, ensure_ascii = False , indent = 4)
-        print("deu certo")
 
 
 class Cupom:
@@ -284,12 +249,6 @@ class Cupom:
             raise TypeError("Erro! O valor deve ser um número inteiro")
 
 
-    @staticmethod
-    def carregar_cupom(caminho) -> dict:
-        with open(caminho, 'r', encoding = "utf-8") as arquivo:
-            dados = json.load(arquivo)
-        return dados
-
     def gerar_dict(self) -> dict:
         return {
             self.codigo : {
@@ -299,50 +258,3 @@ class Cupom:
                 "usos" : self.qtd_usos
             }
         }
-
-    def adicionar_cupom(self) -> None:
-        caminho = CUPOM
-        cupons = self.carregar_cupom(caminho)
-        cupons.update(self.gerar_dict())
-
-        with open(caminho, 'w', encoding = "utf-8") as arquivo:
-            json.dump(cupons, arquivo, ensure_ascii = False, indent = 4)
-        print("Deu certo")
-
-    def exibir_cupom(self) -> None:
-        caminho = CUPOM
-        cupons = self.carregar_cupom(caminho)
-
-        print("=" * 90)
-        print(f'{"CÓDIGO":^10}{"TIPO":^10}{"VALOR":^15}{"VALIDADE":^20}{"QUANTIDADE DE USOS":^25}')
-        print("=" * 90)
-
-        for key, value in cupons.items():
-            print(f'{key:^10}{value["tipo"]:^10}{value["valor"]:^15}{value["validade"]:^20}{value["usos"]:^25}')
-            print("-" * 90)
-
-    def remover_cupom(self) -> str:
-        caminho = CUPOM
-        cupons = self.carregar_cupom(caminho)
-        encontrado = False
-
-        if self.codigo in cupons:
-            del cupons[self.codigo]
-            encontrado = True
-
-        if encontrado:
-            with open(caminho, 'w', encoding = "utf-8") as arquivo:
-                json.dump(cupons, arquivo, ensure_ascii = False, indent = 4)
-            return "dados apagados com sucesso"
-        
-        return "dados não encontrados"
-
-    def atualizar_banco(self):
-        caminho = CUPOM
-        dados = self.carregar_cupom(caminho)
-        dados.update(self.gerar_dict())
-
-        with open(caminho, 'w', encoding = "utf-8") as arquivo:
-            json.dump(dados, arquivo, ensure_ascii = False, indent = 4)
-
-        print("dados atualizados")

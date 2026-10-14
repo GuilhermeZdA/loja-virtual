@@ -1,4 +1,4 @@
-from pagamento import Pagamento
+from models.pagamento import Pagamento
 
 class Relatorio:
     """

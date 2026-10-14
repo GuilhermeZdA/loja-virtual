@@ -1,5 +1,3 @@
-from caminhos import PRODUTOS
-import json
 import re
 
 class Produto:
@@ -138,14 +136,7 @@ class Produto:
         else:
             return NotImplemented
 
-    # FUNÇÕES PARA O BANCO DE DADOS
-    @staticmethod
-    def carregar_produtos(caminho) -> dict:
-        with open(caminho, 'r', encoding = "utf-8") as arquivo:
-            dados = json.load(arquivo)
-        return dados
-
-    def get_dict(self) -> dict: # TEM QUE ATUALIZAR PRA DIGITAL E FISICO
+    def gerar_dict(self) -> dict:
         return {
             self.sku : {
                 "nome" : self.nome,
@@ -155,43 +146,6 @@ class Produto:
                 "status" : self.status
             }
         }
-
-    def adicionar_produto(self):
-        caminho = PRODUTOS
-        produtos = self.carregar_produtos(caminho)
-        produtos.update(self.get_dict())
-
-        with open(caminho, 'w', encoding = "utf-8") as arquivo:
-            json.dump(produtos, arquivo, ensure_ascii = False, indent = 4)
-        print("deu certo")
-
-    def exibir_produtos(self) -> None:
-        caminho = PRODUTOS
-        produtos = self.carregar_produtos(caminho)
-
-        print("=" * 110)
-        print(f'{"SKU":^9}{"NOME":^40}{"CATEGORIA":^15}{"PREÇO":^15}{"QUANTIDADE":^15}{"STATUS":^11}')
-        print("=" * 110)
-
-        for key, item in produtos.items():
-            print(f'{key:^9}{item["nome"]:^40}{item["categoria"]:^15}{item["preco"]:^15}{item["qtd_estoque"]:^15}{item["status"]:^11}')
-            print("-" * 110)
-
-    def remover_produtos(self) -> str:
-        caminho = PRODUTOS
-        produtos = self.carregar_produtos(caminho)
-        encontrado = False
-
-        if self.sku in produtos:
-            del produtos[self.sku]
-            encontrado = True
-
-        if encontrado:
-            with open(caminho, 'w', encoding = "utf-8") as arquivo:
-                json.dump(produtos, arquivo, ensure_ascii = False, indent = 4)
-            return "dados foram apagados"
-
-        return "dados não encontrados"
 
 class ProdutoDigital(Produto):
     """
