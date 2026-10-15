@@ -1,5 +1,5 @@
 import json
-from models.pedido import Cupom
+from src.models.pedido import Cupom
 
 class CupomJSON:
     def __init__(self, caminho):

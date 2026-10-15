@@ -1,4 +1,4 @@
-from models.pedido import Pedido
+
 
 class Pagamento:
     """
@@ -11,7 +11,7 @@ class Pagamento:
         forma (str): O meios de pagamento (PIX, CREDITO, DEBITO, BOLETO).
         valor (float): O valor total da compra.
     """
-    def __init__(self, pedido: Pedido, data: str, forma: str, valor: float):
+    def __init__(self, pedido, data: str, forma: str, valor: float):
         self.pedido = pedido
         self.data = data
         self.forma = forma
@@ -23,8 +23,8 @@ class Pagamento:
         return self._pedido
 
     @pedido.setter
-    def pedido(self, novo_pedido: Pedido):
-        if isinstance(novo_pedido, Pedido):
+    def pedido(self, novo_pedido: str):
+        if isinstance(novo_pedido, str):
             self._pedido = novo_pedido 
         else:
             raise TypeError("Erro! Só é aceito objetos da classe pedido")

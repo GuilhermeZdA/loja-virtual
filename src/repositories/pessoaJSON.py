@@ -1,5 +1,5 @@
 import json
-from models.cliente import Cliente
+from src.models.cliente import Cliente
 
 class PessoaJSON:
     def __init__(self, caminho):

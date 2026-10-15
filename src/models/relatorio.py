@@ -1,4 +1,3 @@
-from models.pagamento import Pagamento
 
 class Relatorio:
     """
@@ -10,7 +9,7 @@ class Relatorio:
         faturamento (float): A soma de todo o dinheiro arrecadado da loja.
         top_vendidos (Dict): Ranking dos produtos mais vendidos.
     """
-    def __init__(self, pagamentos: list[Pagamento]):
+    def __init__(self, pagamentos: list[str]):
         self._pagamentos = pagamentos # Usar o banco de dados para buscar os pagamento
 
 
