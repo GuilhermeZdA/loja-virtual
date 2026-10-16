@@ -29,7 +29,6 @@ class Produto:
         self.qtd_estoque = qtd_estoque
         self.preco = preco
 
-    # Fazer a validação de casos repetidos quando implementar o banco de dados
 
     @property # Atributo SKU
     def sku(self):
@@ -138,13 +137,12 @@ class Produto:
 
     def gerar_dict(self) -> dict:
         return {
-            self.sku : {
-                "nome" : self.nome,
-                "categoria" : self.categoria,
-                "qtd_estoque" : self.qtd_estoque,
-                "preco" : self.preco,
-                "status" : self.status
-            }
+            "sku" : self.sku,
+            "nome" : self.nome,
+            "categoria" : self.categoria,
+            "qtd_estoque" : self.qtd_estoque,
+            "preco" : self.preco,
+            "status" : self.status
         }
 
 class ProdutoDigital(Produto):
@@ -157,8 +155,8 @@ class ProdutoDigital(Produto):
         codigo_uso (str): Código que libera o uso do produto.
     """
 
-    def __init__(self, sku, nome, categoria, preco, codigo_uso):
-        super().__init__(sku, nome, categoria, preco)
+    def __init__(self, sku, nome, categoria, qtd_estoque, preco, codigo_uso):
+        super().__init__(sku, nome, categoria, qtd_estoque, preco)
         self.codigo_uso = codigo_uso
 
 
@@ -179,6 +177,13 @@ class ProdutoDigital(Produto):
             raise TypeError("Erro! O valor digitado deve ser um texto")
 
 
+    def gerar_dict(self) -> dict:
+        dicionario = super().gerar_dict()
+        dicionario["tipo"] = "DIGITAL"
+        dicionario["codigo_uso"] = self.codigo_uso
+
+        return dicionario
+
 class ProdutoFisico(Produto):
     """
     A representação de um produto físico dentro do catálogo da loja.
@@ -188,8 +193,8 @@ class ProdutoFisico(Produto):
     Atributos:
         peso (float): massa do produto em kg.
     """
-    def __init__(self, sku, nome, categoria, preco, peso):
-        super().__init__(sku, nome, categoria, preco)
+    def __init__(self, sku, nome, categoria, qtd_estoque, preco, peso):
+        super().__init__(sku, nome, categoria, qtd_estoque, preco)
         self.peso = peso
 
 
@@ -207,3 +212,11 @@ class ProdutoFisico(Produto):
                 raise TypeError("Erro! O peso do produto deve ser positivo")
         else:
             raise ValueError("Erro! O valor digitado deve ser um inteiro ou um número de ponto flutuante")
+
+
+    def gerar_dict(self) -> dict:
+        dicionario = super().gerar_dict()
+        dicionario["tipo"] = "FISICO"
+        dicionario["peso"] = self.peso
+
+        return dicionario

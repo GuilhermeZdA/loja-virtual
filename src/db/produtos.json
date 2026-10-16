@@ -1,23 +1,22 @@
 {
-    "ABC1235": {
-        "nome": "Uva",
-        "categoria": "ALIMENTO",
-        "qtd_estoque": 10,
-        "preco": 2.5,
-        "status": "ATIVO"
+    "ABB9999": {
+        "sku": "ABB9999",
+        "nome": "Teclado Mecânico",
+        "categoria": "ELETRONICO",
+        "qtd_estoque": 5,
+        "preco": 250.0,
+        "status": "ATIVO",
+        "tipo": "FISICO",
+        "peso": 1.2
     },
-    "ABC1234": {
-        "nome": "Uva",
-        "categoria": "ALIMENTO",
-        "qtd_estoque": 0,
-        "preco": 2.5,
-        "status": "INATIVO"
-    },
-    "AAA1233": {
-        "nome": "Camisa",
-        "categoria": "VESTUARIO",
-        "qtd_estoque": 0,
-        "preco": 1.0,
-        "status": "INATIVO"
+    "AAA1111": {
+        "sku": "AAA1111",
+        "nome": "Avast",
+        "categoria": "ELETRONICO",
+        "qtd_estoque": 20,
+        "preco": 80.0,
+        "status": "ATIVO",
+        "tipo": "DIGITAL",
+        "codigo_uso": "ABCDE"
     }
 }

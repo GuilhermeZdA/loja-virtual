@@ -9,7 +9,7 @@ class ProdutoJSON:
         with open(PRODUTOS, 'r', encoding = "utf-8") as arquivo:
             produtos = json.load(arquivo)
             
-        produtos.update(novo_produto.gerar_dict())
+        produtos[novo_produto.sku] = novo_produto.gerar_dict()
 
         with open(PRODUTOS, 'w', encoding = "utf-8") as arquivo:
             json.dump(produtos, arquivo, ensure_ascii = False, indent = 4)
