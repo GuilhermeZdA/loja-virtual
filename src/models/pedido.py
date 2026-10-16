@@ -154,7 +154,8 @@ class Cupom:
         tipo (str): O tipo de desconto do cupom (VALOR/PERCENTUAL).
         valor (float): A quantidade de desconto que o cupom fornece.
         validade (str): Data máxima até a inativação do cupom.
-        qtd_usos (int): Quantidade de usos restantes até que o cupom se torne inativo. 
+        qtd_usos (int): Quantidade de usos restantes até que o cupom se torne inativo.
+        status (str): O estado do cupom (ATIVO/INATIVO) 
     """
     def __init__(self, codigo: str, tipo: str, valor: float, validade: str, qtd_usos: int):
         self.codigo = codigo

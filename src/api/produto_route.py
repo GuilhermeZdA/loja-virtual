@@ -6,7 +6,6 @@ from src.repositories import ProdutoJSON
 
 router = APIRouter(prefix = "/produtos", tags = ["Produtos"])
 
-
 @router.post("/", status_code = 201, response_model = ProdutoResponse)
 def criar_produto(dados: ProdutoCreate):
     try:
@@ -15,8 +14,7 @@ def criar_produto(dados: ProdutoCreate):
             nome = dados.nome,
             categoria = dados.categoria,
             qtd_estoque = dados.qtd_estoque,
-            preco = dados.preco,
-            status = dados.status
+            preco = dados.preco
         )
 
         ProdutoJSON.adicionar_produto(novo_produto)
@@ -32,3 +30,13 @@ def listar_produtos():
     produtos_salvos = ProdutoJSON.exibir_produtos()
 
     return produtos_salvos
+
+@router.delete("/{sku}")
+def remover_produto(sku: str):
+
+    sucesso = ProdutoJSON.remover_produtos(sku)
+
+    if not sucesso:
+        raise HTTPException(status_code = 404, detail = "Produto não encontrado")
+
+    return {"mensagem": f"Produto {sku} removido com sucesso!"}

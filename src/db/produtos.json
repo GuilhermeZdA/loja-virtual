@@ -12,5 +12,12 @@
         "qtd_estoque": 0,
         "preco": 2.5,
         "status": "INATIVO"
+    },
+    "AAA1233": {
+        "nome": "Camisa",
+        "categoria": "VESTUARIO",
+        "qtd_estoque": 0,
+        "preco": 1.0,
+        "status": "INATIVO"
     }
 }

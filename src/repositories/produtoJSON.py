@@ -8,23 +8,12 @@ class ProdutoJSON:
     def adicionar_produto(novo_produto: Produto) -> None:
         with open(PRODUTOS, 'r', encoding = "utf-8") as arquivo:
             produtos = json.load(arquivo)
+            
         produtos.update(novo_produto.gerar_dict())
 
         with open(PRODUTOS, 'w', encoding = "utf-8") as arquivo:
             json.dump(produtos, arquivo, ensure_ascii = False, indent = 4)
 
-    # @staticmethod
-    # def exibir_produtos(self) -> None:
-    #     with open(PRODUTOS, 'r', encoding = "utf-8") as arquivo:
-    #         produtos = json.load(arquivo)
-
-    #     print("=" * 110)
-    #     print(f'{"SKU":^9}{"NOME":^40}{"CATEGORIA":^15}{"PREÇO":^15}{"QUANTIDADE":^15}{"STATUS":^11}')
-    #     print("=" * 110)
-
-    #     for key, item in produtos.items():
-    #         print(f'{key:^9}{item["nome"]:^40}{item["categoria"]:^15}{item["preco"]:^15}{item["qtd_estoque"]:^15}{item["status"]:^11}')
-    #         print("-" * 110)
 
     @staticmethod
     def exibir_produtos() -> list:
@@ -46,15 +35,17 @@ class ProdutoJSON:
         return lista_produtos
 
     @staticmethod
-    def remover_produtos(produto: Produto) -> None:
+    def remover_produtos(sku: str) -> bool:
         with open(PRODUTOS, 'r', encoding = "utf-8") as arquivo:
             produtos = json.load(arquivo)
         encontrado = False
 
-        if produto.sku in produtos:
-            del produtos[produto.sku]
+        if sku in produtos:
+            del produtos[sku]
             encontrado = True
 
         if encontrado:
             with open(PRODUTOS, 'w', encoding = "utf-8") as arquivo:
                 json.dump(produtos, arquivo, ensure_ascii = False, indent = 4)
+
+        return encontrado

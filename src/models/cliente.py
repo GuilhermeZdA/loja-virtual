@@ -1,5 +1,4 @@
 from .frete import Endereco
-import re
 
 class Cliente:
     """
