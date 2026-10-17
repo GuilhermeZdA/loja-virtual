@@ -1,7 +1,7 @@
-from .produto import Produto, ProdutoFisico, ProdutoDigital
+from .produto import ProdutoFisico, ProdutoDigital
 from .carrinho import Carrinho
 from random import randint
-import json
+from datetime import datetime
 
 class ItemPedido:
     """
@@ -229,11 +229,13 @@ class Cupom:
 
     @validade.setter
     def validade(self, data):
-        if isinstance(data, str):
-            self._validade = data
-        else:
-            raise TypeError("Erro! O valor deve ser um texto")
+        try:
+            datetime.strptime(data, "%d-%m-%Y")
 
+            self._validade = data
+
+        except ValueError:
+            raise ValueError("Erro! A data deve ser no formato DD/MM/YYYY")
 
     @property
     def qtd_usos(self):
@@ -257,9 +259,14 @@ class Cupom:
 
     def analisar_status(self) -> str:
         if self.qtd_usos > 0:
-            return "ATIVO"
-        elif self.qtd_usos == 0:
-            return "INATIVO"
+
+            data_validade = datetime.strptime(self.validade, "%d-%m-%Y").date()
+            data_atual = datetime.now().date()
+
+            if data_validade > data_atual:
+                return "ATIVO"
+        
+        return "INATIVO"
 
     def gerar_dict(self) -> dict:
         return {
@@ -267,6 +274,8 @@ class Cupom:
                 "tipo" : self.tipo,
                 "valor" : self.valor,
                 "validade" : self.validade,
-                "usos" : self.qtd_usos,
+                "qtd_usos" : self.qtd_usos,
                 "status" : self.status
         }
+
+    

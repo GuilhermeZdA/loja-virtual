@@ -16,14 +16,14 @@ class CupomJSON:
 
 
     @staticmethod
-    def exibir_cupom(self) -> None:
+    def exibir_cupom() -> None:
         with open(CUPOM, 'r', encoding = "utf-8") as arquivo:
             cupons = json.load(arquivo)
 
         lista_cupons = []
 
         if isinstance(cupons, dict):
-            for codigo, dados in cupons:
+            for codigo, dados in cupons.items():
                 item = dados.copy()
                 item["codigo"] = codigo
                 lista_cupons.append(item)
