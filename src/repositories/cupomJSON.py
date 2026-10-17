@@ -1,54 +1,54 @@
 import json
-from src.models.pedido import Cupom
+from src.models import Cupom
+from src.caminhos import CUPOM
 
 class CupomJSON:
-    def __init__(self, caminho):
-        self.caminho = caminho
 
+    @staticmethod
+    def adicionar_cupom(novo_cupom: Cupom) -> None:
+        with open(CUPOM, 'r', encoding = "utf-8") as arquivo:
+            cupons = json.load(arquivo)
 
-    @property
-    def caminho(self):
-        return self._caminho
+        cupons[novo_cupom.codigo] = novo_cupom.gerar_dict()
 
-    @caminho.setter
-    def caminho(self, novo_caminho):
-        self._caminho = novo_caminho
-
-
-    def carregar_cupom(self) -> dict:
-        with open(self.caminho, 'r', encoding = "utf-8") as arquivo:
-            dados = json.load(arquivo)
-        return dados
-
-    def adicionar_cupom(self, novo_cupom: Cupom) -> None:
-        cupons = self.carregar_cupom()
-        cupons.update(novo_cupom.gerar_dict())
-
-        with open(self.caminho, 'w', encoding = "utf-8") as arquivo:
+        with open(CUPOM, 'w', encoding = "utf-8") as arquivo:
             json.dump(cupons, arquivo, ensure_ascii = False, indent = 4)
 
+
+    @staticmethod
     def exibir_cupom(self) -> None:
-        cupons = self.carregar_cupom()
+        with open(CUPOM, 'r', encoding = "utf-8") as arquivo:
+            cupons = json.load(arquivo)
 
-        print("=" * 90)
-        print(f'{"CÓDIGO":^10}{"TIPO":^10}{"VALOR":^15}{"VALIDADE":^20}{"QUANTIDADE DE USOS":^25}')
-        print("=" * 90)
+        lista_cupons = []
 
-        for key, value in cupons.items():
-            print(f'{key:^10}{value["tipo"]:^10}{value["valor"]:^15}{value["validade"]:^20}{value["usos"]:^25}')
-            print("-" * 90)
+        if isinstance(cupons, dict):
+            for codigo, dados in cupons:
+                item = dados.copy()
+                item["codigo"] = codigo
+                lista_cupons.append(item)
 
-    def remover_cupom(self, cupom: Cupom) -> None:
-        cupons = self.carregar_cupom()
+        if isinstance(cupons, list):
+            lista_cupons = cupons
+
+        return lista_cupons
+
+    @staticmethod
+    def remover_cupom(codigo: str) -> None:
+        with open(CUPOM, 'r', encoding = "utf-8") as arquivo:
+            cupons = json.load(arquivo)
         encontrado = False
 
-        if cupom.codigo in cupons:
-            del cupons[cupom.codigo]
+        if codigo in cupons:
+            del cupons[codigo]
             encontrado = True
 
         if encontrado:
-            with open(self.caminho, 'w', encoding = "utf-8") as arquivo:
+            with open(CUPOM, 'w', encoding = "utf-8") as arquivo:
                 json.dump(cupons, arquivo, ensure_ascii = False, indent = 4)
+
+        return encontrado
+
 
     def atualizar_banco(self) -> None:
         dados = self.carregar_cupom()

@@ -250,12 +250,23 @@ class Cupom:
             raise TypeError("Erro! O valor deve ser um número inteiro")
 
 
+    @property
+    def status(self):
+        return self.analisar_status()
+
+
+    def analisar_status(self) -> str:
+        if self.qtd_usos > 0:
+            return "ATIVO"
+        elif self.qtd_usos == 0:
+            return "INATIVO"
+
     def gerar_dict(self) -> dict:
         return {
-            self.codigo : {
+                "codigo": self.codigo,
                 "tipo" : self.tipo,
                 "valor" : self.valor,
                 "validade" : self.validade,
-                "usos" : self.qtd_usos
-            }
+                "usos" : self.qtd_usos,
+                "status" : self.status
         }

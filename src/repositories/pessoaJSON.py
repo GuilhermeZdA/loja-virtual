@@ -6,7 +6,7 @@ class PessoaJSON:
 
     @staticmethod
     def adicionar_cliente(nova_pessoa: Cliente) -> None:
-        with open(CLIENTES, 'r', encoding= "utf-8") as arquivo:
+        with open(CLIENTES, 'r', encoding = "utf-8") as arquivo:
             pessoas = json.load(arquivo)
 
         pessoas.update(nova_pessoa.gerar_dict())
@@ -16,7 +16,7 @@ class PessoaJSON:
 
     @staticmethod
     def exibir_cliente() -> list:
-        with open(CLIENTES, 'r', encoding= "utf-8") as arquivo:
+        with open(CLIENTES, 'r', encoding = "utf-8") as arquivo:
             pessoas = json.load(arquivo)
 
         lista_clientes = []
@@ -35,7 +35,7 @@ class PessoaJSON:
 
     @staticmethod
     def remover_cliente(cpf: str) -> bool:
-        with open(CLIENTES, 'r', encoding= "utf-8") as arquivo:
+        with open(CLIENTES, 'r', encoding = "utf-8") as arquivo:
             pessoas = json.load(arquivo)
         encontrado = False
 

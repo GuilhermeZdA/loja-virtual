@@ -4,8 +4,7 @@ from src.schema.produto_schema import ProdutoCreate, ProdutoResponse
 from src.models import ProdutoFisico, ProdutoDigital
 from src.repositories import ProdutoJSON
 
-router = APIRouter(prefix = "/produtos", tags = ["Produtos"])
-
+router = APIRouter(prefix = "/produtos", tags = ["Produtos"]) # Produtos é o endpoint
 
 @router.post("/", status_code = 201, response_model = ProdutoResponse)
 def criar_produto(
@@ -74,6 +73,7 @@ def listar_produtos():
     produtos_salvos = ProdutoJSON.exibir_produtos()
 
     return produtos_salvos
+
 
 
 @router.delete("/{sku}")
