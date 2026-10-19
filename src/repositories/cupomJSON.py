@@ -48,33 +48,3 @@ class CupomJSON:
                 json.dump(cupons, arquivo, ensure_ascii = False, indent = 4)
 
         return encontrado
-
-
-    def atualizar_banco(self) -> None:
-        dados = self.carregar_cupom()
-        dados.update(self.gerar_dict())
-
-        with open(self.caminho, 'w', encoding = "utf-8") as arquivo:
-            json.dump(dados, arquivo, ensure_ascii = False, indent = 4)
-
-    # FAZER A VALIDAÇÃO DO TEMPO!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-    def buscar_cupom(self, cod: str) -> tuple: # Vai utilizar o código para localizar o cupom no banco de dados
-        if isinstance(cod, str):
-            
-            cupons = self.carregar_cupom()
-            valor = 0
-
-            for codigo, value in cupons.items():
-                if codigo == cod:
-                    valor = int(value["usos"])
-                    if valor == 0:
-                        return 0
-                    valor -= 1
-                    value["usos"] = str(valor)
-
-                    with open(self.caminho, 'w', encoding = "utf-8") as arquivo:
-                        json.dump(cupons, arquivo, ensure_ascii = False, indent = 4)
-                    return float(value["valor"]), value["tipo"]
-            return 0
-        else:
-            raise TypeError("Erro! O valor deve ser um texto")

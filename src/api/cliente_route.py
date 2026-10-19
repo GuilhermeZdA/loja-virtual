@@ -30,14 +30,14 @@ def criar_clientes(dados: ClienteCreate):
     except ValueError as erro:
         raise HTTPException(status_code = 400, detail = str(erro))
 
-@router.get("/", response_model = List[ClienteResponse])
+@router.get("/", status_code = 200, response_model = List[ClienteResponse])
 def listar_clientes():
 
     clientes_salvos = PessoaJSON.exibir_cliente()
 
     return clientes_salvos
 
-@router.delete("/{cpf}")
+@router.delete("/{cpf}", status_code = 200)
 def remover_cliente(cpf: str):
 
     sucesso = PessoaJSON.remover_cliente(cpf)

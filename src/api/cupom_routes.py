@@ -26,7 +26,7 @@ def criar_cupom(dados: CupomCreate):
        raise HTTPException(status_code = 400, detail = str(erro))
 
 
-@router.get("/", response_model = List[CupomResponse])
+@router.get("/", status_code = 200, response_model = List[CupomResponse])
 def listar_cupons():
 
     cupons_salvos = CupomJSON.exibir_cupom()
@@ -34,7 +34,7 @@ def listar_cupons():
     return cupons_salvos
 
 
-@router.delete("/{codigo}")
+@router.delete("/{codigo}", status_code = 200)
 def remover_cupom(codigo: str):
 
     sucesso = CupomJSON.remover_cupom(codigo)

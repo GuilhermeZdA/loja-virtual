@@ -67,7 +67,7 @@ def criar_produto(
         raise HTTPException(status_code = 400, detail = str(erro))
 
 
-@router.get("/", response_model = List[ProdutoResponse])
+@router.get("/", status_code = 200, response_model = List[ProdutoResponse])
 def listar_produtos():
     
     produtos_salvos = ProdutoJSON.exibir_produtos()
@@ -76,7 +76,7 @@ def listar_produtos():
 
 
 
-@router.delete("/{sku}")
+@router.delete("/{sku}", status_code = 200)
 def remover_produto(sku: str):
 
     sucesso = ProdutoJSON.remover_produtos(sku)

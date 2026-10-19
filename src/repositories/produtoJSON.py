@@ -35,6 +35,12 @@ class ProdutoJSON:
         return lista_produtos
 
     @staticmethod
+    def buscar_produto(sku: str) -> dict:
+        with open(PRODUTOS, 'r', encoding = "utf-8") as arquivo:
+            produtos = json.load(arquivo)
+        return produtos.get(sku)
+
+    @staticmethod
     def remover_produtos(sku: str) -> bool:
         with open(PRODUTOS, 'r', encoding = "utf-8") as arquivo:
             produtos = json.load(arquivo)
