@@ -1,3 +1,6 @@
+from src.models import Pedido
+from src.caminhos import PEDIDOS
+import json
 
 class Relatorio:
     """
@@ -9,19 +12,24 @@ class Relatorio:
         faturamento (float): A soma de todo o dinheiro arrecadado da loja.
         top_vendidos (Dict): Ranking dos produtos mais vendidos.
     """
-    def __init__(self, pagamentos: list[str]):
-        self._pagamentos = pagamentos # Usar o banco de dados para buscar os pagamento
+    def __init__(self):
 
+        @property
+        def faturamento(self):
+            return calcular_faturamento()
 
-    @property
-    def pedidos(self):
-        return self._pagamentos
+        @staticmethod
+        def calcular_faturamento() -> float:
+            faturamento = 0
+            with open(PEDIDOS, 'r', encoding = "utf-8") as arquivo:
+                pedidos = json.load(arquivo)
 
-    def calcular_faturamento(self) -> float:
-        faturamento = 0
-        for pagamento in self._pagamentos:
-            faturamento += pagamento.valor
-        return self._pagamentos
+            for values in pedidos.value():
+                if values["estado"] == "ENTREGUE" or "PAGO" or "ENVIADO":
+                    faturamento += values["total"]
 
-    def ranking(self): # Precisa do banco de dados
-        pass
+            return faturamento
+
+        @staticmethod
+        def calcular_ranking(): # Precisa do banco de dados
+            pass
