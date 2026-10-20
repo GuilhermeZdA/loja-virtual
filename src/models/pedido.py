@@ -1,5 +1,4 @@
-from .produto import ProdutoFisico, ProdutoDigital
-from .carrinho import Carrinho
+from src.models import ProdutoFisico, ProdutoDigital, Carrinho, Endereco
 from random import randint
 from datetime import datetime
 
@@ -12,26 +11,70 @@ class ItemPedido:
     Atributos:
         item (ProdutoFisico/ProdutoDigital): O produto e seus dados atuais no momento do pedido de compra.
         qtd (int): Armazena a quantidade de produtos no momento do pedido de compra.
-        preco_unidade (float): O preço de uma unidade do produto no momento do pedido de compra.
+        preco_unit (float): O preço de uma unidade do produto no momento do pedido de compra.
+        subtotal_preco (float): O preço total desse(s) item(ns) no carrinho.
+        subtotal_peso (float): O peso total desse(s) item(ns) no carrinho.
     """
-    def __init__(self, item: ProdutoDigital | ProdutoFisico, qtd: int, preco_unidade: float):
-        self._item = item
-        self._qtd = qtd
-        self._preco_unidade = preco_unidade
+
+    def __init__(self, item: ProdutoDigital | ProdutoFisico, qtd: int):
+        self.item = item
+        self.qtd = qtd
+        self._preco_unit = float(item.preco)
+
 
     @property
     def item(self):
         return self._item
+
+    @item.setter
+    def item(self, produto: ProdutoFisico | ProdutoDigital):
+        if isinstance(produto, (ProdutoDigital, ProdutoFisico)): 
+            self._item = produto
+        else:
+            raise TypeError("Erro! O valor deve ser um produto")
 
 
     @property
     def qtd(self):
         return self._qtd
 
+    @qtd.setter
+    def qtd(self, valor: int):
+        if isinstance(valor, int):
+            if valor > 0:
+                self._qtd = valor
+            else:
+                raise ValueError("Erro! O valor digitado deve ser positivo")
+        else:
+            raise TypeError("Erro! O valor deve ser um número inteiro")
+
 
     @property
-    def preco_unidade(self):
-        return self._preco_unidade
+    def preco_unit(self):
+        return self._preco_unit
+
+
+    @property
+    def subtotal_preco(self):
+        return self.preco_unit * self.qtd
+
+
+    @property
+    def subtotal_peso(self):
+        if isinstance(self.item, ProdutoFisico):
+            return self.item.peso * self.qtd
+        else:
+            return 0
+
+    def gerar_dict(self) -> dict:
+        return {
+            "sku": self.item.sku,
+            "nome": self.item.nome,
+            "qtd": self.qtd,
+            "preco_unit": self.preco_unit,
+            "subtotal_preco": self.subtotal_preco,
+            "subtotal_peso": self.subtotal_peso
+        }
 
 
 class Pedido:
@@ -52,83 +95,123 @@ class Pedido:
     lista_estados = ["CRIADO", "PAGO", "ENVIADO", "ENTREGUE", "CANCELADO"]
 
 
-    def __init__(self, carrinho: Carrinho):
-        self.carrinho = carrinho
-        self._id_ = self.gerar_id() #TESTAR
-        self.frete = 0
-        self.desconto = 0
-        self.total = 0
-        self.estado = ""
+    def __init__(self, id_:str, cpf: str, endereco: Endereco, itens: list, cod_cupom: str = None):
+        self._id_ = id_
+        self._data = datetime.now()
+        self._estado = "CRIADO"
+        self._itens = itens
 
+        self.cpf = cpf
+        self.endereco = endereco
+        self.cod_cupom = cod_cupom
+
+        self._desconto = self.calcular_desconto()
+        self._frete = self.calcular_frete()
+        self._total = self.calcular_total()
+
+    
     @property
-    def carrinho(self):
-        return self._carrinho
+    def cpf(self):
+        return self._cpf
 
-    @carrinho.setter
-    def carrinho(self, novo_carrinho: Carrinho):
-        if isinstance(novo_carrinho, Carrinho):
-            self._carrinho = novo_carrinho
+    @cpf.setter
+    def cpf(self, novo_cpf):
+        if isinstance(novo_cpf, str):
+            self._cpf = novo_cpf
         else:
-            raise TypeError("Erro! Só é aceito objetos da classe carrinho")
+            raise TypeError("Erro! CPF inválido ou inexistente")
+
 
     @property
     def id_(self):
         return self._id_
 
-    # MUDAR O RACIOCINIO DO FRETE E DESCONTO
+    @id_.setter
+    def id_(self, novo_id: str):
+        if isinstance(novo_id, str):
+            if len(novo_id) == 5:
+                self._id_ = novo_id
+            else:
+                raise ValueError("Erro! O ID deve ser composto por 5 caracteres")
+        else:
+            raise TypeError("Erro! O valor digitado deve ser um texto")
+
+    
+    @property
+    def endereco(self):
+        return self.__endereco
+
+    @endereco.setter
+    def endereco(self, local: Endereco):
+        if isinstance(local, Endereco):
+            self.__endereco = local
+        else:
+            raise TypeError("Erro! O valor deve ser um objeto da classe Endereco")
+
+
+    @property
+    def cod_cupom(self):
+        return self._cod_cupom
+
+    @cod_cupom.setter
+    def cod_cupom(self, novo_cod: str):
+        if isinstance(novo_cod, str):
+            espaco = " " 
+            novo_cod = novo_cod.strip().upper()
+            if espaco in novo_cod or len(espaco) < 0: # Não pode ter espaços
+                raise ValueError("Erro! O código não pode ter espaços em branco")
+            else:
+                self._cod_cupom = novo_cod
+        else:
+            raise TypeError("Erro! O valor digitado deve ser um texto")
+
+
     @property
     def frete(self):
         return self._frete
-
-    @frete.setter
-    def frete(self, novo_frete: float):
-        if isinstance(novo_frete, float):
-            self._frete = novo_frete # Preciso entender mais disso aqui
-        else:
-            raise TypeError("Erro! Só é aceito objetos da classe frete")
 
 
     @property
     def desconto(self):
         return self._desconto
 
-    @desconto.setter
-    def desconto(self, novo_desc: float):
-        if isinstance(novo_desc, float):
-            self._desconto = novo_desc # Preciso entender mais disso aqui
-        else:
-            raise TypeError("Erro! Só é aceito objetos da classe cupom")
-
 
     @property
     def total(self):
-        return self.calcular_total()
+        return self._total
 
 
     @property
     def estado(self):
-        return self.altenar_estado()
+        return self._estado
 
 
-    def usar_cupom(self, cod: str): # PRECISO DO CALCULAR TOTAL
+    @property
+    def data(self):
+        return self._data
+
+
+    @property
+    def itens(self):
+        return self._itens
+
+
+    def calcular_desconto(self, cod: str) -> float:
         pass
 
-    def buscar_frete(self) -> float: # Vai calcular o frete caso haja produtos fisicos
+    def calcular_frete(self) -> float:
         pass
 
-    def calcular_total(self) -> float: # Vai calcular o valor total após descontos e aumentos
+    def calcular_total(self) -> float:
         pass
 
-    def cancelar_pedido(self) -> None: # Vai apagar o pedido do banco de dados?
+    def cancelar_pedido(self) -> None:
         pass
 
     def confirmar_pedido(self):
         pass
-    
-    def altenar_estado(self) -> str: # Vai analisar o que está acontecendo com o pedido e alternar seu estado
-        pass
 
-    def gerar_itempedido(self, carrinho: Carrinho) -> ItemPedido:
+    def gerar_id(self):
         pass
 
     def gerar_dict(self) -> dict:

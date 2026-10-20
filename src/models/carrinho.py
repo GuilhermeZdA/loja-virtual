@@ -23,7 +23,7 @@ class ItemCarrinho:
 
     @item.setter
     def item(self, produto: ProdutoFisico | ProdutoDigital):
-        if isinstance(produto, (ProdutoDigital, ProdutoFisico)): # Depois fazer a validação com o banco de dados
+        if isinstance(produto, (ProdutoDigital, ProdutoFisico)): 
             self._item = produto
         else:
             raise TypeError("Erro! O valor deve ser um produto")
