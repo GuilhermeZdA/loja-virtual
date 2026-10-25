@@ -13,7 +13,7 @@
         "sku": "AAA1111",
         "nome": "Avast",
         "categoria": "ELETRONICO",
-        "qtd_estoque": 20,
+        "qtd_estoque": 9,
         "preco": 80.0,
         "status": "ATIVO",
         "tipo": "DIGITAL",

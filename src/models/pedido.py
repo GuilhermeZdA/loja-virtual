@@ -97,12 +97,13 @@ class Pedido:
     lista_estados = ["CRIADO", "PAGO", "ENVIADO", "ENTREGUE", "CANCELADO"]
 
 
-    def __init__(self, id_:str, cpf: str, endereco: Endereco, itens: list, frete: Frete, cupom: 'Cupom' = None):
+    def __init__(self, id_: str, cpf: str, endereco: Endereco, itens: list, frete: Frete, cupom: 'Cupom' = None):
         self._id_ = id_
         self._data = datetime.now()
         self._estado = "CRIADO"
         self._itens = itens
         self._forma_pag = None
+        self._data_pag = None
 
         self.cpf = cpf
         self.endereco = endereco
@@ -209,6 +210,11 @@ class Pedido:
 
 
     @property
+    def data_pag(self):
+        return self._data_pag
+
+
+    @property
     def preco_inicial(self):
         return self.calcular_preco()
 
@@ -250,7 +256,8 @@ class Pedido:
             "total" : self.total,
             "estado" : self.estado,
             "endereco": self.endereco.gerar_dict(),
-            "forma_pag": self.forma_pag
+            "forma_pag": self.forma_pag,
+            "data_pag" : self.data_pag
         }
 
 

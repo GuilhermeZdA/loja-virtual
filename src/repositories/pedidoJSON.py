@@ -38,6 +38,32 @@ class PedidoJSON:
 
         with open(PEDIDOS, 'w', encoding = "utf-8") as arquivo:
             json.dump(dados, arquivo, ensure_ascii = False, indent = 4)
+
+    @staticmethod
+    def atualizar_forma_pag(id_: str, nova_forma: str):
+        with open(PEDIDOS, 'r', encoding = "utf-8") as arquivo:
+            dados = json.load(arquivo)
+
+        if id_ in dados:
+            dados[id_]["forma_pag"] = nova_forma
+        else:
+            raise KeyError("Erro! Não existe pedido com esse ID")
+
+        with open(PEDIDOS, 'w', encoding = "utf-8") as arquivo:
+            json.dump(dados, arquivo, ensure_ascii = False, indent = 4)
+
+    @staticmethod
+    def atualizar_data_pag(id_: str, nova_data: str):
+        with open(PEDIDOS, 'r', encoding = "utf-8") as arquivo:
+            dados = json.load(arquivo)
+
+        if id_ in dados:
+            dados[id_]["data_pag"] = nova_data
+        else:
+            raise KeyError("Erro! Não existe pedido com esse ID")
+
+        with open(PEDIDOS, 'w', encoding = "utf-8") as arquivo:
+            json.dump(dados, arquivo, ensure_ascii = False, indent = 4)
         
     @staticmethod
     def gerar_id() -> str:

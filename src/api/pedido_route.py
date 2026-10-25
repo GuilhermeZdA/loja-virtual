@@ -1,11 +1,22 @@
 from fastapi import APIRouter, HTTPException
 from src.models import Pedido, Endereco, ItemPedido, Cupom, Frete
-from src.repositories import PedidoJSON, PessoaJSON, CupomJSON
+from src.repositories import PedidoJSON, PessoaJSON, CupomJSON, ProdutoJSON
 from src.schema.pedido_schema import PedidoCreate, PedidoResponse
 
 from src.api.carrinho_route import carrinhos_ativos
 
 router = APIRouter(prefix = "/pedido", tags = ["PEDIDO"])
+
+
+@router.get("/pedido/{id_}", status_code = 200, response_model = PedidoResponse)
+def exibir_pedido(id_: str):
+    try:
+        pedido_atual = PedidoJSON.buscar_pedido(id_)
+        return pedido_atual
+
+    except KeyError:
+        raise HTTPException(status_code = 404, detail = "Erro! Produto não encontrado")
+
 
 @router.post("/", status_code = 201, response_model = PedidoResponse)
 def iniciar_pedido(dados: PedidoCreate):
@@ -71,6 +82,8 @@ def iniciar_pedido(dados: PedidoCreate):
 
     PedidoJSON.adicionar_pedidos(novo_pedido)
 
+    ProdutoJSON.retirar_estoque(novo_pedido.itens)
+
     del carrinhos_ativos[dados.cpf]
 
     return novo_pedido.gerar_dict()
@@ -79,9 +92,18 @@ def iniciar_pedido(dados: PedidoCreate):
 @router.patch("/pedido/{id_}/cancelar")
 def cancelar_pedido(id_: str):
     try:
+
+        pedido_atual = PedidoJSON.buscar_pedido(id_)
+
+        if pedido_atual["estado"] == "CANCELADO":
+            return {"message" : "O pedido já está CANCELADO"}
+
+        
         PedidoJSON.atualizar_estado(id_, "CANCELADO")
+
+        ProdutoJSON.devolver_estoque(pedido_atual["itens"])
+
         return {"message" : "O pedido foi CANCELADO"}
-    except:
+    
+    except KeyError:
         raise HTTPException(status_code = 404, detail = "Pedido não encontrado")
-
-

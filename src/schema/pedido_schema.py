@@ -35,3 +35,4 @@ class PedidoResponse(BaseModel):
     estado: EstadoPedido
     endereco: EnderecoResponse
     forma_pag: str | None = None
+    data_pag: str | None = None
