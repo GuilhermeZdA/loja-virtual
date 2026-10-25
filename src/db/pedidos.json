@@ -1,1 +1,27 @@
-{}
+{
+    "YS9G9": {
+        "id_": "YS9G9",
+        "cpf": "11423355695",
+        "itens": [
+            {
+                "sku": "AAA1111",
+                "nome": "Avast",
+                "qtd": 1,
+                "preco_unit": 80.0,
+                "subtotal_preco": 80.0,
+                "subtotal_peso": 0
+            }
+        ],
+        "data": "25-10-2026 11:01:00",
+        "valor_frete": 0,
+        "desconto": 0,
+        "total": 80.0,
+        "estado": "CRIADO",
+        "endereco": {
+            "cep": "63260000",
+            "uf": "CE",
+            "cidade": "Brejo"
+        },
+        "forma_pag": null
+    }
+}

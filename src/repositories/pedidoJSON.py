@@ -1,19 +1,24 @@
 import json
 from random import choice
-from src.models import Pedido
 from src.caminhos import PEDIDOS
 
 class PedidoJSON:
 
 
     @staticmethod
-    def adicionar_pedidos(novo_pedido: Pedido):
+    def adicionar_pedidos(novo_pedido):
         with open(PEDIDOS, 'r', encoding = "utf-8") as arquivo:
             dados = json.load(arquivo)
-        dados.update(novo_pedido.gerar_dict())
+
+        dados[novo_pedido.id_] = novo_pedido.gerar_dict()
 
         with open(PEDIDOS, 'w', encoding = "utf-8") as arquivo:
             json.dump(dados, arquivo, ensure_ascii = False , indent = 4)
+
+    @staticmethod
+    def buscar_pedido(id_: str):
+        with open(PEDIDOS, 'r', encoding = "utf-8") as arquivo:
+            dados = json.load(arquivo)
         
     @staticmethod
     def gerar_id() -> str:

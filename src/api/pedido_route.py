@@ -57,7 +57,7 @@ def iniciar_pedido(dados: PedidoCreate):
 
     frete_obj = Frete(
         uf = endereco_dados["uf"],
-        peso_total = carrinho_cliente.peso
+        peso_total = carrinho_cliente.peso_total
     )
 
     novo_pedido = Pedido(
@@ -66,7 +66,7 @@ def iniciar_pedido(dados: PedidoCreate):
         endereco = endereco_obj,
         itens = itens_static,
         frete = frete_obj,
-        cod_cupom = cupom_obj
+        cupom = cupom_obj
     )
 
     PedidoJSON.adicionar_pedidos(novo_pedido)
@@ -74,3 +74,8 @@ def iniciar_pedido(dados: PedidoCreate):
     del carrinhos_ativos[dados.cpf]
 
     return novo_pedido.gerar_dict()
+
+
+@router.patch("/pedido/{id_}/cancelar")
+def cancelar_pedido(id_: str):
+    

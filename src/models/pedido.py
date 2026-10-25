@@ -1,6 +1,5 @@
 from .frete import Endereco
 from .produto import ProdutoFisico, ProdutoDigital
-from .pedido import Cupom
 from .frete import Frete
 from random import randint
 from datetime import datetime
@@ -98,7 +97,7 @@ class Pedido:
     lista_estados = ["CRIADO", "PAGO", "ENVIADO", "ENTREGUE", "CANCELADO"]
 
 
-    def __init__(self, id_:str, cpf: str, endereco: Endereco, itens: list, frete: Frete, cupom: Cupom = None):
+    def __init__(self, id_:str, cpf: str, endereco: Endereco, itens: list, frete: Frete, cupom: 'Cupom' = None):
         self._id_ = id_
         self._data = datetime.now()
         self._estado = "CRIADO"
@@ -158,7 +157,7 @@ class Pedido:
         return self._cupom
 
     @cupom.setter
-    def cupom(self, novo_cupom: Cupom):
+    def cupom(self, novo_cupom: 'Cupom'):
         if isinstance(novo_cupom, Cupom):
             self._cupom = novo_cupom
         elif novo_cupom == None:
@@ -214,11 +213,6 @@ class Pedido:
         return self.calcular_preco()
 
 
-    @property
-    def peso(self):
-        return self.calcular_peso()
-    
-
     def calcular_preco(self) -> float:
         preco = 0
         for item_prod in self._itens:
@@ -245,26 +239,18 @@ class Pedido:
     def calcular_total(self) -> float:
         return self.preco_inicial - self.desconto + self.frete.calcular_frete()
 
-    def cancelar_pedido(self) -> None:
-        pass
-
-    def confirmar_pedido(self):
-        pass
-
     def gerar_dict(self) -> dict:
         return {
-            self.id_ : {
-                "id_" : self.id_,
-                "cpf" : self.cpf,
-                "itens": [item.gerar_dict() for item in self.itens],
-                "data": self.data,
-                "valor_frete" : self.frete.calcular_frete(),
-                "desconto" : self.desconto,
-                "total" : self.total,
-                "estado" : self.estado,
-                "endereco": self.endereco.gerar_dict(),
-                "forma_pag": self.forma_pag
-            }
+            "id_" : self.id_,
+            "cpf" : self.cpf,
+            "itens": [item.gerar_dict() for item in self.itens],
+            "data": self.data.strftime("%d-%m-%Y %H:%M:%S"),
+            "valor_frete" : self.frete.calcular_frete(),
+            "desconto" : self.desconto,
+            "total" : self.total,
+            "estado" : self.estado,
+            "endereco": self.endereco.gerar_dict(),
+            "forma_pag": self.forma_pag
         }
 
 

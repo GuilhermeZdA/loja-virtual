@@ -1,11 +1,10 @@
 import json
-from src.models import Cupom
 from src.caminhos import CUPOM
 
 class CupomJSON:
 
     @staticmethod
-    def adicionar_cupom(novo_cupom: Cupom) -> None:
+    def adicionar_cupom(novo_cupom) -> None:
         with open(CUPOM, 'r', encoding = "utf-8") as arquivo:
             cupons = json.load(arquivo)
 

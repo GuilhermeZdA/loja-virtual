@@ -69,6 +69,14 @@ class Endereco:
             raise TypeError("Erro! O valor digitado deve ser um texto")
 
 
+    def gerar_dict(self):
+        return {
+            "cep" : self.cep,
+            "uf" : self.uf,
+            "cidade": self.cidade
+        }
+
+
 class Frete:
     """
     A representação do frete de uma entrega.
@@ -106,7 +114,7 @@ class Frete:
 
     @peso_total.setter
     def peso_total(self, novo_peso: float | int):
-        if isinstance(self.peso_total, (float ,int)):
+        if isinstance(novo_peso, (float ,int)):
             if novo_peso >= 0:
                 self._peso_total = novo_peso
             else:

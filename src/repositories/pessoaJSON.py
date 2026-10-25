@@ -1,11 +1,10 @@
 import json
-from src.models.cliente import Cliente
 from src.caminhos import CLIENTES
 
 class PessoaJSON:
 
     @staticmethod
-    def adicionar_cliente(nova_pessoa: Cliente) -> None:
+    def adicionar_cliente(nova_pessoa) -> None:
         with open(CLIENTES, 'r', encoding = "utf-8") as arquivo:
             pessoas = json.load(arquivo)
 
