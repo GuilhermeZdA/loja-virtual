@@ -10,6 +10,7 @@ carrinhos_ativos = {}
 
 @router.post("/{cpf}/adicionar", status_code = 201, response_model = CarrinhoResponse)
 def adicionar_item_ao_carrinho(cpf: str, dados: ItemCarrinhoCreate):
+    
     if cpf not in carrinhos_ativos:
         novo_carrinho = Carrinho(cpf)
         carrinhos_ativos[cpf] = novo_carrinho

@@ -1,4 +1,7 @@
-from src.models import ProdutoFisico, ProdutoDigital, Carrinho, Endereco
+from .frete import Endereco
+from .produto import ProdutoFisico, ProdutoDigital
+from .pedido import Cupom
+from .frete import Frete
 from random import randint
 from datetime import datetime
 
@@ -95,18 +98,19 @@ class Pedido:
     lista_estados = ["CRIADO", "PAGO", "ENVIADO", "ENTREGUE", "CANCELADO"]
 
 
-    def __init__(self, id_:str, cpf: str, endereco: Endereco, itens: list, cod_cupom: str = None):
+    def __init__(self, id_:str, cpf: str, endereco: Endereco, itens: list, frete: Frete, cupom: Cupom = None):
         self._id_ = id_
         self._data = datetime.now()
         self._estado = "CRIADO"
         self._itens = itens
+        self._forma_pag = None
 
         self.cpf = cpf
         self.endereco = endereco
-        self.cod_cupom = cod_cupom
+        self.cupom = cupom
+        self.frete = frete
 
         self._desconto = self.calcular_desconto()
-        self._frete = self.calcular_frete()
         self._total = self.calcular_total()
 
     
@@ -150,25 +154,29 @@ class Pedido:
 
 
     @property
-    def cod_cupom(self):
-        return self._cod_cupom
+    def cupom(self):
+        return self._cupom
 
-    @cod_cupom.setter
-    def cod_cupom(self, novo_cod: str):
-        if isinstance(novo_cod, str):
-            espaco = " " 
-            novo_cod = novo_cod.strip().upper()
-            if espaco in novo_cod or len(espaco) < 0: # Não pode ter espaços
-                raise ValueError("Erro! O código não pode ter espaços em branco")
-            else:
-                self._cod_cupom = novo_cod
+    @cupom.setter
+    def cupom(self, novo_cupom: Cupom):
+        if isinstance(novo_cupom, Cupom):
+            self._cupom = novo_cupom
+        elif novo_cupom == None:
+            self._cupom = None
         else:
-            raise TypeError("Erro! O valor digitado deve ser um texto")
+            raise TypeError("Erro! Deve receber um objeto cupom")
 
 
     @property
     def frete(self):
         return self._frete
+
+    @frete.setter
+    def frete(self, novo_frete: Frete):
+        if isinstance(novo_frete, Frete):
+            self._frete = novo_frete
+        else:
+            raise TypeError("Erro! Não é um objeto da classe frete")
 
 
     @property
@@ -196,14 +204,46 @@ class Pedido:
         return self._itens
 
 
-    def calcular_desconto(self, cod: str) -> float:
-        pass
+    @property
+    def forma_pag(self):
+        return self._forma_pag
 
-    def calcular_frete(self) -> float:
-        pass
+
+    @property
+    def preco_inicial(self):
+        return self.calcular_preco()
+
+
+    @property
+    def peso(self):
+        return self.calcular_peso()
+    
+
+    def calcular_preco(self) -> float:
+        preco = 0
+        for item_prod in self._itens:
+            preco += item_prod.subtotal_preco
+        return preco
+
+    def calcular_desconto(self) -> float:
+        if self.cupom == None:
+            return 0
+
+        if self.cupom.tipo == "$":
+            if self.cupom.valor >= self.preco_inicial:
+                raise ValueError("Erro! O valor do cupom deve ser menor que a soma dos preços dos produtos")
+            else:
+                return self.cupom.valor
+            
+        elif self.cupom.tipo == "%":
+            if self.cupom.valor >= 100:
+                raise ValueError("Erro! O desconto do cupom não pode zerar o preço das compras")
+            else:
+                return self.preco_inicial * (self.cupom.valor/100)
+
 
     def calcular_total(self) -> float:
-        pass
+        return self.preco_inicial - self.desconto + self.frete.calcular_frete()
 
     def cancelar_pedido(self) -> None:
         pass
@@ -211,17 +251,19 @@ class Pedido:
     def confirmar_pedido(self):
         pass
 
-    def gerar_id(self):
-        pass
-
     def gerar_dict(self) -> dict:
         return {
             self.id_ : {
-                "carrinho" : {},
-                "frete" : self.frete,
+                "id_" : self.id_,
+                "cpf" : self.cpf,
+                "itens": [item.gerar_dict() for item in self.itens],
+                "data": self.data,
+                "valor_frete" : self.frete.calcular_frete(),
                 "desconto" : self.desconto,
                 "total" : self.total,
-                "estado" : self.estado
+                "estado" : self.estado,
+                "endereco": self.endereco.gerar_dict(),
+                "forma_pag": self.forma_pag
             }
         }
 
@@ -360,5 +402,3 @@ class Cupom:
                 "qtd_usos" : self.qtd_usos,
                 "status" : self.status
         }
-
-    

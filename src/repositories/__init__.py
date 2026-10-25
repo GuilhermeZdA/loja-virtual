@@ -1,10 +1,12 @@
 from .cupomJSON import CupomJSON
+from .freteJSON import  FreteJSON
+from .pedidoJSON import PedidoJSON
 from .pessoaJSON import PessoaJSON
 from .produtoJSON import ProdutoJSON
-from .pedidoJSON import PedidoJSON
 
 __all__ = [
     "CupomJSON",
+    "FreteJSON",
     "PedidoJSON",
     "PessoaJSON",
     "ProdutoJSON"

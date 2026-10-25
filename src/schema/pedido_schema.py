@@ -29,7 +29,7 @@ class PedidoResponse(BaseModel):
     cpf: str
     itens: list[ItemPedidoResponse]
     data: str
-    frete: float
+    valor_frete: float
     desconto: float
     total: float
     estado: EstadoPedido

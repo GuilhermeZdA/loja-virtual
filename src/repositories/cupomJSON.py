@@ -48,3 +48,14 @@ class CupomJSON:
                 json.dump(cupons, arquivo, ensure_ascii = False, indent = 4)
 
         return encontrado
+
+
+    @staticmethod
+    def buscar_cupom(cod: str) -> dict:
+        with open(CUPOM, 'r', encoding = "utf-8") as arquivo:
+            cupons = json.load(arquivo)
+
+        if cod in cupons:
+            return cupons[cod]
+
+        return None
