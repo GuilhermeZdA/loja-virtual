@@ -78,4 +78,10 @@ def iniciar_pedido(dados: PedidoCreate):
 
 @router.patch("/pedido/{id_}/cancelar")
 def cancelar_pedido(id_: str):
-    
+    try:
+        PedidoJSON.atualizar_estado(id_, "CANCELADO")
+        return {"message" : "O pedido foi CANCELADO"}
+    except:
+        raise HTTPException(status_code = 404, detail = "Pedido não encontrado")
+
+

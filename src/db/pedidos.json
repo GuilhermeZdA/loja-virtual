@@ -16,7 +16,7 @@
         "valor_frete": 0,
         "desconto": 0,
         "total": 80.0,
-        "estado": "CRIADO",
+        "estado": "CANCELADO",
         "endereco": {
             "cep": "63260000",
             "uf": "CE",
