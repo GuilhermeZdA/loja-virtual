@@ -1,5 +1,5 @@
 import json
-from random import choice
+from random import choice, randint
 from src.caminhos import PEDIDOS
 
 class PedidoJSON:
@@ -64,6 +64,32 @@ class PedidoJSON:
 
         with open(PEDIDOS, 'w', encoding = "utf-8") as arquivo:
             json.dump(dados, arquivo, ensure_ascii = False, indent = 4)
+
+    @staticmethod
+    def atualizar_cod_rastreio(id_: str, novo_codigo: str):
+        with open(PEDIDOS, 'r', encoding = "utf-8") as arquivo:
+            dados = json.load(arquivo)
+
+        if id_ in dados:
+            dados[id_]["codigo_rastreio"] = novo_codigo
+        else:
+            raise KeyError("Erro! Não existe pedido com esse ID")
+
+        with open(PEDIDOS, 'w', encoding = "utf-8") as arquivo:
+            json.dump(dados, arquivo, ensure_ascii = False, indent = 4)
+
+    @staticmethod
+    def atualizar_data_entrega(id_: str, nova_data: str):
+        with open(PEDIDOS, 'r', encoding = "utf-8") as arquivo:
+            dados = json.load(arquivo)
+
+        if id_ in dados:
+            dados[id_]["data_entrega"] = nova_data
+        else:
+            raise KeyError("Erro! Não existe pedido com esse ID")
+
+        with open(PEDIDOS, 'w', encoding = "utf-8") as arquivo:
+            json.dump(dados, arquivo, ensure_ascii = False, indent = 4)
         
     @staticmethod
     def gerar_id() -> str:
@@ -82,3 +108,24 @@ class PedidoJSON:
 
             if novo_id not in dados:
                 return novo_id
+
+    @staticmethod
+    def gerar_cod_rastreio() -> str:
+        try:
+            with open(PEDIDOS, 'r', encoding = "utf-8") as arquivo:
+                dados = json.load(arquivo)
+        except(FileNotFoundError, json.JSONDecodeError):
+            dados = {}
+
+        codigos_ativos = []
+        for pedido in dados.values():
+            if pedido["codigo_rastreio"] is not None:
+                codigos_ativos.append(pedido["codigo_rastreio"])
+
+        while True:
+
+            digitos = randint(100, 999)
+            cod = str(digitos) + "BR"
+
+            if cod not in codigos_ativos:
+                return cod

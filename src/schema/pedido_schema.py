@@ -36,3 +36,5 @@ class PedidoResponse(BaseModel):
     endereco: EnderecoResponse
     forma_pag: str | None = None
     data_pag: str | None = None
+    codigo_rastreio: str | None = None
+    data_entrega: str | None = None

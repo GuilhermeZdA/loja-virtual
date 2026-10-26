@@ -1,3 +1,4 @@
+from datetime import datetime
 from fastapi import APIRouter, HTTPException
 from src.models import Pedido, Endereco, ItemPedido, Cupom, Frete
 from src.repositories import PedidoJSON, PessoaJSON, CupomJSON, ProdutoJSON
@@ -98,12 +99,65 @@ def cancelar_pedido(id_: str):
         if pedido_atual["estado"] == "CANCELADO":
             return {"message" : "O pedido já está CANCELADO"}
 
-        
-        PedidoJSON.atualizar_estado(id_, "CANCELADO")
+        if pedido_atual["estado"] == "PAGO" or pedido_atual["estado"] == "CRIADO":
 
-        ProdutoJSON.devolver_estoque(pedido_atual["itens"])
+            PedidoJSON.atualizar_estado(id_, "CANCELADO")
+            ProdutoJSON.devolver_estoque(pedido_atual["itens"])
 
-        return {"message" : "O pedido foi CANCELADO"}
+            return {"message" : "O pedido foi CANCELADO com sucesso"}
+
+        else:
+            raise HTTPException(status_code = 400, detail = f"Não é possível cancelar um pedido que já foi {pedido_atual['estado']}")
     
+    except KeyError:
+        raise HTTPException(status_code = 404, detail = "Pedido não encontrado")
+
+
+@router.patch("/pedido/{id_}/enviar")
+def enviar_pedido(id_: str):
+    try:
+
+        pedido_atual = PedidoJSON.buscar_pedido(id_)
+
+        if pedido_atual["estado"] == "ENVIADO":
+            return {"message": "O pedido já foi ENVIADO"}
+
+        if pedido_atual["estado"] == "PAGO":
+
+            codigo_rastreio = PedidoJSON.gerar_cod_rastreio()
+            
+            PedidoJSON.atualizar_estado(id_, "ENVIADO")
+            PedidoJSON.atualizar_cod_rastreio(id_, codigo_rastreio)
+
+            return {"message": "O pedido foi ENVIADO com sucesso"}
+
+        else:
+            raise HTTPException(status_code = 400, detail = f"Não é possivel enviar um pedido que foi {pedido_atual['estado']}")
+        
+    except KeyError:
+        raise HTTPException(status_code = 404, detail = "Pedido não encontrado")
+
+
+@router.patch("/pedido/{id_}/entregar")
+def entregar_pedido(id_: str):
+    try:
+
+        pedido_atual = PedidoJSON.buscar_pedido(id_)
+
+        if pedido_atual["estado"] == "ENTREGUE":
+            return {"message": "O pedido já foi ENTREGUE"}
+
+        if pedido_atual["estado"] == "ENVIADO":
+
+            data_pag = datetime.now().strftime("%d-%m-%Y %H:%M:%S")
+
+            PedidoJSON.atualizar_estado(id_, "ENTREGUE")
+            PedidoJSON.atualizar_data_entrega(id_, data_pag)
+
+            return {"message": "O pedido foi entregue com sucesso"}
+
+        else:
+            raise HTTPException(status_code = 400, detail = f"Não é possivel enviar um pedido que foi {pedido_atual['estado']}")
+
     except KeyError:
         raise HTTPException(status_code = 404, detail = "Pedido não encontrado")

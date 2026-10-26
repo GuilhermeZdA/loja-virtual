@@ -104,6 +104,8 @@ class Pedido:
         self._itens = itens
         self._forma_pag = None
         self._data_pag = None
+        self._codigo_rastreio = None
+        self._data_entrega = None
 
         self.cpf = cpf
         self.endereco = endereco
@@ -215,6 +217,16 @@ class Pedido:
 
 
     @property
+    def codigo_rastreio(self):
+        return self._codigo_rastreio
+
+
+    @property
+    def data_entrega(self):
+        return self._data_entrega
+
+
+    @property
     def preco_inicial(self):
         return self.calcular_preco()
 
@@ -257,7 +269,9 @@ class Pedido:
             "estado" : self.estado,
             "endereco": self.endereco.gerar_dict(),
             "forma_pag": self.forma_pag,
-            "data_pag" : self.data_pag
+            "data_pag" : self.data_pag,
+            "codigo_rastreio": self.codigo_rastreio,
+            "data_entrega": self.data_entrega
         }
 
 
