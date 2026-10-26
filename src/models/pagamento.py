@@ -172,3 +172,15 @@ class NotaFiscal:
             else:
                 raise ValueError("Erro! Não existe esse tipo de estado")
         raise TypeError("Erro! O valor deve ser um texto")
+
+
+    def gerar_dict(self):
+        return {
+            self.codigo_nota : {
+                "codigo_nota" : self.codigo_nota,
+                "id_pedido": self.id_pedido,
+                "cpf" : self.cpf,
+                "valor_pago": self.valor_pago,
+                "produtos": self.produtos # VER O QUE PRODUTOS É
+            }
+        }
