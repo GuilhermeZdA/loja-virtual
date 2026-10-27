@@ -4,7 +4,6 @@ from .frete import Endereco, Frete
 from .pagamento import NotaFiscal, Pagamento
 from .pedido import Cupom, ItemPedido, Pedido
 from .produto import Produto, ProdutoDigital, ProdutoFisico
-from .relatorio import Relatorio
 
 __all__ = [
     "Carrinho",
@@ -19,6 +18,5 @@ __all__ = [
     "Pedido",
     "Produto",
     "ProdutoDigital",
-    "ProdutoFisico",
-    "Relatorio",
+    "ProdutoFisico"
 ]

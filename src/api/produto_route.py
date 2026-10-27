@@ -1,6 +1,5 @@
 from fastapi import APIRouter, HTTPException, Body
-from typing import List
-from src.schema.produto_schema import ProdutoCreate, ProdutoResponse
+from src.schema import ProdutoCreate, ProdutoResponse
 from src.models import ProdutoFisico, ProdutoDigital
 from src.repositories import ProdutoJSON
 
@@ -67,7 +66,7 @@ def criar_produto(
         raise HTTPException(status_code = 400, detail = str(erro))
 
 
-@router.get("/", status_code = 200, response_model = List[ProdutoResponse])
+@router.get("/", status_code = 200, response_model = list[ProdutoResponse])
 def listar_produtos():
     
     produtos_salvos = ProdutoJSON.exibir_produtos()

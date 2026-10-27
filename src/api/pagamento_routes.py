@@ -1,8 +1,7 @@
 from fastapi import APIRouter, HTTPException
 from src.models import Pagamento, NotaFiscal
 from src.repositories import PedidoJSON, NotaFiscalJSON
-from src.schema.pagamento_schema import PagamentoCreate, PagamentoResponse
-from src.schema.notafiscal_schema import NotaFiscalResponse
+from src.schema import NotaFiscalResponse, PagamentoCreate, PagamentoResponse
 
 router = APIRouter(prefix = "/pagamento", tags = ["Pagamento"])
 

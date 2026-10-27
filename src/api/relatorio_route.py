@@ -1,5 +1,5 @@
-from fastapi import APIRouter, HTTPException
-from src.schema.relatorio_schema import RelatorioFaturamentoResponse, RelatorioPedidoResponse, RelatorioRankProdutosResponse
+from fastapi import APIRouter
+from src.schema import RelatorioFaturamentoResponse, RelatorioPedidoResponse, RelatorioRankProdutosResponse
 from src.repositories import RelatorioJSON
 
 router = APIRouter(prefix = "/relatorio", tags = ["Relatórios"])

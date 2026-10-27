@@ -26,5 +26,33 @@
         "data_pag": "26-10-2026 21:42:00",
         "codigo_rastreio": "841BR",
         "data_entrega": "26-10-2026 21:42:38"
+    },
+    "SSAOU": {
+        "id_": "SSAOU",
+        "cpf": "12345678909",
+        "itens": [
+            {
+                "sku": "ZZZ1234",
+                "nome": "Dametecusita Action Figure",
+                "qtd": 4,
+                "preco_unit": 100.0,
+                "subtotal_preco": 400.0,
+                "subtotal_peso": 4.0
+            }
+        ],
+        "data": "27-10-2026 19:25:24",
+        "valor_frete": 64.0,
+        "desconto": 0,
+        "total": 464.0,
+        "estado": "ENTREGUE",
+        "endereco": {
+            "cep": "63260000",
+            "uf": "RS",
+            "cidade": "Rios"
+        },
+        "forma_pag": "PIX",
+        "data_pag": "27-10-2026 19:26:41",
+        "codigo_rastreio": "874BR",
+        "data_entrega": "27-10-2026 19:27:29"
     }
 }

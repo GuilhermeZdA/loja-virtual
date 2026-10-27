@@ -1,6 +1,5 @@
 from fastapi import APIRouter, HTTPException
-from typing import List
-from src.schema.cliente_schema import ClienteCreate, ClienteResponse
+from src.schema import ClienteCreate, ClienteResponse
 from src.models import Cliente, Endereco
 from src.repositories import PessoaJSON
 
@@ -30,7 +29,7 @@ def criar_clientes(dados: ClienteCreate):
     except ValueError as erro:
         raise HTTPException(status_code = 400, detail = str(erro))
 
-@router.get("/", status_code = 200, response_model = List[ClienteResponse])
+@router.get("/", status_code = 200, response_model = list[ClienteResponse])
 def listar_clientes():
 
     clientes_salvos = PessoaJSON.exibir_cliente()

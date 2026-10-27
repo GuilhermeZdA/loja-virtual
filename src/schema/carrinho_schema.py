@@ -1,6 +1,4 @@
 from pydantic import BaseModel, Field
-from typing import Literal
-from src.models import ItemCarrinho, ProdutoDigital, ProdutoFisico
 
 class ItemCarrinhoCreate(BaseModel):
     sku: str = Field(..., description = "Código único do produto")

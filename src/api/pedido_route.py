@@ -1,8 +1,8 @@
 from datetime import datetime
 from fastapi import APIRouter, HTTPException
-from src.models import Pedido, Endereco, ItemPedido, Cupom, Frete, NotaFiscal
+from src.models import Pedido, Endereco, ItemPedido, Cupom, Frete
 from src.repositories import PedidoJSON, PessoaJSON, CupomJSON, ProdutoJSON, NotaFiscalJSON
-from src.schema.pedido_schema import PedidoCreate, PedidoResponse
+from src.schema import PedidoCreate, PedidoResponse
 
 from src.api.carrinho_route import carrinhos_ativos
 

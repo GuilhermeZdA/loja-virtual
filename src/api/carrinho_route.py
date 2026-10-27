@@ -1,7 +1,7 @@
 from fastapi import APIRouter, HTTPException
 from src.repositories import ProdutoJSON
 from src.models import Carrinho, ProdutoDigital, ProdutoFisico
-from src.schema.carrinho_schema import ItemCarrinhoCreate, CarrinhoResponse
+from src.schema import ItemCarrinhoCreate, CarrinhoResponse
 
 router = APIRouter(prefix = "/carrinho", tags = ["Carrinho"])
 
