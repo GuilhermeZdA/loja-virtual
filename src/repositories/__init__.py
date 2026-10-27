@@ -4,6 +4,7 @@ from .notafiscalJSON import NotaFiscalJSON
 from .pedidoJSON import PedidoJSON
 from .pessoaJSON import PessoaJSON
 from .produtoJSON import ProdutoJSON
+from .relatorioJSON import RelatorioJSON
 
 __all__ = [
     "CupomJSON",
@@ -11,5 +12,6 @@ __all__ = [
     "NotaFiscalJSON",
     "PedidoJSON",
     "PessoaJSON",
-    "ProdutoJSON"
+    "ProdutoJSON",
+    "RelatorioJSON"
 ]
