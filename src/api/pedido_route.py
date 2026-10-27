@@ -1,12 +1,12 @@
 from datetime import datetime
 from fastapi import APIRouter, HTTPException
-from src.models import Pedido, Endereco, ItemPedido, Cupom, Frete
-from src.repositories import PedidoJSON, PessoaJSON, CupomJSON, ProdutoJSON
+from src.models import Pedido, Endereco, ItemPedido, Cupom, Frete, NotaFiscal
+from src.repositories import PedidoJSON, PessoaJSON, CupomJSON, ProdutoJSON, NotaFiscalJSON
 from src.schema.pedido_schema import PedidoCreate, PedidoResponse
 
 from src.api.carrinho_route import carrinhos_ativos
 
-router = APIRouter(prefix = "/pedido", tags = ["PEDIDO"])
+router = APIRouter(prefix = "/pedido", tags = ["Pedido"])
 
 
 @router.get("/pedido/{id_}", status_code = 200, response_model = PedidoResponse)
@@ -103,6 +103,8 @@ def cancelar_pedido(id_: str):
 
             PedidoJSON.atualizar_estado(id_, "CANCELADO")
             ProdutoJSON.devolver_estoque(pedido_atual["itens"])
+
+            NotaFiscalJSON.cancelar_nota_fiscal(id_) 
 
             return {"message" : "O pedido foi CANCELADO com sucesso"}
 

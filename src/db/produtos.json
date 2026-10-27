@@ -3,9 +3,9 @@
         "sku": "ABB9999",
         "nome": "Teclado Mecânico",
         "categoria": "ELETRONICO",
-        "qtd_estoque": 4,
+        "qtd_estoque": 0,
         "preco": 250.0,
-        "status": "ATIVO",
+        "status": "INATIVO",
         "tipo": "FISICO",
         "peso": 1.2
     },

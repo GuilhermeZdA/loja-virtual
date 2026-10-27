@@ -66,7 +66,12 @@ class ProdutoJSON:
             qtd = prod.qtd
 
             if sku in estoque:
-                estoque[sku]["qtd_estoque"] -= qtd
+                nova_qtd = estoque[sku]["qtd_estoque"] - qtd
+                estoque[sku]["qtd_estoque"] = nova_qtd
+
+            if nova_qtd <= 0:
+                estoque[sku]["qtd_estoque"] = 0
+                estoque[sku]["status"] = "INATIVO"
 
         with open(PRODUTOS, 'w', encoding = "utf-8") as arquivo:
             json.dump(estoque, arquivo, ensure_ascii = False, indent = 4)

@@ -22,6 +22,12 @@ def adicionar_item_ao_carrinho(cpf: str, dados: ItemCarrinhoCreate):
     if dict_produto == None:
         raise HTTPException(status_code = 404, detail = "Dados do produto não encontrado")
 
+    if dict_produto["status"] == "INATIVO":
+        raise HTTPException(status_code = 400, detail = "Erro! O estoque desse produto está vazio")
+
+    if dict_produto["qtd_estoque"] < dados.qtd:
+        raise HTTPException(status_code = 400, detail = f"Estoque insuficiente. {dict_produto["qtd_estoque"]} unidade(s) disponivel(is)")
+
     if dict_produto["tipo"] == "FISICO":
         produto = ProdutoFisico(
             sku = dict_produto["sku"],

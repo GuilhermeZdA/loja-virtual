@@ -1,1 +1,19 @@
-{}
+{
+    "1": {
+        "codigo_nota": 1,
+        "id_pedido": "GM8BO",
+        "cpf": "11423355695",
+        "valor_pago": 259.6,
+        "produtos": [
+            {
+                "sku": "ABB9999",
+                "nome": "Teclado Mecânico",
+                "qtd": 1,
+                "preco_unit": 250.0,
+                "subtotal_preco": 250.0,
+                "subtotal_peso": 1.2
+            }
+        ],
+        "estado": "EMITIDO"
+    }
+}

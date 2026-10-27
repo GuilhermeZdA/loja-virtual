@@ -1,6 +1,6 @@
 {
-    "SBB2X": {
-        "id_": "SBB2X",
+    "GM8BO": {
+        "id_": "GM8BO",
         "cpf": "11423355695",
         "itens": [
             {
@@ -12,19 +12,19 @@
                 "subtotal_peso": 1.2
             }
         ],
-        "data": "26-10-2026 11:21:05",
+        "data": "26-10-2026 21:40:18",
         "valor_frete": 9.6,
-        "desconto": 25.0,
-        "total": 234.6,
+        "desconto": 0,
+        "total": 259.6,
         "estado": "ENTREGUE",
         "endereco": {
             "cep": "63260000",
             "uf": "CE",
             "cidade": "Brejo"
         },
-        "forma_pag": "CREDITO",
-        "data_pag": "26-10-2026 11:22:17",
-        "codigo_rastreio": "459BR",
-        "data_entrega": "26-10-2026 14:33:13"
+        "forma_pag": "PIX",
+        "data_pag": "26-10-2026 21:42:00",
+        "codigo_rastreio": "841BR",
+        "data_entrega": "26-10-2026 21:42:38"
     }
 }

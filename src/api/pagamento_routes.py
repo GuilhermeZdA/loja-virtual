@@ -1,6 +1,6 @@
 from fastapi import APIRouter, HTTPException
-from src.models import Pagamento
-from src.repositories.pedidoJSON import PedidoJSON
+from src.models import Pagamento, NotaFiscal
+from src.repositories import PedidoJSON, NotaFiscalJSON
 from src.schema.pagamento_schema import PagamentoCreate, PagamentoResponse
 
 router = APIRouter(prefix = "/pagamento", tags = ["Pagamento"])
@@ -24,6 +24,18 @@ def processar_pagamento(id_: str, dados: PagamentoCreate):
             PedidoJSON.atualizar_estado(id_, "PAGO")
             PedidoJSON.atualizar_data_pag(id_, pagamento_obj.data.strftime("%d-%m-%Y %H:%M:%S"))
             PedidoJSON.atualizar_forma_pag(id_, pagamento_obj.forma_pag)
+
+            novo_codigo_nota = NotaFiscalJSON.gerar_codigo()
+
+            nota_obj = NotaFiscal(
+                codigo_nota = novo_codigo_nota,
+                id_pedido = id_,
+                cpf = pedido_atual["cpf"],
+                valor_pago = dados.valor_pag,
+                produtos = pedido_atual["itens"]
+            )
+
+            NotaFiscalJSON.emitir_nota(nota_obj)
 
             return pagamento_obj.gerar_dict()
             
