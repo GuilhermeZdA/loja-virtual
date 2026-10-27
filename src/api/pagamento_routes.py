@@ -2,8 +2,16 @@ from fastapi import APIRouter, HTTPException
 from src.models import Pagamento, NotaFiscal
 from src.repositories import PedidoJSON, NotaFiscalJSON
 from src.schema.pagamento_schema import PagamentoCreate, PagamentoResponse
+from src.schema.notafiscal_schema import NotaFiscalResponse
 
 router = APIRouter(prefix = "/pagamento", tags = ["Pagamento"])
+
+@router.get("/", status_code = 200, response_model = list[NotaFiscalResponse])
+def listar_notas_fiscais():
+
+    notas_salvas = NotaFiscalJSON.exibir_notas()
+
+    return notas_salvas
 
 @router.post("/{id_}/pagar", response_model = PagamentoResponse)
 def processar_pagamento(id_: str, dados: PagamentoCreate):
