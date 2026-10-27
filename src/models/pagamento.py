@@ -1,4 +1,4 @@
-
+from datetime import datetime
 
 class Pagamento:
     """
@@ -11,23 +11,14 @@ class Pagamento:
         forma (str): O meios de pagamento (PIX, CREDITO, DEBITO, BOLETO).
         valor (float): O valor total da compra.
     """
-    def __init__(self, pedido, data: str, forma: str, valor: float):
-        self.pedido = pedido
-        self.data = data
-        self.forma = forma
-        self.valor = valor
 
+    forma_pagamento = ["PIX", "CREDITO", "DEBITO", "BOLETO"]
 
-    @property
-    def pedido(self):
-        return self._pedido
+    def __init__(self, forma_pag: str, valor_pago: float):
+        self._data = datetime.now()
+        self.forma_pag = forma_pag
+        self.valor_pago = valor_pago
 
-    @pedido.setter
-    def pedido(self, novo_pedido: str):
-        if isinstance(novo_pedido, str):
-            self._pedido = novo_pedido 
-        else:
-            raise TypeError("Erro! Só é aceito objetos da classe pedido")
 
     @property
     def data(self):
@@ -35,13 +26,42 @@ class Pagamento:
 
 
     @property
-    def forma(self):
-        return self._forma
+    def forma_pag(self):
+        return self._forma_pag
+
+    @forma_pag.setter
+    def forma_pag(self, nova_forma: str):
+        if isinstance(nova_forma, str):
+            if nova_forma in self.forma_pagamento:
+                self._forma_pag = nova_forma
+            else:
+                raise ValueError("Erro! Forma de pagamento inexistente")
+        else:
+            raise TypeError("Erro! O valor deve ser um texto")
 
 
     @property
-    def valor(self):
-        return self._valor
+    def valor_pago(self):
+        return self._valor_pago
+
+    @valor_pago.setter
+    def valor_pago(self, novo_valor: float | int):
+        if isinstance(novo_valor, (float, int)):
+            novo_valor = float(novo_valor)
+            if novo_valor >= 0:
+                self._valor_pago = novo_valor 
+            else:
+                raise ValueError("Erro! O valor não pode ser negativo")
+        else:
+            raise TypeError("Erro! O valor deve ser um número")
+
+
+    def gerar_dict(self):
+        return {
+            "data": self.data.strftime("%d-%m-%Y %H:%M:%S"),
+            "forma_pag": self.forma_pag,
+            "valor_pago": self.valor_pago
+        }
 
 
 class NotaFiscal:
@@ -55,29 +75,113 @@ class NotaFiscal:
         produtos (list<ItemCarrinho>): Os produtos que foram comprados.
         data (str): A data que ocorreu a compra.
     """
-    def __init__(self, pagamento : Pagamento, valor_pago: float, produtos: list, data: str):
-        self.pagamento = pagamento
+    nota_estados = ["EMITIDO", "CANCELADO"]
+
+    def __init__(self, codigo_nota: str, id_pedido: str, cpf: str, valor_pago: str, produtos: list):
+        self.codigo_nota = codigo_nota
+        self.id_pedido = id_pedido
+        self.cpf = cpf
         self.valor_pago = valor_pago
         self.produtos = produtos
-        self.data = data
+
+        self._data_emissao = datetime.now().strftime("%d-%m-%Y %H:%M:%S")
+        self.estado = "EMITIDO"
 
 
     @property
-    def pagamento(self):
-        return self._pagamento
+    def codigo_nota(self):
+        return self._codigo_nota
 
-    @pagamento.setter
-    def pagamento(self, novo_pag: Pagamento):
-        if isinstance(novo_pag, Pagamento):
-            self._pagamento = novo_pag
+    @codigo_nota.setter
+    def codigo_nota(self, novo_codigo: int):
+        if isinstance(novo_codigo, int):
+            self._codigo_nota = novo_codigo
         else:
-            raise TypeError("Erro! Só é aceito objetos da classe pagamento")
+            raise TypeError("Erro! O valor deve ser um número inteiro")
+
+
+    @property
+    def id_(self):
+        return self._id_
+
+    @id_.setter
+    def id_(self, novo_id: str):
+        if isinstance(novo_id, str):
+            if len(novo_id) == 5:
+                self._id_ = novo_id
+            else:
+                raise ValueError("Erro! O ID deve ser composto por 5 caracteres")
+        else:
+            raise TypeError("Erro! O valor digitado deve ser um texto")
+
+
+    @property
+    def cpf(self):
+        return self._cpf
+
+    @cpf.setter
+    def cpf(self, novo_cpf):
+        if isinstance(novo_cpf, str):
+            self._cpf = novo_cpf
+        else:
+            raise TypeError("Erro! CPF inválido ou inexistente")
 
 
     @property
     def valor_pago(self):
-        return self.pagamento.valor
+        return self._valor_pago
+
+    @valor_pago.setter
+    def valor_pago(self, novo_valor: float | int):
+        if isinstance(novo_valor, (int, float)):
+            novo_valor = float(novo_valor)
+            if novo_valor >= 0:
+                self._valor_pago = novo_valor
+            else:
+                raise ValueError("Erro! O valor pago não pode ser negativo")
+        else:
+            raise TypeError("Erro! O valor deve ser um número")
+
 
     @property
-    def data(self):
-        return self._data
+    def produtos(self):
+        return self._produtos
+
+    @produtos.setter
+    def produtos(self, nova_lista: list):
+        if isinstance(nova_lista, list):
+            self._produtos = nova_lista
+        else:
+            raise TypeError("Erro! O valor tem que ser uma lista")
+
+
+    @property
+    def data_emissao(self):
+        return self._data_emissao
+
+
+    @property
+    def estado(self):
+        return self._estado
+
+    @estado.setter
+    def estado(self, novo_estado: str):
+        if isinstance(novo_estado, str):
+            if novo_estado in self.nota_estados:
+                self._estado = novo_estado
+            else:
+                raise ValueError("Erro! Não existe esse tipo de estado")
+        else:
+            raise TypeError("Erro! O valor deve ser um texto")
+
+
+    def gerar_dict(self):
+        return {
+                "codigo_nota" : self.codigo_nota,
+                "id_pedido": self.id_pedido,
+                "cpf" : self.cpf,
+                "valor_pago": self.valor_pago,
+                "produtos": self.produtos,
+                "estado": self.estado
+            }
+        

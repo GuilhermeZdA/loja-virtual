@@ -1,46 +1,131 @@
 import json
-from models.pedido import Pedido
+from random import choice, randint
+from src.caminhos import PEDIDOS
 
 class PedidoJSON:
-    def __init__(self, caminho):
-        self.caminho = caminho
 
 
-    @property
-    def caminho(self):
-        return self._caminho
-
-    @caminho.setter
-    def caminho(self, novo_caminho):
-        self._caminho = novo_caminho
-
-
-    def carregar_pedidos(caminho) -> dict:
-        with open(caminho, 'r', encoding = "utf-8") as arquivo:
+    @staticmethod
+    def adicionar_pedidos(novo_pedido):
+        with open(PEDIDOS, 'r', encoding = "utf-8") as arquivo:
             dados = json.load(arquivo)
-        return dados
 
-    def adicionar_pedidos(self, novo_pedido: Pedido) -> None:
-        pedidos = self.carregar_pedidos()
-        pedidos.update(novo_pedido.gerar_dict())
+        dados[novo_pedido.id_] = novo_pedido.gerar_dict()
 
-        with open(self.caminho, 'w', encoding = "utf-8") as arquivo:
-            json.dump(pedidos, arquivo, ensure_ascii = False , indent = 4)
+        with open(PEDIDOS, 'w', encoding = "utf-8") as arquivo:
+            json.dump(dados, arquivo, ensure_ascii = False , indent = 4)
 
-    def gerar_id(self) -> str: #TESTAR
-        dados = self.carregar_pedidos()
-        novo_id = 0
+    @staticmethod
+    def buscar_pedido(id_: str) -> dict:
+        with open(PEDIDOS, 'r', encoding = "utf-8") as arquivo:
+            dados = json.load(arquivo)
 
-        if not dados: # JSON vazio
-            novo_id = "1"
-            return novo_id
+        if id_ in dados:
+            return dados[id_]
 
-        for ids in dados.keys():
-            ids = int(ids)
-            if ids - novo_id >= 2:
-                novo_id += 1
-                break
-            if novo_id < ids:
-                novo_id = ids
+        else:
+            raise KeyError("Erro! Não existe pedido com esse ID")
 
-        return str(novo_id)
+    @staticmethod
+    def atualizar_estado(id_: str, novo_estado: str):
+        with open(PEDIDOS, 'r', encoding = "utf-8") as arquivo:
+            dados = json.load(arquivo)
+
+        if id_ in dados:
+            dados[id_]["estado"] = novo_estado
+        else:
+            raise KeyError("Erro! Não existe pedido com esse ID")
+
+        with open(PEDIDOS, 'w', encoding = "utf-8") as arquivo:
+            json.dump(dados, arquivo, ensure_ascii = False, indent = 4)
+
+    @staticmethod
+    def atualizar_forma_pag(id_: str, nova_forma: str):
+        with open(PEDIDOS, 'r', encoding = "utf-8") as arquivo:
+            dados = json.load(arquivo)
+
+        if id_ in dados:
+            dados[id_]["forma_pag"] = nova_forma
+        else:
+            raise KeyError("Erro! Não existe pedido com esse ID")
+
+        with open(PEDIDOS, 'w', encoding = "utf-8") as arquivo:
+            json.dump(dados, arquivo, ensure_ascii = False, indent = 4)
+
+    @staticmethod
+    def atualizar_data_pag(id_: str, nova_data: str):
+        with open(PEDIDOS, 'r', encoding = "utf-8") as arquivo:
+            dados = json.load(arquivo)
+
+        if id_ in dados:
+            dados[id_]["data_pag"] = nova_data
+        else:
+            raise KeyError("Erro! Não existe pedido com esse ID")
+
+        with open(PEDIDOS, 'w', encoding = "utf-8") as arquivo:
+            json.dump(dados, arquivo, ensure_ascii = False, indent = 4)
+
+    @staticmethod
+    def atualizar_cod_rastreio(id_: str, novo_codigo: str):
+        with open(PEDIDOS, 'r', encoding = "utf-8") as arquivo:
+            dados = json.load(arquivo)
+
+        if id_ in dados:
+            dados[id_]["codigo_rastreio"] = novo_codigo
+        else:
+            raise KeyError("Erro! Não existe pedido com esse ID")
+
+        with open(PEDIDOS, 'w', encoding = "utf-8") as arquivo:
+            json.dump(dados, arquivo, ensure_ascii = False, indent = 4)
+
+    @staticmethod
+    def atualizar_data_entrega(id_: str, nova_data: str):
+        with open(PEDIDOS, 'r', encoding = "utf-8") as arquivo:
+            dados = json.load(arquivo)
+
+        if id_ in dados:
+            dados[id_]["data_entrega"] = nova_data
+        else:
+            raise KeyError("Erro! Não existe pedido com esse ID")
+
+        with open(PEDIDOS, 'w', encoding = "utf-8") as arquivo:
+            json.dump(dados, arquivo, ensure_ascii = False, indent = 4)
+        
+    @staticmethod
+    def gerar_id() -> str:
+        caracteres = "ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890"
+        try:
+            with open(PEDIDOS, 'r', encoding = "utf-8") as arquivo:
+                dados = json.load(arquivo)
+        except(FileNotFoundError, json.JSONDecodeError):
+            dados = {}
+
+        while True:
+            novo_id = ""
+
+            while len(novo_id) < 5:
+                novo_id += choice(list(caracteres))
+
+            if novo_id not in dados:
+                return novo_id
+
+    @staticmethod
+    def gerar_cod_rastreio() -> str:
+        try:
+            with open(PEDIDOS, 'r', encoding = "utf-8") as arquivo:
+                dados = json.load(arquivo)
+        except(FileNotFoundError, json.JSONDecodeError):
+            dados = {}
+
+        codigos_ativos = []
+        for pedido in dados.values():
+            if pedido["codigo_rastreio"] is not None:
+                codigos_ativos.append(pedido["codigo_rastreio"])
+
+        while True:
+
+            digitos = randint(100, 999)
+            cod = str(digitos) + "BR"
+
+            if cod not in codigos_ativos:
+                return cod

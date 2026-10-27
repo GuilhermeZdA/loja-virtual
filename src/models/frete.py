@@ -1,5 +1,5 @@
 import re
-
+from src.repositories import FreteJSON
 
 class Endereco:
     """
@@ -69,6 +69,14 @@ class Endereco:
             raise TypeError("Erro! O valor digitado deve ser um texto")
 
 
+    def gerar_dict(self):
+        return {
+            "cep" : self.cep,
+            "uf" : self.uf,
+            "cidade": self.cidade
+        }
+
+
 class Frete:
     """
     A representação do frete de uma entrega.
@@ -78,38 +86,50 @@ class Frete:
     Atributos:
         endereco (Endereco): Os dados sobre onde os produtos serão entregues.
         peso_total (float): A soma das massas dos produtos físicos.
-        valor (float): O preço do frete. 
     """
-    def __init__(self, endereco: Endereco):
-        self.endereco = endereco
-        self.peso_total = 0
-        self.valor = 0
+    def __init__(self, uf: str, peso_total):
+        self.uf = uf
+        self.peso_total = peso_total
 
-    # Atributo endereço
+
     @property 
-    def endereco(self):
-        return self.__endereco
+    def uf(self):
+        return self._uf
 
-    @endereco.setter
-    def endereco(self, local: Endereco):
-        if isinstance(local, Endereco):
-            self.__endereco = local
+    @uf.setter
+    def uf(self, nova_uf: str):
+        if isinstance(nova_uf, str):
+            nova_uf = nova_uf.upper().strip()
+            espaco = " "
+            if len(nova_uf) != 2 or espaco in nova_uf:
+                raise ValueError("Erro! Formato incorreto de UF (xx)")
+            self._uf = nova_uf
         else:
-            raise TypeError("Erro! O valor deve ser um objeto da classe Endereco")
+            raise TypeError("Erro! O valor deve ser um texto")
 
 
     @property
     def peso_total(self):
-        return self.calcular_peso()
+        return self._peso_total
 
-    
-    @property
-    def valor(self):
-        return self.calcular_valor()
+    @peso_total.setter
+    def peso_total(self, novo_peso: float | int):
+        if isinstance(novo_peso, (float ,int)):
+            if novo_peso >= 0:
+                self._peso_total = novo_peso
+            else:
+                raise ValueError("Erro! O peso não pode ser negativo")
+        else:
+            raise TypeError("Erro! O peso deve ser um número")
 
 
-    def calcular_peso(self) -> float: 
-        pass
+    def calcular_frete(self) -> float: 
+        if self.peso_total == 0:
+            return 0
 
-    def calcular_valor(self) -> float:
-        pass
+        multiplicador = FreteJSON.buscar_multiplicador(self.uf)
+        taxa_kg = FreteJSON.taxa_fixa()
+
+        valor_frete = self.peso_total * taxa_kg * multiplicador
+
+        return valor_frete

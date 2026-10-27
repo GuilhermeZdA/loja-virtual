@@ -55,3 +55,38 @@ class ProdutoJSON:
                 json.dump(produtos, arquivo, ensure_ascii = False, indent = 4)
 
         return encontrado
+
+    @staticmethod
+    def retirar_estoque(itens_pedido: list):
+        with open(PRODUTOS, 'r', encoding = "utf-8") as arquivo:
+            estoque = json.load(arquivo)
+
+        for prod in itens_pedido:
+            sku = prod.item.sku
+            qtd = prod.qtd
+
+            if sku in estoque:
+                nova_qtd = estoque[sku]["qtd_estoque"] - qtd
+                estoque[sku]["qtd_estoque"] = nova_qtd
+
+            if nova_qtd <= 0:
+                estoque[sku]["qtd_estoque"] = 0
+                estoque[sku]["status"] = "INATIVO"
+
+        with open(PRODUTOS, 'w', encoding = "utf-8") as arquivo:
+            json.dump(estoque, arquivo, ensure_ascii = False, indent = 4)
+
+    @staticmethod
+    def devolver_estoque(itens_pedido: list):
+        with open(PRODUTOS, 'r', encoding = "utf-8") as arquivo:
+            estoque = json.load(arquivo)
+
+        for prod in itens_pedido:
+            sku = prod["sku"]
+            qtd = prod["qtd"]
+
+            if sku in estoque:
+                estoque[sku]["qtd_estoque"] += qtd
+
+        with open(PRODUTOS, 'w', encoding = "utf-8") as arquivo:
+            json.dump(estoque, arquivo, ensure_ascii = False, indent = 4)

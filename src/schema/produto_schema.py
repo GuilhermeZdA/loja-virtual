@@ -8,6 +8,7 @@ class CategoriaProduto(str, Enum):
     VESTUARIO = "VESTUARIO"
     DECORACAO = "DECORACAO"
     HIGIENE = "HIGIENE"
+    
 
 class ProdutoBase(BaseModel):
     sku: str = Field(..., description = "Código único do produto")

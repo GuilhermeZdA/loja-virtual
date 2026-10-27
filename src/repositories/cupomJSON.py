@@ -1,11 +1,10 @@
 import json
-from src.models import Cupom
 from src.caminhos import CUPOM
 
 class CupomJSON:
 
     @staticmethod
-    def adicionar_cupom(novo_cupom: Cupom) -> None:
+    def adicionar_cupom(novo_cupom) -> None:
         with open(CUPOM, 'r', encoding = "utf-8") as arquivo:
             cupons = json.load(arquivo)
 
@@ -48,3 +47,14 @@ class CupomJSON:
                 json.dump(cupons, arquivo, ensure_ascii = False, indent = 4)
 
         return encontrado
+
+
+    @staticmethod
+    def buscar_cupom(cod: str) -> dict:
+        with open(CUPOM, 'r', encoding = "utf-8") as arquivo:
+            cupons = json.load(arquivo)
+
+        if cod in cupons:
+            return cupons[cod]
+
+        return None

@@ -5,6 +5,11 @@ class EnderecoSchema(BaseModel):
     uf: str = Field(..., description = " Unidade Federatica onde o cliente habita")
     cidade: str = Field(..., description = "Cidade onde o cliente habita")
 
+class EnderecoResponse(BaseModel):
+    cep: str
+    uf: str
+    cidade: str
+
 
 class ClienteCreate(BaseModel): # Molde de entrada
     nome: str = Field(..., description = "Nome do cliente")

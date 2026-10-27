@@ -1,11 +1,10 @@
 import json
-from src.models.cliente import Cliente
 from src.caminhos import CLIENTES
 
 class PessoaJSON:
 
     @staticmethod
-    def adicionar_cliente(nova_pessoa: Cliente) -> None:
+    def adicionar_cliente(nova_pessoa) -> None:
         with open(CLIENTES, 'r', encoding = "utf-8") as arquivo:
             pessoas = json.load(arquivo)
 
@@ -48,3 +47,18 @@ class PessoaJSON:
                 json.dump(pessoas, arquivo, ensure_ascii = False, indent = 4)
         
         return encontrado
+
+
+    @staticmethod
+    def buscar_dados(tipo, cpf):
+        with open(CLIENTES, 'r', encoding = "utf-8") as arquivo:
+            pessoas = json.load(arquivo)
+
+        if cpf not in pessoas:
+            raise ValueError("Erro! não existe cliente com esse CPF")
+
+        try:
+            dado = pessoas[cpf][tipo]
+            return dado
+        except KeyError:
+            raise ValueError(f"Erro! O dado {tipo} não existe no cadastro deste cliente.")
