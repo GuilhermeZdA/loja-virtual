@@ -59,6 +59,9 @@ def iniciar_pedido(dados: PedidoCreate):
         if cupom_dados is None:
             raise HTTPException(status_code = 404, detail = "Erro! Cupom inválido")
 
+        if cupom_dados["status"] == "INATIVO":
+            raise HTTPException(status_code = 400, detail = "Erro! O cupom está INATIVO")
+
         cupom_obj = Cupom(
             codigo = cupom_dados["codigo"],
             tipo = cupom_dados["tipo"],
@@ -84,6 +87,9 @@ def iniciar_pedido(dados: PedidoCreate):
     PedidoJSON.adicionar_pedidos(novo_pedido)
 
     ProdutoJSON.retirar_estoque(novo_pedido.itens)
+
+    if dados.cod_cupom is not None:
+        CupomJSON.descontar_usos(dados.cod_cupom)
 
     del carrinhos_ativos[dados.cpf]
 

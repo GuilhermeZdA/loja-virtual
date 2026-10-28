@@ -1,5 +1,5 @@
 from fastapi import APIRouter, HTTPException
-from src.repositories import ProdutoJSON
+from src.repositories import ProdutoJSON, PessoaJSON
 from src.models import Carrinho, ProdutoDigital, ProdutoFisico
 from src.schema import ItemCarrinhoCreate, CarrinhoResponse
 
@@ -10,6 +10,9 @@ carrinhos_ativos = {}
 
 @router.post("/{cpf}/adicionar", status_code = 201, response_model = CarrinhoResponse)
 def adicionar_item_ao_carrinho(cpf: str, dados: ItemCarrinhoCreate):
+
+    if not PessoaJSON.buscar_cliente(cpf):
+        raise HTTPException(status_code = 404, detail = "Não existe cliente cadastrado com esse CPF")
     
     if cpf not in carrinhos_ativos:
         novo_carrinho = Carrinho(cpf)
