@@ -16,12 +16,7 @@ class Produto:
     """
     categorias = ["ELETRONICO", "VESTUARIO", "DECORACAO", "ALIMENTO", "HIGIENE"]
 
-    def __init__(self,
-                sku: str,
-                nome: str,
-                categoria: str,
-                qtd_estoque: str,
-                preco: float):
+    def __init__(self, sku: str, nome: str, categoria: str, qtd_estoque: str, preco: float):
         
         self.sku = sku
         self.nome = nome
@@ -30,7 +25,7 @@ class Produto:
         self.preco = preco
 
 
-    @property # Atributo SKU
+    @property
     def sku(self):
         return self._sku
 
@@ -43,10 +38,10 @@ class Produto:
             else:
                 raise ValueError("Erro! Padrão incorreto de SKU")
         else:
-            raise TypeError("Erro! O valor digitado deve ser um texto")
+            raise TypeError("Erro! O tipo requisitado é string")
 
 
-    @property # Atributo nome
+    @property
     def nome(self):
         return self._nome
 
@@ -58,12 +53,12 @@ class Produto:
             if not espaco in novo_nome and len(novo_nome) > 0:
                 self._nome = novo_nome
             else:
-                raise ValueError("Erro! Espaços vazios repetidos no nome do produto!")
+                raise ValueError("Erro! Há muitos espaços vazios entre o nome do produto")
         else:
-            raise TypeError("Erro! O valor digitado deve ser um texto")
+            raise TypeError("Erro! O tipo requisitado é string")
 
 
-    @property # Atributo categoria
+    @property
     def categoria(self):
         return self._categoria
 
@@ -71,15 +66,15 @@ class Produto:
     def categoria(self, categ: str):
         if isinstance(categ, str) and len(categ) > 0:
             categ = categ.strip().upper()
-            if categ in Produto.categorias: # Analisa se a categoria existe
+            if categ in Produto.categorias:
                 self._categoria = categ
             else:
-                raise ValueError("Erro! Categoria inexistente")
+                raise ValueError("Erro! Essa categoria não existe")
         else:
-            raise TypeError("Erro! O valor digitado deve ser um texto")
+            raise TypeError("Erro! O tipo requisitado é string")
 
 
-    @property # Atributo qtd_estoque
+    @property
     def qtd_estoque(self):
         return self._qtd_estoque
 
@@ -91,10 +86,10 @@ class Produto:
             else:
                 self._qtd_estoque = 0
         else:
-            raise TypeError("Erro! O valor deve ser um número inteiro")
+            raise TypeError("Erro! O tipo requisitado é int")
 
 
-    @property # Atributo preço
+    @property
     def preco(self):
         return self._preco
 
@@ -102,15 +97,15 @@ class Produto:
     def preco(self, valor: float):
         if isinstance(valor, (int, float)):
             valor = float(valor)
-            if valor > 0: # Analisa se o valor do preço é positivo
+            if valor > 0:
                 self._preco = valor
             else:
-                raise TypeError("Erro! O preço do produto deve ser positivo")
+                raise TypeError("Erro! O valor não pode ser negativo ou igual a 0")
         else:
-            raise ValueError("Erro! O valor digitado deve ser um inteiro ou um número de ponto flutuante")
+            raise ValueError("Erro! Os tipos requisitados são float ou int")
 
 
-    @property # Atributo status
+    @property
     def status(self):
         return self.analisar_status()
 
@@ -160,7 +155,7 @@ class ProdutoDigital(Produto):
         self.codigo_uso = codigo_uso
 
 
-    @property # Atributo código_uso
+    @property 
     def codigo_uso(self):
         return self.__codigo_uso
 
@@ -174,7 +169,7 @@ class ProdutoDigital(Produto):
             else:
                 self.__codigo_uso = cod
         else:
-            raise TypeError("Erro! O valor digitado deve ser um texto")
+            raise TypeError("Erro! O tipo requisitado é string")
 
 
     def gerar_dict(self) -> dict:
@@ -198,7 +193,7 @@ class ProdutoFisico(Produto):
         self.peso = peso
 
 
-    @property # Atributo peso
+    @property 
     def peso(self):
         return self._peso
 
@@ -206,12 +201,12 @@ class ProdutoFisico(Produto):
     def peso(self, valor: float):
         if isinstance(valor, (int, float)):
             valor = float(valor)
-            if valor > 0: # Analisa se o valor do peso é positivo
+            if valor > 0: 
                 self._peso = valor
             else:
-                raise TypeError("Erro! O peso do produto deve ser positivo")
+                raise TypeError("Erro! O valor não pode ser negativo ou igual a 0")
         else:
-            raise ValueError("Erro! O valor digitado deve ser um inteiro ou um número de ponto flutuante")
+            raise ValueError("Erro! Os tipos requisitados são float ou int")
 
 
     def gerar_dict(self) -> dict:

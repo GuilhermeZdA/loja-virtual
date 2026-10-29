@@ -20,7 +20,7 @@ class Endereco:
         self.uf = uf
         self.cidade = cidade
 
-    # Atributo CEP
+
     @property
     def cep(self):
         return self._cep
@@ -28,15 +28,15 @@ class Endereco:
     @cep.setter
     def cep(self, valor: str):
         if isinstance(valor, str):
-            padrao = r"^\d{8}$"
+            padrao = r"^\d{8}$" # 8 números obrigatórios
             if re.fullmatch(padrao, valor):
                 self._cep = valor
             else:
-                raise ValueError("Erro! O valor digitado não confere com o padrão CEP")
+                raise ValueError("Erro! O valor digitado não confere com o padrão CEP (8 números)")
         else:
-            raise TypeError("Erro! O valor digitado deve ser um texto")
+            raise TypeError("Erro! O tipo requisitado é string")
 
-    # Atributo UF
+
     @property
     def uf(self):
         return self._uf
@@ -48,11 +48,11 @@ class Endereco:
             if unidade in Endereco.estados:
                 self._uf = unidade
             else:
-                raise ValueError("Erro! O estado digitado é inexistente")
+                raise ValueError("Erro! A UF informada não existe")
         else:
-            raise TypeError("Erro! O valor digitado deve ser um texto")
+            raise TypeError("Erro! O tipo requisitado é string")
 
-    # Atributo Cidade
+
     @property
     def cidade(self):
         return self._cidade
@@ -62,14 +62,14 @@ class Endereco:
         if isinstance(cid, str):
             espaco = "  "
             if espaco in cid or len(cid) < 0:
-                raise ValueError("Erro! Espaços vazios repetidos no nome da cidade!")
+                raise ValueError("Erro! Há muitos Espaços vazios entre o nome da cidade")
             else:
                 self._cidade = cid
         else:
-            raise TypeError("Erro! O valor digitado deve ser um texto")
+            raise TypeError("Erro! O tipo requisitado é string")
 
 
-    def gerar_dict(self):
+    def gerar_dict(self) -> dict:
         return {
             "cep" : self.cep,
             "uf" : self.uf,
@@ -102,10 +102,10 @@ class Frete:
             nova_uf = nova_uf.upper().strip()
             espaco = " "
             if len(nova_uf) != 2 or espaco in nova_uf:
-                raise ValueError("Erro! Formato incorreto de UF (xx)")
+                raise ValueError("Erro! O formato de representação da UF não coincidiu (xx)")
             self._uf = nova_uf
         else:
-            raise TypeError("Erro! O valor deve ser um texto")
+            raise TypeError("Erro! O tipo requisitado é string")
 
 
     @property
@@ -118,9 +118,9 @@ class Frete:
             if novo_peso >= 0:
                 self._peso_total = novo_peso
             else:
-                raise ValueError("Erro! O peso não pode ser negativo")
+                raise ValueError("Erro! O valor não pode ser negativo")
         else:
-            raise TypeError("Erro! O peso deve ser um número")
+            raise TypeError("Erro! Os tipos requisitados são float ou int")
 
 
     def calcular_frete(self) -> float: 

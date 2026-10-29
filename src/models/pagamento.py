@@ -8,8 +8,8 @@ class Pagamento:
 
     Atributos:
         data (str): A data em que o pagamento da compra ocorreu.
-        forma (str): O meios de pagamento (PIX, CREDITO, DEBITO, BOLETO).
-        valor (float): O valor total da compra.
+        forma_pag (str): Os meios de pagamento (PIX, CREDITO, DEBITO, BOLETO).
+        valor_pago (float): O valor total da compra.
     """
 
     forma_pagamento = ["PIX", "CREDITO", "DEBITO", "BOLETO"]
@@ -35,9 +35,9 @@ class Pagamento:
             if nova_forma in self.forma_pagamento:
                 self._forma_pag = nova_forma
             else:
-                raise ValueError("Erro! Forma de pagamento inexistente")
+                raise ValueError("Erro! Essa forma de pagamento não existe")
         else:
-            raise TypeError("Erro! O valor deve ser um texto")
+            raise TypeError("Erro! O tipo requisitado é string")
 
 
     @property
@@ -53,10 +53,10 @@ class Pagamento:
             else:
                 raise ValueError("Erro! O valor não pode ser negativo")
         else:
-            raise TypeError("Erro! O valor deve ser um número")
+            raise TypeError("Erro! Os tipos requisitados são float ou int")
 
 
-    def gerar_dict(self):
+    def gerar_dict(self) -> dict:
         return {
             "data": self.data.strftime("%d-%m-%Y %H:%M:%S"),
             "forma_pag": self.forma_pag,
@@ -71,9 +71,13 @@ class NotaFiscal:
     Essa classe armazena dados da compra para registrar que a transação comercial ocorreu.
 
     Atributos:
+        codigo_nota (str): O código de identificação da nota fiscal.
+        id_pedido (str): O ID do pedido que originou a nota fiscal.
+        cpf (str): O CPF do cliente dono do pedido.
         valor_pago (float): O valor total pago pelo cliente na compra.
-        produtos (list<ItemCarrinho>): Os produtos que foram comprados.
-        data (str): A data que ocorreu a compra.
+        produtos (list): Os produtos que foram comprados.
+        data_emissão (str): A data que ocorreu a compra.
+        estado (str): O estado atual da nota fiscal (EMITIDO/CANCELADO).
     """
     nota_estados = ["EMITIDO", "CANCELADO"]
 
@@ -97,7 +101,7 @@ class NotaFiscal:
         if isinstance(novo_codigo, int):
             self._codigo_nota = novo_codigo
         else:
-            raise TypeError("Erro! O valor deve ser um número inteiro")
+            raise TypeError("Erro! O tipo requisitado é int")
 
 
     @property
@@ -112,7 +116,7 @@ class NotaFiscal:
             else:
                 raise ValueError("Erro! O ID deve ser composto por 5 caracteres")
         else:
-            raise TypeError("Erro! O valor digitado deve ser um texto")
+            raise TypeError("Erro! O tipo requisitado é string")
 
 
     @property
@@ -124,7 +128,7 @@ class NotaFiscal:
         if isinstance(novo_cpf, str):
             self._cpf = novo_cpf
         else:
-            raise TypeError("Erro! CPF inválido ou inexistente")
+            raise TypeError("Erro! O tipo requisitado é string")
 
 
     @property
@@ -138,9 +142,9 @@ class NotaFiscal:
             if novo_valor >= 0:
                 self._valor_pago = novo_valor
             else:
-                raise ValueError("Erro! O valor pago não pode ser negativo")
+                raise ValueError("Erro! O valor não pode ser negativo")
         else:
-            raise TypeError("Erro! O valor deve ser um número")
+            raise TypeError("Erro! Os tipos requisitados são float ou int")
 
 
     @property
@@ -152,7 +156,7 @@ class NotaFiscal:
         if isinstance(nova_lista, list):
             self._produtos = nova_lista
         else:
-            raise TypeError("Erro! O valor tem que ser uma lista")
+            raise TypeError("Erro! O tipo requisitado é list")
 
 
     @property
@@ -170,12 +174,12 @@ class NotaFiscal:
             if novo_estado in self.nota_estados:
                 self._estado = novo_estado
             else:
-                raise ValueError("Erro! Não existe esse tipo de estado")
+                raise ValueError("Erro! Esse estado não existe")
         else:
-            raise TypeError("Erro! O valor deve ser um texto")
+            raise TypeError("Erro! O tipo requisitado é string")
 
 
-    def gerar_dict(self):
+    def gerar_dict(self) ->dict:
         return {
                 "codigo_nota" : self.codigo_nota,
                 "id_pedido": self.id_pedido,
@@ -184,4 +188,3 @@ class NotaFiscal:
                 "produtos": self.produtos,
                 "estado": self.estado
             }
-        

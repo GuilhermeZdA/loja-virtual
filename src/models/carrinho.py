@@ -26,7 +26,7 @@ class ItemCarrinho:
         if isinstance(produto, (ProdutoDigital, ProdutoFisico)): 
             self._item = produto
         else:
-            raise TypeError("Erro! O valor deve ser um produto")
+            raise TypeError("Erro! Erro! O tipo requisitado é Produto")
  
 
     @property
@@ -41,7 +41,7 @@ class ItemCarrinho:
             else:
                 raise ValueError("Erro! O valor digitado deve ser positivo")
         else:
-            raise TypeError("Erro! O valor deve ser um número inteiro")
+            raise TypeError("Erro! Erro! O tipo requisitado é int")
 
 
     @property
@@ -51,11 +51,12 @@ class ItemCarrinho:
 
     @property
     def subtotal_peso(self):
-        if isinstance(self.item, ProdutoFisico):
+        if isinstance(self.item, ProdutoFisico): # Apenas produtos fisicos contém peso
             return self.item.peso * self.qtd
         else:
             return 0
-        
+
+
     def gerar_dict(self):
         return {
             "sku": self.item.sku,
@@ -80,7 +81,7 @@ class Carrinho:
     """
     def __init__(self, cpf: str):
         self.cpf = cpf
-        self._itens: list[ItemCarrinho] = [] # Type hint para a vscode entender que a lista só manipulara ItemCarrinho
+        self._itens: list[ItemCarrinho] = [] # A IDE interpreta uma lista de ItemCarrinho
 
 
     @property
@@ -93,7 +94,7 @@ class Carrinho:
         if isinstance(novo_cpf, str):
             self._cpf = novo_cpf
         else:
-            raise TypeError("Erro! CPF inválido ou inexistente")
+            raise TypeError("Erro! O tipo requisitado é string")
 
 
     @property
@@ -120,7 +121,7 @@ class Carrinho:
                 nova_qtd = qtd + item_existente.qtd
 
                 if nova_qtd > produto.qtd_estoque:
-                    nova_qtd = produto.qtd_estoque
+                    nova_qtd = produto.qtd_estoque # Impede que o estoque tenha valores negativos
                 else:
                     item_existente.qtd = nova_qtd
                 return
@@ -128,7 +129,7 @@ class Carrinho:
         novo_item = ItemCarrinho(item = produto, qtd = qtd)
         self._itens.append(novo_item)
 
-    def remover_item(self, sku: str):
+    def remover_item(self, sku: str) -> None:
         for prod_atual in self.itens:
             if prod_atual.item.sku == sku:
                 self.itens.remove(prod_atual)
@@ -149,7 +150,7 @@ class Carrinho:
             peso += produto.subtotal_peso
         return peso
 
-    def gerar_dict(self):
+    def gerar_dict(self) -> dict:
         return {
             "cpf": self.cpf,
             "itens": [item.gerar_dict() for item in self.itens],
