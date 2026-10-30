@@ -54,5 +54,33 @@
         "data_pag": "27-10-2026 19:26:41",
         "codigo_rastreio": "874BR",
         "data_entrega": "27-10-2026 19:27:29"
-    }   
+    },
+    "ZX4YI": {
+        "id_": "ZX4YI",
+        "cpf": "12345678909",
+        "itens": [
+            {
+                "sku": "AAA1111",
+                "nome": "Avast",
+                "qtd": 2,
+                "preco_unit": 80.0,
+                "subtotal_preco": 160.0,
+                "subtotal_peso": 0
+            }
+        ],
+        "data": "30-10-2026 16:07:33",
+        "valor_frete": 0,
+        "desconto": 0,
+        "total": 160.0,
+        "estado": "CANCELADO",
+        "endereco": {
+            "cep": "63260000",
+            "uf": "CE",
+            "cidade": "Brejo Santo"
+        },
+        "forma_pag": null,
+        "data_pag": null,
+        "codigo_rastreio": null,
+        "data_entrega": null
+    }
 }

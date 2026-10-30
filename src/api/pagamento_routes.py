@@ -21,6 +21,9 @@ def processar_pagamento(id_: str, dados: PagamentoCreate):
         if pedido_atual["estado"] != "CRIADO":
             raise HTTPException(status_code = 400, detail = "O pagamento já foi realizado")
 
+        if pedido_atual["estado"] == "CANCELADO":
+            raise HTTPException(status_code = 400, detail = "O pedido foi cancelado")
+
         pagamento_obj = Pagamento(
             forma_pag = dados.forma_pag,
             valor_pago = dados.valor_pag
