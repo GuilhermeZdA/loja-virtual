@@ -286,11 +286,11 @@ class Cupom:
     """
     A representação de um cupom de desconto.
 
-    Essa classe representa cupons que podem ser utilizados antes do pagamento para diminuir o preço do produto. O cupom pode ter um desconto percentual (%) ou um desconto em valor fixo (BRL).
+    Essa classe representa cupons que podem ser utilizados antes do pagamento para diminuir o preço do produto. O cupom pode ter um desconto percentual (%) ou um desconto em valor fixo ($).
 
     Atributos:
         codigo (str): O código de identificação do cupom.
-        tipo (str): O tipo de desconto do cupom (VALOR/PERCENTUAL).
+        tipo (str): O tipo de desconto do cupom (VALOR($)/PERCENTUAL(%)).
         valor (float): A quantidade de desconto que o cupom fornece.
         validade (str): Data máxima até a inativação do cupom.
         qtd_usos (int): Quantidade de usos restantes até que o cupom se torne inativo.

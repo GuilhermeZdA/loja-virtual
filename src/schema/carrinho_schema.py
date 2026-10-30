@@ -2,7 +2,7 @@ from pydantic import BaseModel, Field
 
 class ItemCarrinhoCreate(BaseModel):
     sku: str = Field(..., description = "Código único do produto")
-    qtd: int = Field(..., gt = 0, description = "Quantidade desse item colocado no carrinho")
+    qtd: int = Field(..., gt = 0, description = "Quantidade desse produto adicionado no carrinho")
 
 
 class ItemCarrinhoResponse(BaseModel):

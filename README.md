@@ -6,6 +6,33 @@ O projeto Sistema de Loja Virtual Simplificada possibilita que um cliente cadast
 ## Objetivo
 Criar um sistema que facilite o comércio físico e virtual ao automatizar, organizar e otimizar várias etapas de uma transação comercial, como a criação de relatórios de venda, a realização do pedido de compra e o pagamento e a alocação de produtos no carrinho. Assim, o sistema facilita a compra pelos clientes e a organização do comércio pelo comerciante.
 
+
+# PASSO A PASSO
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 # Lista das classes
 1. Cliente
 2. Produto

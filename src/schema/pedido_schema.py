@@ -11,7 +11,7 @@ class EstadoPedido(str, Enum):
 
 
 class PedidoCreate(BaseModel):
-    cpf: str = Field(..., description = "Cadastro de Pessoa Física (CPF) do Cliente")
+    cpf: str = Field(..., description = "Cadastro de Pessoa Física do Cliente")
     cod_cupom: str | None = Field(default = None, description = "Código de identificação do cupom")
 
 
