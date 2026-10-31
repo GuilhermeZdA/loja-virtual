@@ -14,5 +14,13 @@
         "validade": "12-11-2026",
         "qtd_usos": 3,
         "status": "ATIVO"
+    },
+    "ZZZ111": {
+        "codigo": "ZZZ111",
+        "tipo": "$",
+        "valor": 10.0,
+        "validade": "12-11-2027",
+        "qtd_usos": 0,
+        "status": "INATIVO"
     }
 }

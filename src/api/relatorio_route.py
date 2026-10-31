@@ -1,8 +1,9 @@
-from fastapi import APIRouter, HTTPException
-from src.schema.relatorio_schema import RelatorioFaturamentoResponse, RelatorioPedidoResponse, RelatorioRankProdutosResponse
+from fastapi import APIRouter
+from src.schema import RelatorioFaturamentoResponse, RelatorioPedidoResponse, RelatorioRankProdutosResponse
 from src.repositories import RelatorioJSON
 
 router = APIRouter(prefix = "/relatorio", tags = ["Relatórios"])
+
 
 @router.get("/pedidos", status_code = 200, response_model = list[RelatorioPedidoResponse])
 def exibir_relatorio_pedidos():

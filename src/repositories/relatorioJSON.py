@@ -112,6 +112,3 @@ class RelatorioJSON:
             del cont[sku_maior]
 
         return resultado
-            
-
-                    

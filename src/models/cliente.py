@@ -18,7 +18,7 @@ class Cliente:
         self.cpf = cpf
         self.endereco = endereco
 
-    @property # Atributo nome
+    @property
     def nome(self):
         return self._nome
 
@@ -30,27 +30,27 @@ class Cliente:
             if not espaco in novo_nome and len(novo_nome) > 0:
                 self._nome = novo_nome
             else:
-                raise ValueError("Erro! Espaços vazios repetidos no nome do produto!")
+                raise ValueError("Erro! Há muitos espaços vazios entre seu nome")
         else:
-            raise TypeError("Erro! O valor digitado deve ser um texto")
+            raise TypeError("Erro! O tipo requisitado é str")
 
 
-    @property # Atributo email
+    @property
     def email(self):
         return self._email
 
     @email.setter
     def email(self, novo_email: str):
         if isinstance(novo_email, str):
-            if "@" in novo_email: # Analisa a presença de '@'
+            if "@" in novo_email: # Impede emails sem '@'
                 self._email = novo_email
             else:
                 raise ValueError("O email digitado deve conter '@'")
         else:
-            raise TypeError("Erro! O valor digitado deve ser um texto")
+            raise TypeError("Erro! Erro! O tipo requisitado é str")
 
 
-    @property # Atributo CPF
+    @property 
     def cpf(self):
         return self.__cpf
 
@@ -60,26 +60,26 @@ class Cliente:
             if self.validar_cpf(valor):
                 self.__cpf = valor
             else:
-                raise ValueError("Erro! CPF inexistente")
+                raise ValueError("Erro! Padrão de CPF impossível de existir")
         else:
-            raise TypeError("Erro! O valor digitado deve ser um texto")
+            raise TypeError("Erro! Erro! O tipo requisitado é str")
 
 
-    @property # Atributo endereço
+    @property
     def endereco(self):
         return self.__endereco
 
     @endereco.setter
     def endereco(self, local: Endereco):
-        if isinstance(local, Endereco):
+        if isinstance(local, Endereco): 
             self.__endereco = local
         else:
-            raise TypeError("Erro! O valor deve ser um objeto da classe Endereco")
+            raise TypeError("Erro! Erro! O tipo requisitado é Endereco")
 
     @staticmethod
     def validar_cpf(cpf: str) -> bool:
 
-        cpf = "".join(filter(str.isdigit, cpf))
+        cpf = "".join(filter(str.isdigit, cpf)) # Permite caracteres entre os números do cpf
 
         if not cpf or len(cpf) != 11:
             return False

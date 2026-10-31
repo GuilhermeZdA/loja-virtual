@@ -3,7 +3,7 @@ from pydantic import BaseModel
 class RelatorioPedidoResponse(BaseModel):
     estado: str
     quantidade: float
-    percentual: float
+    percentual: str
 
 
 class RelatorioFaturamentoResponse(BaseModel):

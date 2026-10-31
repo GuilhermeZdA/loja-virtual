@@ -1,14 +1,4 @@
 {
-    "ABB9999": {
-        "sku": "ABB9999",
-        "nome": "Teclado Mecânico",
-        "categoria": "ELETRONICO",
-        "qtd_estoque": 0,
-        "preco": 250.0,
-        "status": "INATIVO",
-        "tipo": "FISICO",
-        "peso": 1.2
-    },
     "AAA1111": {
         "sku": "AAA1111",
         "nome": "Avast",
@@ -18,5 +8,15 @@
         "status": "ATIVO",
         "tipo": "DIGITAL",
         "codigo_uso": "ABCDE"
+    },
+    "ZZZ1234": {
+        "sku": "ZZZ1234",
+        "nome": "Dametecusita Action Figure",
+        "categoria": "DECORACAO",
+        "qtd_estoque": 9,
+        "preco": 100.0,
+        "status": "ATIVO",
+        "tipo": "FISICO",
+        "peso": 1.0
     }
 }

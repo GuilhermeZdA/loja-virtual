@@ -1,13 +1,4 @@
 {
-    "11423355695": {
-        "nome": "Guilherme",
-        "email": "gui@gmail.com",
-        "endereco": {
-            "cep": "63260000",
-            "uf": "CE",
-            "cidade": "Brejo"
-        }
-    },
     "71551810565": {
         "nome": "José",
         "email": "Jos@gmail.com",
@@ -15,6 +6,15 @@
             "cep": "63260000",
             "uf": "CE",
             "cidade": "Jati"
+        }
+    },
+    "12345678909": {
+        "nome": "Chico",
+        "email": "Chico@gmail.com",
+        "endereco": {
+            "cep": "63260000",
+            "uf": "CE",
+            "cidade": "Brejo Santo"
         }
     }
 }

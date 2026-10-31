@@ -48,7 +48,6 @@ class CupomJSON:
 
         return encontrado
 
-
     @staticmethod
     def buscar_cupom(cod: str) -> dict:
         with open(CUPOM, 'r', encoding = "utf-8") as arquivo:
@@ -58,3 +57,21 @@ class CupomJSON:
             return cupons[cod]
 
         return None
+
+    @staticmethod
+    def descontar_usos(codigo_cupom: str):
+        with open(CUPOM, 'r', encoding = "utf-8") as arquivo:
+            cupons = json.load(arquivo)
+
+        if codigo_cupom in cupons:
+            qtd_usos = cupons[codigo_cupom]["qtd_usos"]
+
+            if qtd_usos > 0:
+                nova_qtd = qtd_usos - 1
+                cupons[codigo_cupom]["qtd_usos"] = nova_qtd
+
+                if nova_qtd == 0:
+                    cupons[codigo_cupom]["status"] = "INATIVO"
+
+        with open(CUPOM, 'w', encoding = "utf-8") as arquivo:
+            json.dump(cupons, arquivo, ensure_ascii = False, indent = 4)

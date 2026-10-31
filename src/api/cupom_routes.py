@@ -1,5 +1,4 @@
 from fastapi import APIRouter, HTTPException
-from typing import List
 from src.models import Cupom
 from src.repositories import CupomJSON
 from src.schema.cupom_schema import CupomCreate, CupomResponse
@@ -26,7 +25,7 @@ def criar_cupom(dados: CupomCreate):
        raise HTTPException(status_code = 400, detail = str(erro))
 
 
-@router.get("/", status_code = 200, response_model = List[CupomResponse])
+@router.get("/", status_code = 200, response_model = list[CupomResponse])
 def listar_cupons():
 
     cupons_salvos = CupomJSON.exibir_cupom()
@@ -42,4 +41,4 @@ def remover_cupom(codigo: str):
     if not sucesso:
         raise HTTPException(status_code = 401, detail = "Cupom não encontrado")
 
-    return {"mensagem": f"Produto {codigo} removido com sucesso!"}
+    return {"message": f"cupom de {codigo} removido com sucesso!"}

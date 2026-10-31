@@ -9,8 +9,8 @@ class FormaPagamento(str, Enum):
 
 
 class PagamentoCreate(BaseModel):
-    forma_pag: FormaPagamento = Field(..., description = "Forma de pagamento do pedido (PIX, CREDITO, DEBITO, BOLETO)")
-    valor_pag: float = Field(..., description = "Valor pago pelo cliente")
+    forma_pag: FormaPagamento = Field(..., description = "Forma de pagamento do pedido")
+    valor_pag: float = Field(..., description = "Valor pago pelo cliente (valor exato do pedido)")
 
 
 class PagamentoResponse(BaseModel):

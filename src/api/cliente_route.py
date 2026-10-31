@@ -1,10 +1,10 @@
 from fastapi import APIRouter, HTTPException
-from typing import List
-from src.schema.cliente_schema import ClienteCreate, ClienteResponse
+from src.schema import ClienteCreate, ClienteResponse
 from src.models import Cliente, Endereco
 from src.repositories import PessoaJSON
 
 router = APIRouter(prefix = "/Cliente", tags = ["Cliente"])
+
 
 @router.post("/", status_code = 201, response_model = ClienteResponse)
 def criar_clientes(dados: ClienteCreate):
@@ -30,12 +30,14 @@ def criar_clientes(dados: ClienteCreate):
     except ValueError as erro:
         raise HTTPException(status_code = 400, detail = str(erro))
 
-@router.get("/", status_code = 200, response_model = List[ClienteResponse])
+
+@router.get("/", status_code = 200, response_model = list[ClienteResponse])
 def listar_clientes():
 
     clientes_salvos = PessoaJSON.exibir_cliente()
 
     return clientes_salvos
+
 
 @router.delete("/{cpf}", status_code = 200)
 def remover_cliente(cpf: str):
@@ -45,4 +47,4 @@ def remover_cliente(cpf: str):
     if not sucesso:
         raise HTTPException(status_code = 401, detail = "Cliente não encontrado")
 
-    return {"mensagem": f"Produto {cpf} removido com sucesso!"}
+    return {"message": f"cliente de {cpf} removido com sucesso!"}

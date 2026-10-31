@@ -33,7 +33,7 @@ class ItemPedido:
         if isinstance(produto, (ProdutoDigital, ProdutoFisico)): 
             self._item = produto
         else:
-            raise TypeError("Erro! O valor deve ser um produto")
+            raise TypeError("Erro! O tipo requisitado é Produto")
 
 
     @property
@@ -46,9 +46,9 @@ class ItemPedido:
             if valor > 0:
                 self._qtd = valor
             else:
-                raise ValueError("Erro! O valor digitado deve ser positivo")
+                raise ValueError("Erro! O valor não pode ser negativo")
         else:
-            raise TypeError("Erro! O valor deve ser um número inteiro")
+            raise TypeError("Erro! O tipo requisitado é int")
 
 
     @property
@@ -87,19 +87,26 @@ class Pedido:
 
     Atributos:
         id_ (str): O identificador individual de cada pedido
-        carrinho (Carrinho): O carrinho com os produtos do cliente.
-        frete (float): O valor do frete para a entrega dos produtos (BRL).
-        desconto (float): O valor do desconto do cupom (BRL).
-        total (float): O preço total da compra após os acréscimos e descontos.
+        data (str): A data que o pedido foi efetuado.
         estado (str): A situação atual do pedido (CRIADO, PAGO, ENVIADO, ENTREGUE, CANCELADO).
-
+        itens (list): A lista que armazena estáticamento os produtos do carrinho.
+        cpf (str): O CPF do cliente dono do pedido.
+        endereco (Endereco): O endereço do dono do pedido.
+        cupom (Cupom): O cupom que o cliente utilizou
+        frete (Frete): A calculadora do acréscimo devido o transporte do produto.
+        desconto (float): O valor do desconto do cupom.
+        total (float): O preço total da compra após os acréscimos e descontos.
+        forma_pag (str): Os meios de pagamento (PIX, CREDITO, DEBITO, BOLETO).
+        data_pag (str): A data que ocorreu o pagamento do pedido.
+        codigo_rastreio (str): O código de rastreio da entrega do pedido.
+        data_entrega (str): A data que ocorreu a entrega do pedido.
     """
     lista_estados = ["CRIADO", "PAGO", "ENVIADO", "ENTREGUE", "CANCELADO"]
 
 
     def __init__(self, id_: str, cpf: str, endereco: Endereco, itens: list, frete: Frete, cupom: 'Cupom' = None):
         self._id_ = id_
-        self._data = datetime.now()
+        self._data = datetime.now().strftime("%d-%m-%Y %H:%M:%S")
         self._estado = "CRIADO"
         self._itens = itens
         self._forma_pag = None
@@ -125,7 +132,7 @@ class Pedido:
         if isinstance(novo_cpf, str):
             self._cpf = novo_cpf
         else:
-            raise TypeError("Erro! CPF inválido ou inexistente")
+            raise TypeError("Erro! O tipo requisitado é string")
 
 
     @property
@@ -140,7 +147,7 @@ class Pedido:
             else:
                 raise ValueError("Erro! O ID deve ser composto por 5 caracteres")
         else:
-            raise TypeError("Erro! O valor digitado deve ser um texto")
+            raise TypeError("Erro! O tipo requisitado é string")
 
     
     @property
@@ -152,7 +159,7 @@ class Pedido:
         if isinstance(local, Endereco):
             self.__endereco = local
         else:
-            raise TypeError("Erro! O valor deve ser um objeto da classe Endereco")
+            raise TypeError("Erro! O tipo requisitado é Endereco")
 
 
     @property
@@ -166,7 +173,7 @@ class Pedido:
         elif novo_cupom == None:
             self._cupom = None
         else:
-            raise TypeError("Erro! Deve receber um objeto cupom")
+            raise TypeError("Erro! O tipo requisitado é Cupom")
 
 
     @property
@@ -178,7 +185,7 @@ class Pedido:
         if isinstance(novo_frete, Frete):
             self._frete = novo_frete
         else:
-            raise TypeError("Erro! Não é um objeto da classe frete")
+            raise TypeError("Erro! O tipo requisitado é Frete")
 
 
     @property
@@ -242,13 +249,13 @@ class Pedido:
             return 0
 
         if self.cupom.tipo == "$":
-            if self.cupom.valor >= self.preco_inicial:
+            if self.cupom.valor >= self.preco_inicial: # Impede que o cupom negative/zere o valor da compra
                 raise ValueError("Erro! O valor do cupom deve ser menor que a soma dos preços dos produtos")
             else:
                 return self.cupom.valor
             
         elif self.cupom.tipo == "%":
-            if self.cupom.valor >= 100:
+            if self.cupom.valor >= 100: # Impede que o cupom negative/zere o valor da compra
                 raise ValueError("Erro! O desconto do cupom não pode zerar o preço das compras")
             else:
                 return self.preco_inicial * (self.cupom.valor/100)
@@ -262,7 +269,7 @@ class Pedido:
             "id_" : self.id_,
             "cpf" : self.cpf,
             "itens": [item.gerar_dict() for item in self.itens],
-            "data": self.data.strftime("%d-%m-%Y %H:%M:%S"),
+            "data": self.data,
             "valor_frete" : self.frete.calcular_frete(),
             "desconto" : self.desconto,
             "total" : self.total,
@@ -279,11 +286,11 @@ class Cupom:
     """
     A representação de um cupom de desconto.
 
-    Essa classe representa cupons que podem ser utilizados antes do pagamento para diminuir o preço do produto. O cupom pode ter um desconto percentual (%) ou um desconto em valor fixo (BRL).
+    Essa classe representa cupons que podem ser utilizados antes do pagamento para diminuir o preço do produto. O cupom pode ter um desconto percentual (%) ou um desconto em valor fixo ($).
 
     Atributos:
         codigo (str): O código de identificação do cupom.
-        tipo (str): O tipo de desconto do cupom (VALOR/PERCENTUAL).
+        tipo (str): O tipo de desconto do cupom (VALOR($)/PERCENTUAL(%)).
         valor (float): A quantidade de desconto que o cupom fornece.
         validade (str): Data máxima até a inativação do cupom.
         qtd_usos (int): Quantidade de usos restantes até que o cupom se torne inativo.
@@ -297,7 +304,7 @@ class Cupom:
         self.qtd_usos = qtd_usos
 
 
-    @property # Atributo código_uso
+    @property
     def codigo(self):
         return self.__codigo
 
@@ -306,12 +313,12 @@ class Cupom:
         if isinstance(cod, str):
             espaco = " " 
             cod = cod.strip().upper()
-            if espaco in cod or len(espaco) < 0: # Não pode ter espaços
-                raise ValueError("Erro! O código não pode ter espaços em branco")
+            if espaco in cod or len(espaco) < 0: 
+                raise ValueError("Erro! Há espaços vazios entre o codigo do cupom")
             else:
                 self.__codigo = cod
         else:
-            raise TypeError("Erro! O valor digitado deve ser um texto")
+            raise TypeError("Erro! O tipo requisitado é string")
         
 
     @property
@@ -326,9 +333,9 @@ class Cupom:
             elif novo_tipo == "%":
                 self._tipo = novo_tipo
             else:
-                raise ValueError("Erro! Existem apenas os tipos '$' e '%'")
+                raise ValueError("Erro! Existem apenas os valores '$' e '%'")
         else:
-            raise TypeError("Erro! O valor deve ser um texto")
+            raise TypeError("Erro! O tipo requisitado é string")
 
 
     @property
@@ -348,11 +355,11 @@ class Cupom:
                     else:
                         self._valor = novo_valor
                 else:
-                    raise ValueError("Erro! Tipo de valor indefinido")
+                    raise ValueError("Erro! Existem apenas os valores '$' e '%'")
             else:
-                raise ValueError("Erro! O valor deve ser maior que 0")
+                raise ValueError("Erro! O valor não pode ser negativo ou igual a 0")
         else:
-            raise TypeError("Erro! O valor deve ser um número")
+            raise TypeError("Erro! Os tipos requisitados são float ou int")
 
 
     @property
@@ -367,7 +374,7 @@ class Cupom:
             self._validade = data
 
         except ValueError:
-            raise ValueError("Erro! A data deve ser no formato DD/MM/YYYY")
+            raise ValueError("Erro! A data deve ser no formato DD-MM-YYYY")
 
     @property
     def qtd_usos(self):
@@ -381,7 +388,7 @@ class Cupom:
             else:
                 self._qtd_usos = 0
         else:
-            raise TypeError("Erro! O valor deve ser um número inteiro")
+            raise TypeError("Erro! O tipo requisitado é int")
 
 
     @property
