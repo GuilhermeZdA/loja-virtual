@@ -5,16 +5,17 @@ from src.schema import ItemCarrinhoCreate, CarrinhoResponse
 
 router = APIRouter(prefix = "/carrinho", tags = ["Carrinho"])
 
-carrinhos_ativos = {}
+
+carrinhos_ativos = {} # Local que armazena os carrinhos salvos
 
 
 @router.post("/{cpf}/adicionar", status_code = 201, response_model = CarrinhoResponse)
 def adicionar_item_ao_carrinho(cpf: str, dados: ItemCarrinhoCreate):
 
-    if not PessoaJSON.buscar_cliente(cpf):
-        raise HTTPException(status_code = 404, detail = "Não existe cliente cadastrado com esse CPF")
+    if not PessoaJSON.buscar_cliente(cpf): 
+        raise HTTPException(status_code = 404, detail = f"Erro! Não existe cliente cadastrado com o CPF {cpf}")
     
-    if cpf not in carrinhos_ativos:
+    if cpf not in carrinhos_ativos: # Cria um carrinho, caso não exista um cadastrado com esse CPF
         novo_carrinho = Carrinho(cpf)
         carrinhos_ativos[cpf] = novo_carrinho
 
@@ -23,13 +24,14 @@ def adicionar_item_ao_carrinho(cpf: str, dados: ItemCarrinhoCreate):
     dict_produto = ProdutoJSON.buscar_produto(dados.sku)
 
     if dict_produto == None:
-        raise HTTPException(status_code = 404, detail = "Dados do produto não encontrado")
+        raise HTTPException(status_code = 404, detail = f"Não existe produto cadastrado com o SKU {dados.sku}")
 
     if dict_produto["status"] == "INATIVO":
-        raise HTTPException(status_code = 400, detail = "Erro! O estoque desse produto está vazio")
+        raise HTTPException(status_code = 400, detail = f"Erro! O estoque do produto {dados.sku} está vazio")
 
     if dict_produto["qtd_estoque"] < dados.qtd:
         raise HTTPException(status_code = 400, detail = f"Estoque insuficiente. {dict_produto["qtd_estoque"]} unidade(s) disponivel(is)")
+
 
     if dict_produto["tipo"] == "FISICO":
         produto = ProdutoFisico(
@@ -62,17 +64,20 @@ def exibir_carrinho(cpf: str):
         carrinho = carrinhos_ativos[cpf]
         return carrinho.gerar_dict()
 
-    raise HTTPException(status_code = 404, detail = "Dados não encontrados")
+    raise HTTPException(status_code = 404, detail = f"Erro! Não existe carrinho cadastrado com CPF {cpf}")
 
 
 @router.delete("/{cpf}/remover/{sku}", status_code = 200)
 def remover_item(cpf: str, sku: str):
     if cpf in carrinhos_ativos:
-        carrinho_atual = carrinhos_ativos[cpf]
+            carrinho_atual = carrinhos_ativos[cpf]
+            
+            try:
+                carrinho_atual.remover_item(sku)
+            except:
+                raise HTTPException(status_code = 404, detail = f"Erro! O produto de SKU {sku} dentro do carrinho de CPF {cpf}")        
 
-        carrinho_atual.remover_item(sku)        
-
-        return {"message" : f"Produto de SKU {sku} removido com sucesso de carrinho de CPF {cpf}"}
+            return {"message" : f"Produto de SKU {sku} removido com sucesso de carrinho de CPF {cpf}"}
     
     else:
         raise HTTPException(status_code = 404, detail = "Não existe carrinho ativo com esse CPF")

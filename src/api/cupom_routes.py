@@ -41,4 +41,4 @@ def remover_cupom(codigo: str):
     if not sucesso:
         raise HTTPException(status_code = 401, detail = "Cupom não encontrado")
 
-    return {"mensagem": f"Produto {codigo} removido com sucesso!"}
+    return {"message": f"cupom de {codigo} removido com sucesso!"}

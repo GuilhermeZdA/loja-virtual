@@ -3,8 +3,9 @@ from src.schema import ProdutoCreate, ProdutoResponse
 from src.models import ProdutoFisico, ProdutoDigital
 from src.repositories import ProdutoJSON
 
-router = APIRouter(prefix = "/produtos", tags = ["Produtos"]) # Produtos é o endpoint
+router = APIRouter(prefix = "/produtos", tags = ["Produtos"])
 
+# MUDAR
 @router.post("/", status_code = 201, response_model = ProdutoResponse)
 def criar_produto(
     dados: ProdutoCreate = Body(
@@ -74,7 +75,6 @@ def listar_produtos():
     return produtos_salvos
 
 
-
 @router.delete("/{sku}", status_code = 200)
 def remover_produto(sku: str):
 
@@ -83,4 +83,4 @@ def remover_produto(sku: str):
     if not sucesso:
         raise HTTPException(status_code = 404, detail = "Produto não encontrado")
 
-    return {"mensagem": f"Produto {sku} removido com sucesso!"}
+    return {"message": f"Produto de {sku} removido com sucesso!"}

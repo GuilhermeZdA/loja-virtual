@@ -4,6 +4,7 @@ from src.repositories import RelatorioJSON
 
 router = APIRouter(prefix = "/relatorio", tags = ["Relatórios"])
 
+
 @router.get("/pedidos", status_code = 200, response_model = list[RelatorioPedidoResponse])
 def exibir_relatorio_pedidos():
     relatorio_pedidos = RelatorioJSON.gerar_relatorio_pedido()
