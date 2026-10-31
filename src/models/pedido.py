@@ -351,7 +351,7 @@ class Cupom:
                     self._valor = novo_valor
                 elif self.tipo == "%":
                     if novo_valor > 30:
-                        self._valor = 30
+                        raise ValueError("Erro! A porcentagem do desconto é limitado a 30%")
                     else:
                         self._valor = novo_valor
                 else:
@@ -369,12 +369,17 @@ class Cupom:
     @validade.setter
     def validade(self, data):
         try:
-            datetime.strptime(data, "%d-%m-%Y")
-
-            self._validade = data
-
-        except ValueError:
+            nova_data = datetime.strptime(data, "%d-%m-%Y")
+        except:
             raise ValueError("Erro! A data deve ser no formato DD-MM-YYYY")
+        
+        data_atual = datetime.today()
+
+        if data_atual > nova_data:
+            raise ValueError("Erro! A data de validade do cupom não pode ser no passado")
+        else:
+            self._validade = nova_data
+
 
     @property
     def qtd_usos(self):

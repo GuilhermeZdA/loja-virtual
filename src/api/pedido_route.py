@@ -54,7 +54,7 @@ def iniciar_pedido(dados: PedidoCreate):
 
     if dados.cod_cupom is not None:
 
-        cupom_dados = CupomJSON.buscar_cupom(dados.cod_cupom)
+        cupom_dados = CupomJSON.obter_cupom(dados.cod_cupom)
 
         if cupom_dados is None:
             raise HTTPException(status_code = 404, detail = f"Erro! não existe cupom com o código {dados.cod_cupom}")

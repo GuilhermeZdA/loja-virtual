@@ -26,4 +26,4 @@ class ClienteResponse(BaseModel): # Molde de saída
 
 
 class ClienteUpdate(BaseModel):
-    novo_valor: str
+    novo_valor: str = Field(..., description = "Novo valor para o atributo [nome] ou [email]")

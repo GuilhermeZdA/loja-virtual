@@ -38,14 +38,16 @@ def listar_clientes():
 
     return clientes_salvos
 
+
 @router.patch("/cliente/{cpf}/{atributo}", status_code = 200)
 def atualizar_atributo(cpf: str, atributo: str, dados: ClienteUpdate):
     atributos_permitidos = ["nome", "email"]
 
     atributo = atributo.strip().lower()
     dados.novo_valor = dados.novo_valor.strip()
+    cpf = cpf.strip()
 
-    if not atributo in atributos_permitidos:
+    if atributo not in atributos_permitidos:
         raise HTTPException(status_code = 400, detail = f"Erro! É possivel modificar apenas os atributos {atributos_permitidos}")
 
     if not PessoaJSON.cliente_existe(cpf):
