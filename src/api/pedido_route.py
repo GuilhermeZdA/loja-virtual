@@ -98,7 +98,7 @@ def iniciar_pedido(dados: PedidoCreate):
     return novo_pedido.gerar_dict()
 
 
-@router.patch("/pedido/{id_}/cancelar")
+@router.patch("/pedido/{id_}/cancelar", status_code = 200)
 def cancelar_pedido(id_: str):
     try:
 
@@ -124,7 +124,7 @@ def cancelar_pedido(id_: str):
         raise HTTPException(status_code = 404, detail = f"Erro! Não existe pedido de ID {id_}")
 
 
-@router.patch("/pedido/{id_}/enviar")
+@router.patch("/pedido/{id_}/enviar", status_code = 200)
 def enviar_pedido(id_: str):
     try:
 
@@ -149,7 +149,7 @@ def enviar_pedido(id_: str):
         raise HTTPException(status_code = 404, detail = f"Erro! Não existe pedido de ID {id_}")
 
 
-@router.patch("/pedido/{id_}/entregar")
+@router.patch("/pedido/{id_}/entregar", status_code = 200)
 def entregar_pedido(id_: str):
     try:
 

@@ -1,5 +1,5 @@
 from .carrinho_schema import CarrinhoResponse, ItemCarrinhoCreate, ItemCarrinhoResponse
-from .cliente_schema import ClienteCreate, ClienteResponse, EnderecoResponse, EnderecoSchema
+from .cliente_schema import ClienteCreate, ClienteResponse, ClienteUpdate, EnderecoResponse, EnderecoSchema
 from .cupom_schema import CupomCreate, CupomResponse
 from .notafiscal_schema import NotaFiscalResponse
 from .pagamento_schema import PagamentoCreate, PagamentoResponse
@@ -9,18 +9,19 @@ from .relatorio_schema import RelatorioFaturamentoResponse, RelatorioPedidoRespo
 
 __all__ = [
     "CarrinhoResponse",
-    "ItemCarrinhoCreate",
-    "ItemCarrinhoResponse",
     "ClienteCreate",
     "ClienteResponse",
-    "EnderecoResponse",
-    "EnderecoSchema",
+    "ClienteUpdate",
     "CupomCreate",
     "CupomResponse",
+    "EnderecoResponse",
+    "EnderecoSchema",
+    "ItemCarrinhoCreate",
+    "ItemCarrinhoResponse",
+    "ItemPedidoResponse",
     "NotaFiscalResponse",
     "PagamentoCreate",
     "PagamentoResponse",
-    "ItemPedidoResponse",
     "PedidoCreate",
     "PedidoResponse",
     "ProdutoCreate",

@@ -74,7 +74,7 @@ class Cliente:
         if isinstance(local, Endereco): 
             self.__endereco = local
         else:
-            raise TypeError("Erro! Erro! O tipo requisitado é Endereco")
+            raise TypeError("Erro! O tipo requisitado é Endereco")
 
     @staticmethod
     def validar_cpf(cpf: str) -> bool:

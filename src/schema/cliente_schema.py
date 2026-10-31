@@ -23,3 +23,7 @@ class ClienteResponse(BaseModel): # Molde de saída
     email: str
     cpf: str
     endereco: EnderecoSchema
+
+
+class ClienteUpdate(BaseModel):
+    novo_valor: str

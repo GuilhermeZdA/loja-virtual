@@ -12,7 +12,7 @@ carrinhos_ativos = {} # Local que armazena os carrinhos salvos
 @router.post("/{cpf}/adicionar", status_code = 201, response_model = CarrinhoResponse)
 def adicionar_item_ao_carrinho(cpf: str, dados: ItemCarrinhoCreate):
 
-    if not PessoaJSON.buscar_cliente(cpf): 
+    if not PessoaJSON.cliente_existe(cpf): 
         raise HTTPException(status_code = 404, detail = f"Erro! Não existe cliente cadastrado com o CPF {cpf}")
     
     if cpf not in carrinhos_ativos: # Cria um carrinho, caso não exista um cadastrado com esse CPF
