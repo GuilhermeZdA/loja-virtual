@@ -61,7 +61,7 @@ class ProdutoJSON:
 
 
     @staticmethod
-    def existe_produto(sku: str) -> bool:
+    def produto_existe(sku: str) -> bool:
         with open(PRODUTOS, 'r', encoding = "utf-8") as arquivo:
             produtos = json.load(arquivo)
 
@@ -82,6 +82,16 @@ class ProdutoJSON:
             json.dump(produtos, arquivo, ensure_ascii = False, indent = 4)
 
         return
+
+    @staticmethod
+    def carregar_produtos():
+        with open(PRODUTOS, 'r', encoding = "utf-8") as arquivo:
+            produtos = json.load(arquivo)
+
+        if not produtos:
+            return {}
+
+        return produtos
         
 
     @staticmethod

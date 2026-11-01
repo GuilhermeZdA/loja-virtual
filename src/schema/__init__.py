@@ -4,7 +4,7 @@ from .cupom_schema import CupomCreate, CupomResponse, CupomUpdate
 from .notafiscal_schema import NotaFiscalResponse
 from .pagamento_schema import PagamentoCreate, PagamentoResponse
 from .pedido_schema import ItemPedidoResponse, PedidoCreate, PedidoResponse
-from .produto_schema import ProdutoDigitalCreate, ProdutoDigitalResponse, ProdutoFisicoCreate, ProdutoFisicoResponse
+from .produto_schema import ProdutoDigitalCreate, ProdutoDigitalResponse, ProdutoFisicoCreate, ProdutoFisicoResponse, ProdutoUpdate
 from .relatorio_schema import RelatorioFaturamentoResponse, RelatorioPedidoResponse, RelatorioRankProdutosResponse
 
 __all__ = [
@@ -29,6 +29,7 @@ __all__ = [
     "ProdutoDigitalResponse",
     "ProdutoFisicoCreate",
     "ProdutoFisicoResponse",
+    "ProdutoUpdate",
     "RelatorioFaturamentoResponse",
     "RelatorioPedidoResponse",
     "RelatorioRankProdutosResponse",

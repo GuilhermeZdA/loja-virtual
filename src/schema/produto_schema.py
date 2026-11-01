@@ -1,6 +1,6 @@
 from enum import Enum
 from pydantic import BaseModel, Field
-from typing import Literal, Union, Annotated
+from typing import Literal, Any
 
 
 class CategoriaProduto(str, Enum):
@@ -44,3 +44,6 @@ class ProdutoDigitalResponse(ProdutoBase):
     tipo: Literal["DIGITAL"]
     codigo_uso: str
     status: str
+
+class ProdutoUpdate(BaseModel):
+    novo_valor: Any = Field(..., description = "Novo valor para o atributo [nome] ou [preco]")

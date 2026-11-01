@@ -1,6 +1,6 @@
 from fastapi import APIRouter, HTTPException, Body
-from src.schema import ProdutoDigitalCreate, ProdutoDigitalResponse, ProdutoFisicoCreate, ProdutoFisicoResponse
-from src.models import ProdutoFisico, ProdutoDigital
+from src.schema import ProdutoDigitalCreate, ProdutoDigitalResponse, ProdutoFisicoCreate, ProdutoFisicoResponse, ProdutoUpdate
+from src.models import ProdutoFisico, ProdutoDigital, Produto
 from src.repositories import ProdutoJSON
 
 router = APIRouter(prefix = "/produtos", tags = ["Produtos"])
@@ -53,6 +53,51 @@ def listar_produtos():
     produtos_salvos = ProdutoJSON.exibir_produtos()
 
     return produtos_salvos
+
+
+@router.patch("/produto/{sku}/{atributo}", status_code = 200)
+def atualizar_dados(sku: str, atributo: str, dados: ProdutoUpdate):
+    atributos_permitidos = ["nome", "preco"]
+
+    atributo = atributo.strip().lower()
+    sku = sku.strip().upper()
+
+    if atributo not in atributos_permitidos:
+        raise HTTPException(status_code = 400, detail = f"Erro! É possivel modificar apenas os atributos {atributos_permitidos}")
+
+    if not ProdutoJSON.produto_existe(sku):
+        raise HTTPException(status_code = 400, detail = f"Erro! Não existe produto cadastrado com o SKU {sku}")
+
+    produtos_ativos = ProdutoJSON.carregar_produtos()
+
+    if not produtos_ativos:
+        raise HTTPException(status_code = 400, detail = "Erro! Não há produtos cadastrados")
+
+    produto_atual = produtos_ativos[sku]
+
+    if not produto_atual:
+        raise HTTPException(status_code = 400, detail = f"Erro! Não existe produto com SKU {sku}")
+
+    produto_atual[atributo] = dados.novo_valor
+    produto_atual.pop("tipo", None)
+
+    try:
+        if produto_atual["status"] == "FISICO":
+            produto_atual.pop("status", None)
+
+            validador = ProdutoFisico(**produto_atual)
+
+        elif produto_atual["status"] == "DIGITAL":
+            produto_atual.pop("status", None)
+
+            validador = ProdutoDigital(**produto_atual)
+
+    except (ValueError, TypeError) as erro:
+        raise HTTPException(status_code = 400, detail = str(erro))
+
+    ProdutoJSON.atualizar_produto(sku, atributo, dados.novo_valor)
+
+    return {"message": f"{atributo} atualizado com sucesso!"}
 
 
 @router.delete("/{sku}", status_code = 200)
