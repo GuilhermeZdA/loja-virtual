@@ -1,73 +1,53 @@
 from fastapi import APIRouter, HTTPException, Body
-from src.schema import ProdutoCreate, ProdutoResponse
+from src.schema import ProdutoDigitalCreate, ProdutoDigitalResponse, ProdutoFisicoCreate, ProdutoFisicoResponse
 from src.models import ProdutoFisico, ProdutoDigital
 from src.repositories import ProdutoJSON
 
 router = APIRouter(prefix = "/produtos", tags = ["Produtos"])
 
-# MUDAR
-@router.post("/", status_code = 201, response_model = ProdutoResponse)
-def criar_produto(
-    dados: ProdutoCreate = Body(
-        ...,
-        openapi_examples={
-            "exemplo_fisico": {
-                "summary": "Produto Físico",
-                "value": {
-                    "sku": "ABC1234",
-                    "nome": "Teclado Mecânico",
-                    "categoria": "ELETRONICO",
-                    "qtd_estoque": 5,
-                    "preco": 250.0,
-                    "tipo": "FISICO",
-                    "peso": 1.2
-                }
-            },
-            "exemplo_digital": {
-                "summary": "Produto Digital",
-                "value": {
-                    "sku": "AAA1111",
-                    "nome": "Avast",
-                    "categoria": "ELETRONICO",
-                    "qtd_estoque": 20,
-                    "preco": 80.0,
-                    "tipo": "DIGITAL",
-                    "codigo_uso": "ABCDE"
-                }
-            }
-        }
-    )
-):
-    try:
-        if dados.tipo == "FISICO":       
-            novo_produto = ProdutoFisico(
-                sku = dados.sku,
-                nome = dados.nome,
-                categoria = dados.categoria,
-                qtd_estoque = dados.qtd_estoque,
-                preco = dados.preco,
-                peso = dados.peso
-            )
+@router.post("/fisico", status_code = 200, response_model = ProdutoFisicoResponse)
+def criar_produto_fisico(dados: ProdutoFisicoCreate):
 
-        elif dados.tipo == "DIGITAL":       
-            novo_produto = ProdutoDigital(
-                sku = dados.sku,
-                nome = dados.nome,
-                categoria = dados.categoria,
-                qtd_estoque = dados.qtd_estoque,
-                preco = dados.preco,
-                codigo_uso = dados.codigo_uso
-            )
+    try:
+        novo_produto = ProdutoFisico(
+            sku = dados.sku,
+            nome = dados.nome,
+            categoria = dados.categoria,
+            qtd_estoque = dados.qtd_estoque,
+            preco = dados.preco,
+            peso = dados.peso
+        )
 
         ProdutoJSON.adicionar_produto(novo_produto)
 
         return novo_produto.gerar_dict()
 
-    except ValueError as erro:
+    except Exception as erro:
         raise HTTPException(status_code = 400, detail = str(erro))
 
 
-@router.get("/", status_code = 200, response_model = list[ProdutoResponse])
+@router.post("/digital", status_code = 200, response_model = ProdutoDigitalResponse)
+def criar_produto_digital(dados: ProdutoDigitalCreate):
+
+    try:
+        novo_produto = ProdutoDigital(
+            sku = dados.sku,
+            nome = dados.nome,
+            categoria = dados.categoria,
+            qtd_estoque = dados.qtd_estoque,
+            preco = dados.preco,
+            codigo_uso = dados.codigo_uso
+        )
+
+        ProdutoJSON.adicionar_produto(novo_produto)
+
+        return novo_produto.gerar_dict()
+
+    except Exception as erro:
+        raise HTTPException(status_code = 400, detail = str(erro))
+    
+
+@router.get("/", status_code = 200, response_model = list[ProdutoDigitalResponse | ProdutoFisicoResponse])
 def listar_produtos():
     
     produtos_salvos = ProdutoJSON.exibir_produtos()

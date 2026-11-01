@@ -4,6 +4,7 @@ from src.caminhos import PRODUTOS
 
 class ProdutoJSON:
 
+
     @staticmethod
     def adicionar_produto(novo_produto: Produto) -> None:
         with open(PRODUTOS, 'r', encoding = "utf-8") as arquivo:
@@ -34,11 +35,13 @@ class ProdutoJSON:
 
         return lista_produtos
 
+
     @staticmethod
     def buscar_produto(sku: str) -> dict:
         with open(PRODUTOS, 'r', encoding = "utf-8") as arquivo:
             produtos = json.load(arquivo)
         return produtos.get(sku)
+
 
     @staticmethod
     def remover_produtos(sku: str) -> bool:
@@ -55,6 +58,31 @@ class ProdutoJSON:
                 json.dump(produtos, arquivo, ensure_ascii = False, indent = 4)
 
         return encontrado
+
+
+    @staticmethod
+    def existe_produto(sku: str) -> bool:
+        with open(PRODUTOS, 'r', encoding = "utf-8") as arquivo:
+            produtos = json.load(arquivo)
+
+        if sku in produtos:
+            return True
+        else:
+            return False
+
+
+    @staticmethod
+    def atualizar_produto(sku: str, atributo: str, novo_valor: str) -> None:
+        with open(PRODUTOS, 'r', encoding = "utf-8") as arquivo:
+            produtos = json.load(arquivo)
+
+        produtos[sku][atributo] = novo_valor
+
+        with open(PRODUTOS, 'w', encoding = "utf-8") as arquivo:
+            json.dump(produtos, arquivo, ensure_ascii = False, indent = 4)
+
+        return
+        
 
     @staticmethod
     def retirar_estoque(itens_pedido: list):
@@ -75,6 +103,7 @@ class ProdutoJSON:
 
         with open(PRODUTOS, 'w', encoding = "utf-8") as arquivo:
             json.dump(estoque, arquivo, ensure_ascii = False, indent = 4)
+
 
     @staticmethod
     def devolver_estoque(itens_pedido: list):

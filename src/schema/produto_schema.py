@@ -34,20 +34,13 @@ class ProdutoDigitalCreate(ProdutoBase):
     codigo_uso: str = Field(..., description = "Código de uso do produto")
 
 
-ProdutoCreate = Annotated[
-    Union[ProdutoFisicoCreate, ProdutoDigitalCreate], Field(discriminator="tipo")
-    ]
-
-
 class ProdutoFisicoResponse(ProdutoBase):
     tipo: Literal["FISICO"]
     peso: float
     status: str
 
+
 class ProdutoDigitalResponse(ProdutoBase):
     tipo: Literal["DIGITAL"]
     codigo_uso: str
     status: str
-
-
-ProdutoResponse = Annotated[Union[ProdutoDigitalResponse, ProdutoFisicoResponse], Field(discriminator = "tipo")]
