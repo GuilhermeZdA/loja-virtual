@@ -117,7 +117,7 @@ class Carrinho:
             qtd = produto.qtd_estoque
 
         for item_existente in self._itens:
-            if produto.sku == item_existente.item.sku:
+            if item_existente.item == produto:
                 nova_qtd = qtd + item_existente.qtd
 
                 if nova_qtd > produto.qtd_estoque:
@@ -150,7 +150,10 @@ class Carrinho:
         for produto in self._itens:
             peso += produto.subtotal_peso
         return peso
-
+    
+    def __len__(self) -> int:
+        return sum(item.qtd for item in self._itens)
+    
     def gerar_dict(self) -> dict:
         return {
             "cpf": self.cpf,

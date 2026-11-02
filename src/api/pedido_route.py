@@ -27,7 +27,7 @@ def iniciar_pedido(dados: PedidoCreate):
 
     carrinho_cliente = carrinhos_ativos[dados.cpf]
 
-    if not carrinho_cliente.itens:
+    if len(carrinho_cliente) == 0:
         raise HTTPException(status_code = 400, detail = "Erro! O carrinho está vazio")
 
 

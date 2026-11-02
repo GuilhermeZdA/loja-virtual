@@ -16,7 +16,7 @@ class Produto:
     """
     categorias = ["ELETRONICO", "VESTUARIO", "DECORACAO", "ALIMENTO", "HIGIENE"]
 
-    def __init__(self, sku: str, nome: str, categoria: str, qtd_estoque: str, preco: float):
+    def __init__(self, sku: str, nome: str, categoria: str, qtd_estoque: int, preco: float):
         
         self.sku = sku
         self.nome = nome
@@ -116,20 +116,23 @@ class Produto:
         elif self.qtd_estoque == 0:
             return "INATIVO"
 
-    def __iadd__(self, valor: int):
-        if isinstance(valor, int):
-            self.qtd_estoque += valor
-            return self
-        else:
-            return NotImplemented
+    def __str__(self) -> str:
+        return f"[{self.sku}] {self.nome} - R$ {self.preco:.2f} ({self.qtd_estoque} em estoque)"
 
-    def __isub__(self, valor: int):
-        if isinstance(valor, int):
-            self.qtd_estoque -= valor
-            return self
-        else:
-            return NotImplemented
+    def __eq__(self, outro) -> bool:
+        if isinstance(outro, Produto):
+            return self.sku == outro.sku
+        return NotImplemented
+        
 
+    def __hash__(self) -> int:
+        return hash(self.sku)
+
+    def __lt__(self, outro) -> bool:
+        if not isinstance(outro, Produto):
+            return (self.preco, self.nome.lower()) < (outro.preco, outro.nome.lower())      
+        return NotImplemented
+    
     def gerar_dict(self) -> dict:
         return {
             "sku" : self.sku,
@@ -150,7 +153,7 @@ class ProdutoDigital(Produto):
         codigo_uso (str): Código que libera o uso do produto.
     """
 
-    def __init__(self, sku, nome, categoria, qtd_estoque, preco, codigo_uso):
+    def __init__(self, sku: str, nome: str, categoria: str, qtd_estoque: int, preco: float, codigo_uso: str):
         super().__init__(sku, nome, categoria, qtd_estoque, preco)
         self.codigo_uso = codigo_uso
 
@@ -188,7 +191,7 @@ class ProdutoFisico(Produto):
     Atributos:
         peso (float): massa do produto em kg.
     """
-    def __init__(self, sku, nome, categoria, qtd_estoque, preco, peso):
+    def __init__(self, sku: str, nome: str, categoria: str, qtd_estoque: int, preco: float, peso: float):
         super().__init__(sku, nome, categoria, qtd_estoque, preco)
         self.peso = peso
 

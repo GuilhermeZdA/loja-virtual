@@ -369,10 +369,10 @@ class Cupom:
     def validade(self, data):
         try:
             nova_data = datetime.strptime(data, "%d-%m-%Y")
-        except:
+        except ValueError:
             raise ValueError("Erro! A data deve ser no formato DD-MM-YYYY")
 
-        if nova_data.date() > datetime.today().date():
+        if nova_data.date() < datetime.today().date():
             raise ValueError("Erro! A data de validade do cupom não pode ser no passado")
         else:
             self._validade = data
