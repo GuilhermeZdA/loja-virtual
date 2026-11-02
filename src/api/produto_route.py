@@ -1,4 +1,4 @@
-from fastapi import APIRouter, HTTPException, Body
+from fastapi import APIRouter, HTTPException
 from src.schema import ProdutoDigitalCreate, ProdutoDigitalResponse, ProdutoFisicoCreate, ProdutoFisicoResponse, ProdutoUpdate
 from src.models import ProdutoFisico, ProdutoDigital, Produto
 from src.repositories import ProdutoJSON
@@ -7,8 +7,14 @@ router = APIRouter(prefix = "/produtos", tags = ["Produtos"])
 
 @router.post("/fisico", status_code = 200, response_model = ProdutoFisicoResponse)
 def criar_produto_fisico(dados: ProdutoFisicoCreate):
-
+    
+    if ProdutoJSON.produto_existe(dados.sku):
+        raise HTTPException(status_code = 400, detail = "Erro! Já existe um produto com esse SKU")
+    
     try:
+
+
+
         novo_produto = ProdutoFisico(
             sku = dados.sku,
             nome = dados.nome,
@@ -17,6 +23,7 @@ def criar_produto_fisico(dados: ProdutoFisicoCreate):
             preco = dados.preco,
             peso = dados.peso
         )
+
 
         ProdutoJSON.adicionar_produto(novo_produto)
 
@@ -28,8 +35,13 @@ def criar_produto_fisico(dados: ProdutoFisicoCreate):
 
 @router.post("/digital", status_code = 200, response_model = ProdutoDigitalResponse)
 def criar_produto_digital(dados: ProdutoDigitalCreate):
-
+        
+    if ProdutoJSON.produto_existe(dados.sku):
+        raise HTTPException(status_code = 400, detail = "Erro! Já existe um produto com esse SKU")
+    
     try:
+
+        
         novo_produto = ProdutoDigital(
             sku = dados.sku,
             nome = dados.nome,
@@ -79,16 +91,16 @@ def atualizar_dados(sku: str, atributo: str, dados: ProdutoUpdate):
         raise HTTPException(status_code = 400, detail = f"Erro! Não existe produto com SKU {sku}")
 
     produto_atual[atributo] = dados.novo_valor
-    produto_atual.pop("tipo", None)
+    produto_atual.pop("status", None)
 
     try:
-        if produto_atual["status"] == "FISICO":
-            produto_atual.pop("status", None)
+        if produto_atual["tipo"] == "FISICO":
+            produto_atual.pop("tipo", None)
 
             validador = ProdutoFisico(**produto_atual)
 
-        elif produto_atual["status"] == "DIGITAL":
-            produto_atual.pop("status", None)
+        elif produto_atual["tipo"] == "DIGITAL":
+            produto_atual.pop("tipo", None)
 
             validador = ProdutoDigital(**produto_atual)
 

@@ -10,7 +10,7 @@ class RelatorioJSON:
             pedidos_salvos = json.load(arquivo)
 
         if not pedidos_salvos:
-            return {"message": "Nenhum pedido salvo"}
+            raise ValueError("Erro! Não há notas fiscais salvas")
         
         total_pedido = len(pedidos_salvos)
         cont = {}
@@ -44,7 +44,7 @@ class RelatorioJSON:
             notas_salvas = json.load(arquivo)
 
         if not notas_salvas:
-            return {"message": "Nenhuma nota fiscal salva"}
+            return {"faturamento": 0.0, "quantidade_vendas": 0, "ticket_medio": 0.0}
 
         quantidade_vendas = 0
         faturamento = 0.0
@@ -73,8 +73,7 @@ class RelatorioJSON:
             notas_salvas = json.load(arquivo)
 
         if not notas_salvas:
-            return {"message": "nenhuma nota fiscal salva"}
-
+            raise ValueError("Erro! Não há notas fiscais salvas")
         cont = {}
 
         for notas in notas_salvas.values():

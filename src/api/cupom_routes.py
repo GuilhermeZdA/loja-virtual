@@ -8,6 +8,10 @@ router = APIRouter(prefix = "/cupom", tags = ["Cupom"])
 
 @router.post("/", status_code = 201, response_model = CupomResponse)
 def criar_cupom(dados: CupomCreate):
+
+    if CupomJSON.cupom_existe(dados.codigo):
+        raise HTTPException(status_code = 400, detail = "Erro! Já existe um cupom com esse código")
+        
     try:
         novo_cupom = Cupom(
             codigo = dados.codigo,

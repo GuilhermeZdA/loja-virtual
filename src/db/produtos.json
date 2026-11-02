@@ -1,7 +1,7 @@
 {
     "AAA1111": {
         "sku": "AAA1111",
-        "nome": "Avast",
+        "nome": "Avast                 anti-virus",
         "categoria": "ELETRONICO",
         "qtd_estoque": 9,
         "preco": 80.0,
@@ -18,5 +18,25 @@
         "status": "ATIVO",
         "tipo": "FISICO",
         "peso": 1.0
+    },
+    "ELE00005": {
+        "sku": "ELE00005",
+        "nome": "TV",
+        "categoria": "ELETRONICO",
+        "qtd_estoque": 10,
+        "preco": 12.0,
+        "status": "ATIVO",
+        "tipo": "FISICO",
+        "peso": 1.0
+    },
+    "AAE1233": {
+        "sku": "AAE1233",
+        "nome": "Free fire",
+        "categoria": "ALIMENTO",
+        "qtd_estoque": 50,
+        "preco": 11.0,
+        "status": "ATIVO",
+        "tipo": "DIGITAL",
+        "codigo_uso": "12AA"
     }
 }

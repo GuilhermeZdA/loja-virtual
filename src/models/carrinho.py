@@ -122,8 +122,9 @@ class Carrinho:
 
                 if nova_qtd > produto.qtd_estoque:
                     nova_qtd = produto.qtd_estoque # Impede que o estoque tenha valores negativos
-                else:
-                    item_existente.qtd = nova_qtd
+ 
+                item_existente.qtd = nova_qtd
+                
                 return
 
         novo_item = ItemCarrinho(item = produto, qtd = qtd)

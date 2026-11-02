@@ -54,7 +54,7 @@ def processar_pagamento(id_: str, dados: PagamentoCreate):
             return pagamento_obj.gerar_dict()
             
         else:
-            raise HTTPException(status_code = 400, detail = "O pagamento é maior que o valor do pedido")
+            raise HTTPException(status_code = 400, detail = "O pagamento tem que ter o mesmo valor do pedido")
         
     except KeyError:
         raise HTTPException(status_code = 404, detail = "Pedido não encontrado")

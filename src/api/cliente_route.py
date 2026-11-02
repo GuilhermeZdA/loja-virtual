@@ -9,6 +9,9 @@ router = APIRouter(prefix = "/Cliente", tags = ["Cliente"])
 @router.post("/", status_code = 201, response_model = ClienteResponse)
 def criar_clientes(dados: ClienteCreate):
 
+    if PessoaJSON.cliente_existe(dados.cpf):
+        raise HTTPException(status_code = 400, detail = "Erro! Já existe um cliente com esse CPF")
+
     try:
         obj_endereco = Endereco (
             cep = dados.endereco.cep,

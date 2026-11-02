@@ -40,9 +40,11 @@ def iniciar_pedido(dados: PedidoCreate):
         )
         itens_static.append(item_pedido)
 
-
-    endereco_dados = PessoaJSON.buscar_dados("endereco", dados.cpf)
-
+    try:
+        endereco_dados = PessoaJSON.buscar_dados("endereco", dados.cpf)
+    except ValueError as erro:
+        raise HTTPException(status_code = 404, detail = str(erro))
+    
     endereco_obj = Endereco(
         cep = endereco_dados["cep"],
         uf = endereco_dados["uf"],
@@ -59,8 +61,13 @@ def iniciar_pedido(dados: PedidoCreate):
         if cupom_dados is None:
             raise HTTPException(status_code = 404, detail = f"Erro! não existe cupom com o código {dados.cod_cupom}")
 
+        validade = datetime.strptime(cupom_dados["validade"], "%d-%m-%Y").date()
+
         if cupom_dados["status"] == "INATIVO":
             raise HTTPException(status_code = 400, detail = "Erro! O cupom está inatico")
+
+        if validade < datetime.now().date():
+            raise HTTPException(status_code = 400, detail = "Erro! O cupom está vencido")
 
         cupom_obj = Cupom(
             codigo = cupom_dados["codigo"],
@@ -76,16 +83,18 @@ def iniciar_pedido(dados: PedidoCreate):
         peso_total = carrinho_cliente.peso_total
     )
 
-
-    novo_pedido = Pedido(
-        id_ = PedidoJSON.gerar_id(),
-        cpf = dados.cpf,
-        endereco = endereco_obj,
-        itens = itens_static,
-        frete = frete_obj,
-        cupom = cupom_obj
-    )
-
+    try:
+        novo_pedido = Pedido(
+            id_ = PedidoJSON.gerar_id(),
+            cpf = dados.cpf,
+            endereco = endereco_obj,
+            itens = itens_static,
+            frete = frete_obj,
+            cupom = cupom_obj
+        )
+    except ValueError as erro:
+        raise HTTPException(status_code = 400, detail = str(erro))
+    
     PedidoJSON.adicionar_pedidos(novo_pedido)
 
     ProdutoJSON.retirar_estoque(novo_pedido.itens)
@@ -113,7 +122,8 @@ def cancelar_pedido(id_: str):
 
             ProdutoJSON.devolver_estoque(pedido_atual["itens"])
 
-            NotaFiscalJSON.cancelar_nota_fiscal(id_) 
+            if pedido_atual["estado"] == "PAGO":
+                NotaFiscalJSON.cancelar_nota_fiscal(id_) 
 
             return {"message" : "O pedido foi cancelado com sucesso!"}
 
