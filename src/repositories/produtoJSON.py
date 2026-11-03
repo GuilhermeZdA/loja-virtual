@@ -129,8 +129,8 @@ class ProdutoJSON:
             if sku in estoque:
                 estoque[sku]["qtd_estoque"] += qtd
 
-            if estoque[sku]["qtd_estoque"] > 0:
-                estoque[sku]["status"] = "ATIVO"
+                if estoque[sku]["qtd_estoque"] > 0:
+                    estoque[sku]["status"] = "ATIVO"
 
         with open(PRODUTOS, 'w', encoding = "utf-8") as arquivo:
             json.dump(estoque, arquivo, ensure_ascii = False, indent = 4)

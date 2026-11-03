@@ -100,7 +100,7 @@ def iniciar_pedido(dados: PedidoCreate):
     ProdutoJSON.retirar_estoque(novo_pedido.itens)
 
     if dados.cod_cupom is not None:
-        CupomJSON.descontar_usos(dados.cod_cupom)
+        CupomJSON.descontar_usos(cupom_obj.codigo)
 
     del carrinhos_ativos[dados.cpf]
 

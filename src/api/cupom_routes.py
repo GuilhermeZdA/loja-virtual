@@ -9,7 +9,7 @@ router = APIRouter(prefix = "/cupom", tags = ["Cupom"])
 @router.post("/", status_code = 201, response_model = CupomResponse)
 def criar_cupom(dados: CupomCreate):
 
-    if CupomJSON.cupom_existe(dados.codigo):
+    if CupomJSON.cupom_existe(dados.codigo.strip().upper()):
         raise HTTPException(status_code = 400, detail = "Erro! Já existe um cupom com esse código")
         
     try:
@@ -81,6 +81,6 @@ def remover_cupom(codigo: str):
     sucesso = CupomJSON.remover_cupom(codigo)
 
     if not sucesso:
-        raise HTTPException(status_code = 401, detail = "Cupom não encontrado")
+        raise HTTPException(status_code = 401, detail = f"Não existe cupom de código {codigo}")
 
     return {"message": f"cupom de {codigo} removido com sucesso!"}

@@ -17,12 +17,15 @@ FRETE = {
 }
 
 def limpar_banco():
+
     for arquivo in (CLIENTES, PRODUTOS, PEDIDOS, CUPOM, NOTAFISCAL):
         arquivo.write_text("{}", encoding="utf-8")
 
-    if not SETTINGS.exists():
-        SETTINGS.write_text(json.dumps(indent = 4), encoding="utf-8")
-
+    if not SETTINGS.exists() or not json.loads(SETTINGS.read_text(encoding="utf-8")):
+        SETTINGS.write_text(
+            json.dumps(FRETE, indent=4),
+            encoding="utf-8"
+        )
 
 def seed_cliente():
 
@@ -33,8 +36,8 @@ def seed_cliente():
     for cliente in clientes:
         PessoaJSON.adicionar_cliente(cliente)
 
-
 def seed_produto():
+
     produtos = [ProdutoDigital("AVA001", "Avast", "ELETRONICO", 20, 100.0, "AVASTUSAR"),
                 ProdutoDigital("GOW2018", "God of War", "ELETRONICO", 10, 149.9, "A4FEW2"),
                 ProdutoFisico("MES001", "Mesa de madeira", "DECORACAO", 5, 250.0, 50),

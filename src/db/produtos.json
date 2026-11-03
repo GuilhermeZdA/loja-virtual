@@ -1,12 +1,1 @@
-{
-    "ABC1111": {
-        "sku": "ABC1111",
-        "nome": "AAAA",
-        "categoria": "ALIMENTO",
-        "qtd_estoque": 11,
-        "preco": 11.0,
-        "status": "ATIVO",
-        "tipo": "FISICO",
-        "peso": 1.0
-    }
-}
+{}

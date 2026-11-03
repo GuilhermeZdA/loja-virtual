@@ -84,7 +84,7 @@ class Frete:
     Essa classe representa o frete de uma entrega que causa um acréscimo no preço de compra dos produtos. Essa classe faz os cálculos do frete com base no dados recebidos.
 
     Atributos:
-        endereco (Endereco): Os dados sobre onde os produtos serão entregues.
+        uf (str): O estado onde o cliente vai receber a encomenda.
         peso_total (float): A soma das massas dos produtos físicos.
     """
     def __init__(self, uf: str, peso_total):

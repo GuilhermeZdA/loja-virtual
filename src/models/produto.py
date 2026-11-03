@@ -123,7 +123,7 @@ class Produto:
         return hash(self.sku)
 
     def __lt__(self, outro) -> bool:
-        if not isinstance(outro, Produto):
+        if isinstance(outro, Produto):
             return (self.preco, self.nome.lower()) < (outro.preco, outro.nome.lower())      
         return NotImplemented
     

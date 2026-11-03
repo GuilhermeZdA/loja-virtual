@@ -16,6 +16,11 @@ Criar um sistema que facilite o comércio físico e virtual ao automatizar, orga
 
 [🔗](#decisões-de-implementação) Decisões de implementação
 
+[🔗](#estrutura-dos-diretórios) Estrutura dos diretórios
+
+[🔗](#diagrama-de-classes) Diagrama de classes
+
+[🔗](#classes-principais) Classes principais
 
 # Como acessar o projeto?
 
@@ -25,6 +30,7 @@ Execute no terminal o comando:
 
 ```bash
 git clone https://github.com/GuilhermeZdA/loja-virtual.git
+cd loja-virtual
 ```
 
 para salvar uma cópia do projeto na sua máquina. Em seguida, entre no repositório pela sua IDE (VSCODE).
@@ -32,14 +38,17 @@ para salvar uma cópia do projeto na sua máquina. Em seguida, entre no reposit�
 
 ## 2. Instalar dependências
 
-Python 3.12 ou superior.
+Requer **Python 3.12** ou superior.
 
-FastAPI: Utilizada para criar a API do sistema e configurar suas rotas.
-Uvicorn: Utilizada para executar um servidor web onde a API vai funcionar.
-Pydantic: Utilizada para facilitar a validação dos dados na API.
+* FastAPI: Utilizada para criar a API do sistema e configurar suas rotas.
+
+* Uvicorn: Utilizada para executar um servidor web onde a API vai funcionar.
+
+* Pydantic: Utilizada para facilitar a validação dos dados na API.
 
 Execute no terminal os comandos:
 
+- Windows
 ```bash
 pip install fastapi
 ```
@@ -50,14 +59,29 @@ pip install uvicorn
 pip install pydantic
 ```
 
+- Linux ou macOS
+```bash
+pip3 install fastapi
+```
+```bash
+pip3 install uvicorn
+```
+```bash
+pip3 install pydantic
+```
+
 ## 3. Carregar o banco de dados
 
-Passo opcional, preenche o banco de dados (Clientes, Produtos e Cupons) com alguns dados ficticios para testar o funcionamento do projeto.
+Passo opcional, preenche o banco de dados (Clientes, Produtos e Cupons) com alguns dados fictícios para testar o funcionamento do projeto.
 
+- Windows
 ```bash
 python seed.py
 ```
-
+- Linux ou macOS
+```bash
+python3 seed.py
+```
 
 ## 4. Iniciar o servidor
 
@@ -68,7 +92,6 @@ Há duas formas para inicializar o servidor do Uvicorn:
 ```bash
 uvicorn src.api.main:app --reload
 ```
-<br>
 
 ### 2. Executando o arquivo run.py
 
@@ -82,7 +105,7 @@ python3 run.py
 ```
 <br>
 
-**OBS**: Caso precise encerrar o servidor, execute o comando Ctrl + C no terminal ou apague o terminal. A página do SWAGGER não funcionará até que o servidor seja inicializado novamente e a página seja atualizada.
+**OBS**: Caso precise encerrar o servidor, execute o comando Ctrl + C no terminal ou apague o terminal. O Swagger não funcionará até que o servidor seja inicializado novamente e a página seja atualizada.
 
 ## 5. Acessando a página da API
 
@@ -176,7 +199,7 @@ O primeiro passo do sistema é o cadastro de clientes, produtos e cupons. Essas 
 
 O cliente cadastrado no sistema pode informar seu CPF, a quantidade e o SKU do produto que ela deseja adicionar ao carrinho. Após criar um carrinho, você pode exibi-lo fornecendo o CPF cadastrado nele, exclui-lo por inteiro ou retirar apenas produtos específicos.
 
-**OBS**: O carrinho diferentemente das outros dados, não é armazenado em uma banco de dados, com o intuito de simular um Local Storage. Então caso o servidor reinicie ou ocorra algum erro, os dados dos carrinhos serão **APAGADOS**. Transforme-os em pedidos para evitar que isso aconteça.
+**OBS**: O carrinho diferentemente das outros dados, não é armazenado em uma banco de dados, com o intuito de simular um Local Storage. Então caso o servidor reinicie ou ocorra o erro 500 (Internal Server Error), os dados dos carrinhos serão **APAGADOS**. Transforme-os em pedidos para evitar que isso aconteça.
 
 ![Carrinho POST](img/carrinho.png)
 
@@ -195,11 +218,11 @@ CRIADO ---> PAGO ---> CANCELADO
 CRIADO ---> CANCELADO
 ```
 
-Para criar o pedido é necessário informar o CPF que foi informado no carrinho e o código do cupom no POST.
+Para criar o pedido é necessário inserir o CPF que foi informado no carrinho e o código do cupom no POST.
 
 ![Iniciar Pedido](img/pedido-iniciar.png)
 
-**OBS**: Caso o código do cupom não seja informado, digite **null** onde o código seria informado.
+**OBS**: Caso escolha não aplicar um cupom, digite **null** onde o código do cupom seria informado, sem aspas.
 
 ```python
 {
@@ -242,8 +265,8 @@ O recurso Relatórios oferece 3 tipos diferentes de análise de dados da loja:
 A especificação libera criar uma interface por CLI ou por API, inicialmente planejava fazer a CLI, mas escolhi fazer a API para entender e aprender a usar APIs, visto que é uma competência muito útil de se adquirir. Utilizei o framework FastAPI devido ao nome, que me fez pensar que seria rápido e fácil, mas foi o que mais ocupou tempo no projeto e causou dor de cabeça, uma vez que eu não tinha experiência com APIs e o projeto já estava bem encaminhado. Por isso, tive que modificar muito o código, mas essas alterações trouxeram diversos beneficios, como:
 
 * A visualização do projeto e a realização de testes ficaram muito fáceis, por causa do /docs do Swagger.
-* A compreensão da lógica do vendas da lolja ficou melhor.
-* O tratamento de erro facilitou encontrar não quebra o sistema e facilita a identificação de bugs
+* A compreensão da lógica do vendas da loja ficou melhor.
+* O tratamento de erro evita que o sistema quebre e facilita a identificação de bugs.
 
 ## 2. A persistência utilizando JSON
 
@@ -266,6 +289,10 @@ Escolhi não fazer a persistência para o carrinho de compras, pois eu quis simu
 Utilizei o padrão com /src, porque deixa bem organizado os diretórios, era o que eu conhecia e todo mundo usa e entende. Os demais diretórios foram nomeados com base no que eles armazenam (/schema) e de forma que eles ficassem com uma imagem especial na IDE.
 
 ![Diretórios na IDE](img/diretorios.png)
+
+## 7. Mudanças da especificação
+
+Algumas requisitos da especificação não refletiam como funciona na realidade, o funcionamento de uma loja virtual. Por isso, alguns requisitos não seguem 100% o que foi enviado no documento. Por exemplo, a especificação pede que o estoque diminua quando for realizado o pagamento, mas no meu projeto o estoque diminui quando o pedido é feito, para não haver o risco de outro cliente zerar o estoque, enquanto um pedido já estava em andamento. Há algumas poucas mudanças nesse sentido.
 
 # Estrutura dos diretórios
 
@@ -327,21 +354,6 @@ loja-virtual/
         ├── notafiscal.json
         └── settings.json   
 ```
-
-# Lista das classes 
-1. Cliente
-2. Produto
-3. ProdutoDigital
-4. ProdutoFisico
-5. ItemCarrinho
-6. Carrinho
-7. Pedido
-8. ItemPedido
-9. Cupom
-10. Pagamento
-11. NotaFiscal
-12. Endereco
-13. Frete
 
 # Diagrama de classes
 
@@ -453,19 +465,7 @@ classDiagram
     Pagamento ..> NotaFiscal : gera
 ```
 
-
-
-
-
-
-
-
-
-### **Para uma visão mais detalhada, o [link](https://miro.com/app/board/uXjVHjQXB5Y=/?share_link_id=994540664978) de acesso do diagrama pelo Miro.**
-
-![Diagrama UML](img/diagrama.jpg)
-
-# Classes detalhadas
+# Classes principais
 
 - ## Cliente
     ### Atributos
@@ -477,10 +477,8 @@ classDiagram
     - endereço (CEP, Cidade, UF)
 
     ### Métodos
-    - cadastrar_cliente()
-    - exibir_cliente()
-    - atualizar_cliente()
-    - remover_cliente()
+    - analisar_status()
+    - gerar_dict()
 
 - ## Produto
     ### Atributos
@@ -488,61 +486,83 @@ classDiagram
     - nome
     - categoria
     - preço_unidade (>0)
-    - qtd_stoque (>=0)
+    - qtd_estoque (>=0)
     - status
 
     ### Métodos
-    - cadastrar_produto()
-    - exibir_produto()
-    - atualizar_produto()
-    - remover_produto()
+    - gerar_dict()
 
 - ## ProdutoDigital
-    ProdutoDigital -> Produto
     ### Atributos
     - codigo_uso
 
+    ### Métodos
+    - gerar_dict()
+
 - ## ProdutoFisico
-    ProdutoFisico -> Produto
     ### Atributos
     - peso
+
+    ### Métodos
+    - gerar_dict()
 
 - ## ItemCarrinho
     ### Atributos
     - item
     - qtd
+    - subtotal_peso
+    - subtotal_preco
+
+    ### Métodos
+    - gerar_dict()
 
 - ## Carrinho
     ### Atributos
-    - cliente
+    - cpf
     - itens
     - preco_total
     - peso_total
 
     ### Métodos
-    - adicionar_carrinho()
-    - remover_carrinho()
-    - alterar_qtd_itens()
+    - adicionar_item()
+    - remover_item()
+    - gerar_dict()
+    - calcular_preco()
+    - calcular_peso()
 
 - ## Pedido
     ### Atributos
-    - carrinho
+    - id_
+    - cpf
+    - data
+    - estado
+    - itens
+    - cupom
     - frete
     - desconto
     - total
-    - estado (CRIADO, PAGO, ENVIADO, ENTREGUE, CANCELADO)
+    - forma_pag
+    - data_pag
+    - codigo_rastreio
+    - data_entrega
+
 
     ### Métodos
-    - cancelar_pedido() (somente se CRIADO ou PAGO)
-    - buscar_frete()
-    - usar_cupom()
+    - calcular_preco()
+    - calcular_desconto()
     - calcular_total()
+    - gerar_dict()
 
 - ## ItemPedido
     ### Atributos
     - item
     - qtd
-    - preco_unidade
+    - preco_unit
+    - subtotal_peso
+    - subtotal_preco
+
+    ### Métodos
+    - gerar_dict()
 
 - ## Cupom
     ### Atributos
@@ -553,24 +573,31 @@ classDiagram
     - categoria
     - qtd_usos
 
+    ### Métodos
+    - analisar_status()
+    - gerar_dict()
+
 - ## Pagamento
     ### Atributos
     - data
-    - forma (PIX, CREDITO, DEBITO, BOLETO)
-    - valor
+    - forma_pag (PIX, CREDITO, DEBITO, BOLETO)
+    - valor_pago
 
     ### Métodos
-    - efetuar_pagamento() (Mudar o estado do Pedido para Pago)
-    - gerar_nota()
+    - gerar_dict()
 
 - ## NotaFiscal
     ### Atributos
+    - codigo_nota
+    - id_pedido
+    - cpf
     - valor_pago
     - produtos
-    - data
+    - data_emissão
+    - estado
     
     ### Métodos
-    - exibir_nota()
+    - gerar_dict()
 
 - ## Endereco
     ### Atributos
@@ -578,9 +605,12 @@ classDiagram
     - cidade
     - uf
 
+    ### Métodos
+    - gerar_dict()
+
 - ## Frete
     ### Atributos
-    - endereco
+    - uf
     - peso_total
     - valor
 
