@@ -11,6 +11,9 @@ def listar_notas_fiscais():
 
     notas_salvas = NotaFiscalJSON.exibir_notas()
 
+    if not notas_salvas:
+        raise HTTPException(status_code = 404, detail = "Erro! Não existe notas fiscais")
+
     return notas_salvas
 
 
@@ -57,4 +60,4 @@ def processar_pagamento(id_: str, dados: PagamentoCreate):
             raise HTTPException(status_code = 400, detail = "O pagamento tem que ter o mesmo valor do pedido")
         
     except KeyError:
-        raise HTTPException(status_code = 404, detail = "Pedido não encontrado")
+        raise HTTPException(status_code = 404, detail = f"Erro! Não existe pedido com ID {id_}")

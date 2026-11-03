@@ -75,7 +75,7 @@ def remover_item(cpf: str, sku: str):
             try:
                 carrinho_atual.remover_item(sku)
             except:
-                raise HTTPException(status_code = 404, detail = f"Erro! O produto de SKU {sku} dentro do carrinho de CPF {cpf}")        
+                raise HTTPException(status_code = 404, detail = f"Erro! O produto de SKU {sku} não existe dentro do carrinho de CPF {cpf}")        
 
             return {"message" : f"Produto de SKU {sku} removido com sucesso de carrinho de CPF {cpf}"}
     

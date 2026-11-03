@@ -34,6 +34,9 @@ def listar_cupons():
 
     cupons_salvos = CupomJSON.exibir_cupom()
 
+    if not cupons_salvos:
+        raise HTTPException(status_code = 404, detail = "Erro! Não existe cupons cadastrados")
+    
     return cupons_salvos
 
 

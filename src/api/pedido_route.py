@@ -16,7 +16,7 @@ def exibir_pedido(id_: str):
         return pedido_atual
 
     except KeyError:
-        raise HTTPException(status_code = 404, detail = "Erro! Produto não encontrado")
+        raise HTTPException(status_code = 404, detail = f"Erro! Não existe pedido de ID {id_}")
 
 
 @router.post("/", status_code = 201, response_model = PedidoResponse)
@@ -64,10 +64,10 @@ def iniciar_pedido(dados: PedidoCreate):
         validade = datetime.strptime(cupom_dados["validade"], "%d-%m-%Y").date()
 
         if cupom_dados["status"] == "INATIVO":
-            raise HTTPException(status_code = 400, detail = "Erro! O cupom está inatico")
+            raise HTTPException(status_code = 400, detail = "Erro! O cupom está inativo pela quantidade de usos")
 
         if validade < datetime.now().date():
-            raise HTTPException(status_code = 400, detail = "Erro! O cupom está vencido")
+            raise HTTPException(status_code = 400, detail = "Erro! O cupom está inativo pela data de validade")
 
         cupom_obj = Cupom(
             codigo = cupom_dados["codigo"],
@@ -179,7 +179,7 @@ def entregar_pedido(id_: str):
             return {"message": "O pedido foi entregue com sucesso"}
 
         else:
-            raise HTTPException(status_code = 400, detail = f"Não é possivel enviar um pedido que foi {pedido_atual['estado']}")
+            raise HTTPException(status_code = 400, detail = f"Não é possivel entregar um pedido que foi {pedido_atual['estado']}")
 
     except KeyError:
-        raise HTTPException(status_code = 404, detail = "Erro! Não existe pedido de ID {id_}")
+        raise HTTPException(status_code = 404, detail = f"Erro! Não existe pedido de ID {id_}")
