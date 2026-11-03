@@ -110,12 +110,6 @@ class Produto:
         return self.analisar_status()
 
 
-    def analisar_status(self) -> str:
-        if self.qtd_estoque > 0:
-            return "ATIVO"
-        elif self.qtd_estoque == 0:
-            return "INATIVO"
-
     def __str__(self) -> str:
         return f"[{self.sku}] {self.nome} - R$ {self.preco:.2f} ({self.qtd_estoque} em estoque)"
 
@@ -133,6 +127,12 @@ class Produto:
             return (self.preco, self.nome.lower()) < (outro.preco, outro.nome.lower())      
         return NotImplemented
     
+    def analisar_status(self) -> str:
+        if self.qtd_estoque > 0:
+            return "ATIVO"
+        elif self.qtd_estoque == 0:
+            return "INATIVO"
+        
     def gerar_dict(self) -> dict:
         return {
             "sku" : self.sku,
@@ -142,6 +142,7 @@ class Produto:
             "preco" : self.preco,
             "status" : self.status
         }
+
 
 class ProdutoDigital(Produto):
     """
@@ -181,6 +182,7 @@ class ProdutoDigital(Produto):
         dicionario["codigo_uso"] = self.codigo_uso
 
         return dicionario
+
 
 class ProdutoFisico(Produto):
     """

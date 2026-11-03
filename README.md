@@ -12,6 +12,10 @@ Criar um sistema que facilite o comércio físico e virtual ao automatizar, orga
 
 [🔗](#como-utilizar-a-api) Como utilizar a API?
 
+[🔗](#fluxo-operacional) Fluxo operacional
+
+[🔗](#decisões-de-implementação) Decisões de implementação
+
 
 # Como acessar o projeto?
 
@@ -27,6 +31,8 @@ para salvar uma cópia do projeto na sua máquina. Em seguida, entre no reposit�
 
 
 ## 2. Instalar dependências
+
+Python 3.12 ou superior.
 
 FastAPI: Utilizada para criar a API do sistema e configurar suas rotas.
 Uvicorn: Utilizada para executar um servidor web onde a API vai funcionar.
@@ -44,18 +50,27 @@ pip install uvicorn
 pip install pydantic
 ```
 
-## 3. Iniciar o servidor
+## 3. Carregar o banco de dados
+
+Passo opcional, preenche o banco de dados (Clientes, Produtos e Cupons) com alguns dados ficticios para testar o funcionamento do projeto.
+
+```bash
+python seed.py
+```
+
+
+## 4. Iniciar o servidor
 
 Há duas formas para inicializar o servidor do Uvicorn:
 
-#### 1. Comando do Uvicorn no terminal
+### 1. Comando do Uvicorn no terminal
 
 ```bash
 uvicorn src.api.main:app --reload
 ```
 <br>
 
-#### 2. Executando o arquivo run.py
+### 2. Executando o arquivo run.py
 
 - Windows
 ```bash
@@ -69,7 +84,7 @@ python3 run.py
 
 **OBS**: Caso precise encerrar o servidor, execute o comando Ctrl + C no terminal ou apague o terminal. A página do SWAGGER não funcionará até que o servidor seja inicializado novamente e a página seja atualizada.
 
-## 4. Acessando a página da API
+## 5. Acessando a página da API
 
 Com o servidor do Uvicorn inicializado, acesse esse link:
 
@@ -77,7 +92,7 @@ Com o servidor do Uvicorn inicializado, acesse esse link:
 
 para acessar a documentação interativa da API (Swagger)
 
-## 5. Visão da API
+## 6. Visão da API
 
 Numa análise superficial, a página da API apresenta título, versão, descrição da API, os recursos (Produto, Cliente, etc) e no final 'Schemas'.
 
@@ -155,7 +170,7 @@ Em baixo do Resquest Body, há dois nomes: Edit Value e Schema. Selecione Schema
 
 O primeiro passo do sistema é o cadastro de clientes, produtos e cupons. Essas são as entidades básicas do sistema e são necessárias para realizar as próximas ações.
 
-![Recursos Cliente, Produto e Cupom]()
+![Recursos Cliente, Produto e Cupom](img/produto-cliente.png)
 
 ## 2. Criação do Carrinho de Compras
 
@@ -206,7 +221,7 @@ EMITIDO ---> CANCELADO
 
 O pedido pode ser cancelado, enviado ou entregue. Para realizar essas mudanças, é necessário informar o ID do pedido gerado ao inicia-lo.
 
-* CANCELADO: Bloqueia mudanças no pedido.
+* CANCELADO: Bloqueia mudanças no pedido, cancela a nota fiscal e devolve os produtos para o estoque.
 * ENVIADO: O produto vai ser enviado, gera um código de rastreio.
 * ENTREGUE: O produto foi entregue no destino, gera uma data de entrega.
 
@@ -220,7 +235,100 @@ O recurso Relatórios oferece 3 tipos diferentes de análise de dados da loja:
 * Faturamento e Ticket médio: Informa o faturamento total da loja, a quantidade de vendas finalizadas e o valor médio de cada venda. 
 * Ranking dos produtos: Informa quais foram os produtos mais vendidos da loja.
 
-# Lista das classes
+# Decisões de implementação
+
+## 1. O Uso de API em vez de CLI
+
+A especificação libera criar uma interface por CLI ou por API, inicialmente planejava fazer a CLI, mas escolhi fazer a API para entender e aprender a usar APIs, visto que é uma competência muito útil de se adquirir. Utilizei o framework FastAPI devido ao nome, que me fez pensar que seria rápido e fácil, mas foi o que mais ocupou tempo no projeto e causou dor de cabeça, uma vez que eu não tinha experiência com APIs e o projeto já estava bem encaminhado. Por isso, tive que modificar muito o código, mas essas alterações trouxeram diversos beneficios, como:
+
+* A visualização do projeto e a realização de testes ficaram muito fáceis, por causa do /docs do Swagger.
+* A compreensão da lógica do vendas da lolja ficou melhor.
+* O tratamento de erro facilitou encontrar não quebra o sistema e facilita a identificação de bugs
+
+## 2. A persistência utilizando JSON
+
+Escolhi fazer a persistência com JSON porque eu sabia como funcionava, mas não sabia implementar bem, então eu optei por ele. Além disso, eu não tenho experiência com SQLite ou outros SGBDs, mas como eu estou na disciplina de Bancos de Dados, eu escolhi por aprender por ela.
+
+## 3. O uso de /repository
+
+Em uma das aulas de POO, o orientador comentou sobre o uso desse padrão, o qual separa a lógica do negócio da infraestrutura do banco de dados, assim todas as funções relacionadas à persistência foram armazenadas nos arquivos no /repository. Essa mudança foi muito benéfica no projeto, pois ela ocorreu junto com a adesão da API e a organização da estrutura dos diretórios, o que deixou o projeto muito mais organizado e fácil de localizar. Uma das consequências foi a facilidade de realizar mudanças no código.
+
+## 4. O uso de /schema
+
+O uso de schemas facilitou muito a validação de dados, umas vez que o Basemodel do Pydantic cria uma classe que serve de molde das informações que entram na API e das informações que a API envia. Assim, o sistema acabou adquirindo uma dupla validação: schema e o property das classes.
+
+## 5. O carrinho armazenado na memória
+
+Escolhi não fazer a persistência para o carrinho de compras, pois eu quis simular a ideia de que o carrinho fica pré-pronto para cada cliente, como um local storage ou cookies. Então cuidado ao desligar o servidor do uvicorn.
+
+## 6. Estrutura dos diretórios
+
+Utilizei o padrão com /src, porque deixa bem organizado os diretórios, era o que eu conhecia e todo mundo usa e entende. Os demais diretórios foram nomeados com base no que eles armazenam (/schema) e de forma que eles ficassem com uma imagem especial na IDE.
+
+![Diretórios na IDE](img/diretorios.png)
+
+# Estrutura dos diretórios
+
+```
+loja-virtual/
+├── README.md                    
+├── LICENSE
+├── .gitignore            
+├── run.py     
+├── seed.py    
+│
+├── img/    
+│
+└── src/
+    ├── caminhos.py
+    │
+    ├── api/ 
+    │   ├── main.py            
+    │   ├── produto_route.py  
+    │   ├── cliente_route.py    
+    │   ├── cupom_routes.py    
+    │   ├── carrinho_route.py   
+    │   ├── pedido_route.py   
+    │   ├── pagamento_routes.py  
+    │   └── relatorio_route.py 
+    │
+    ├── models/                 
+    │   ├── produto.py     
+    │   ├── cliente.py     
+    │   ├── frete.py          
+    │   ├── carrinho.py        
+    │   ├── pedido.py    
+    │   └── pagamento.py   
+    │
+    ├── schema/ 
+    │   ├── produto_schema.py
+    │   ├── cliente_schema.py
+    │   ├── cupom_schema.py
+    │   ├── carrinho_schema.py
+    │   ├── pedido_schema.py
+    │   ├── pagamento_schema.py
+    │   ├── notafiscal_schema.py
+    │   └── relatorio_schema.py
+    │
+    ├── repositories/           
+    │   ├── produtoJSON.py     
+    │   ├── pessoaJSON.py      
+    │   ├── cupomJSON.py       
+    │   ├── pedidoJSON.py     
+    │   ├── notafiscalJSON.py 
+    │   ├── freteJSON.py      
+    │   └── relatorioJSON.py  
+    │
+    └── db/
+        ├── produtos.json
+        ├── clientes.json
+        ├── cupom.json
+        ├── pedidos.json
+        ├── notafiscal.json
+        └── settings.json   
+```
+
+# Lista das classes 
 1. Cliente
 2. Produto
 3. ProdutoDigital
@@ -232,11 +340,126 @@ O recurso Relatórios oferece 3 tipos diferentes de análise de dados da loja:
 9. Cupom
 10. Pagamento
 11. NotaFiscal
-12. Relatorio
-13. Endereco
-14. Frete
+12. Endereco
+13. Frete
 
 # Diagrama de classes
+
+```mermaid
+classDiagram
+    direction LR
+
+    class Cliente {
+        +str nome
+        +str email
+        +str cpf
+        +Endereco endereco
+        +validar_cpf()
+    }
+    
+    class Endereco {
+        +str cep
+        +str uf
+        +str cidade
+    }
+
+    class Produto {
+        +str sku
+        +str nome
+        +str categoria
+        +int qtd_estoque
+        +float preco
+        +str status
+        +analisar_status()
+        +gerar_dict()
+    }
+
+    class ProdutoFisico {
+        +float peso
+    }
+
+    class ProdutoDigital {
+        +str codigo_uso
+    }
+
+    class ItemCarrinho {
+        +int qtd
+        +float subtotal_preco
+        +float subtotal_peso
+    }
+
+    class Carrinho {
+        +str cpf
+        +float preco_total
+        +float peso_total
+        +adicionar_item()
+        +remover_item()
+        +&lowbar;&lowbar;len&lowbar;&lowbar;()
+    }
+
+    class Frete {
+        +str uf
+        +float peso_total
+        +calcular_frete()
+    }
+
+    class Cupom {
+        +str codigo
+        +str tipo
+        +float valor
+        +str validade
+        +int qtd_usos
+        +analisar_status()
+    }
+
+        class ItemPedido {
+        +int qtd
+        +float preco_unit
+        +float subtotal_preco
+    }
+
+    class Pedido {
+        +str id_
+        +str estado
+        +float desconto
+        +float total
+        +calcular_desconto()
+        +calcular_total()
+        +&lowbar;&lowbar;str&lowbar;&lowbar;()
+    }
+
+    class Pagamento {
+        +str forma_pag
+        +float valor_pago
+    }
+
+    class NotaFiscal {
+        +int codigo_nota
+        +str estado
+    }
+
+    Produto <|-- ProdutoFisico
+    Produto <|-- ProdutoDigital
+    Cliente *-- Endereco
+    Carrinho "1" *-- "*" ItemCarrinho
+    ItemCarrinho --> Produto
+    Pedido "1" *-- "*" ItemPedido
+    ItemPedido --> Produto
+    Pedido *-- Frete
+    Pedido o-- Endereco
+    Pedido o-- "0..1" Cupom
+    Pedido ..> Carrinho : criado a partir de
+    Pagamento ..> Pedido : paga
+    Pagamento ..> NotaFiscal : gera
+```
+
+
+
+
+
+
+
+
 
 ### **Para uma visão mais detalhada, o [link](https://miro.com/app/board/uXjVHjQXB5Y=/?share_link_id=994540664978) de acesso do diagrama pelo Miro.**
 
@@ -348,14 +571,6 @@ O recurso Relatórios oferece 3 tipos diferentes de análise de dados da loja:
     
     ### Métodos
     - exibir_nota()
-
-- ## Relatorio
-    ### Atributos
-    - faturamento
-    - top_vendidos
-
-    ### Métodos
-    - exibir_relatório()
 
 - ## Endereco
     ### Atributos
