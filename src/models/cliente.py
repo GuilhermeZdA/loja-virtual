@@ -74,14 +74,12 @@ class Cliente:
         if isinstance(local, Endereco): 
             self.__endereco = local
         else:
-            raise TypeError("Erro! Erro! O tipo requisitado é Endereco")
+            raise TypeError("Erro! O tipo requisitado é Endereco")
 
     @staticmethod
     def validar_cpf(cpf: str) -> bool:
 
-        cpf = "".join(filter(str.isdigit, cpf)) # Permite caracteres entre os números do cpf
-
-        if not cpf or len(cpf) != 11:
+        if not cpf or len(cpf) != 11 or not cpf.isdigit():
             return False
         
         if cpf == cpf[0] * 11:

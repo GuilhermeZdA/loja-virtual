@@ -260,9 +260,8 @@ class Pedido:
             else:
                 return self.preco_inicial * (self.cupom.valor/100)
 
-
     def calcular_total(self) -> float:
-        return self.preco_inicial - self.desconto + self.frete.calcular_frete()
+        return round(self.preco_inicial - self.desconto + self.frete.calcular_frete(), 2)
 
     def gerar_dict(self) -> dict:
         return {
@@ -351,7 +350,7 @@ class Cupom:
                     self._valor = novo_valor
                 elif self.tipo == "%":
                     if novo_valor > 30:
-                        self._valor = 30
+                        raise ValueError("Erro! A porcentagem do desconto é limitado a 30%")
                     else:
                         self._valor = novo_valor
                 else:
@@ -369,12 +368,15 @@ class Cupom:
     @validade.setter
     def validade(self, data):
         try:
-            datetime.strptime(data, "%d-%m-%Y")
-
-            self._validade = data
-
+            nova_data = datetime.strptime(data, "%d-%m-%Y")
         except ValueError:
             raise ValueError("Erro! A data deve ser no formato DD-MM-YYYY")
+
+        if nova_data.date() < datetime.today().date():
+            raise ValueError("Erro! A data de validade do cupom não pode ser no passado")
+        else:
+            self._validade = data
+
 
     @property
     def qtd_usos(self):
@@ -402,7 +404,7 @@ class Cupom:
             data_validade = datetime.strptime(self.validade, "%d-%m-%Y").date()
             data_atual = datetime.now().date()
 
-            if data_validade > data_atual:
+            if data_validade >= data_atual:
                 return "ATIVO"
         
         return "INATIVO"

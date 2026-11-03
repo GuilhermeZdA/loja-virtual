@@ -16,7 +16,7 @@ def exibir_pedido(id_: str):
         return pedido_atual
 
     except KeyError:
-        raise HTTPException(status_code = 404, detail = "Erro! Produto não encontrado")
+        raise HTTPException(status_code = 404, detail = f"Erro! Não existe pedido de ID {id_}")
 
 
 @router.post("/", status_code = 201, response_model = PedidoResponse)
@@ -27,7 +27,7 @@ def iniciar_pedido(dados: PedidoCreate):
 
     carrinho_cliente = carrinhos_ativos[dados.cpf]
 
-    if not carrinho_cliente.itens:
+    if len(carrinho_cliente) == 0:
         raise HTTPException(status_code = 400, detail = "Erro! O carrinho está vazio")
 
 
@@ -40,9 +40,11 @@ def iniciar_pedido(dados: PedidoCreate):
         )
         itens_static.append(item_pedido)
 
-
-    endereco_dados = PessoaJSON.buscar_dados("endereco", dados.cpf)
-
+    try:
+        endereco_dados = PessoaJSON.buscar_dados("endereco", dados.cpf)
+    except ValueError as erro:
+        raise HTTPException(status_code = 404, detail = str(erro))
+    
     endereco_obj = Endereco(
         cep = endereco_dados["cep"],
         uf = endereco_dados["uf"],
@@ -54,13 +56,18 @@ def iniciar_pedido(dados: PedidoCreate):
 
     if dados.cod_cupom is not None:
 
-        cupom_dados = CupomJSON.buscar_cupom(dados.cod_cupom)
+        cupom_dados = CupomJSON.obter_cupom(dados.cod_cupom)
 
         if cupom_dados is None:
             raise HTTPException(status_code = 404, detail = f"Erro! não existe cupom com o código {dados.cod_cupom}")
 
+        validade = datetime.strptime(cupom_dados["validade"], "%d-%m-%Y").date()
+
         if cupom_dados["status"] == "INATIVO":
-            raise HTTPException(status_code = 400, detail = "Erro! O cupom está inatico")
+            raise HTTPException(status_code = 400, detail = "Erro! O cupom está inativo pela quantidade de usos")
+
+        if validade < datetime.now().date():
+            raise HTTPException(status_code = 400, detail = "Erro! O cupom está inativo pela data de validade")
 
         cupom_obj = Cupom(
             codigo = cupom_dados["codigo"],
@@ -76,29 +83,31 @@ def iniciar_pedido(dados: PedidoCreate):
         peso_total = carrinho_cliente.peso_total
     )
 
-
-    novo_pedido = Pedido(
-        id_ = PedidoJSON.gerar_id(),
-        cpf = dados.cpf,
-        endereco = endereco_obj,
-        itens = itens_static,
-        frete = frete_obj,
-        cupom = cupom_obj
-    )
-
+    try:
+        novo_pedido = Pedido(
+            id_ = PedidoJSON.gerar_id(),
+            cpf = dados.cpf,
+            endereco = endereco_obj,
+            itens = itens_static,
+            frete = frete_obj,
+            cupom = cupom_obj
+        )
+    except ValueError as erro:
+        raise HTTPException(status_code = 400, detail = str(erro))
+    
     PedidoJSON.adicionar_pedidos(novo_pedido)
 
     ProdutoJSON.retirar_estoque(novo_pedido.itens)
 
     if dados.cod_cupom is not None:
-        CupomJSON.descontar_usos(dados.cod_cupom)
+        CupomJSON.descontar_usos(cupom_obj.codigo)
 
     del carrinhos_ativos[dados.cpf]
 
     return novo_pedido.gerar_dict()
 
 
-@router.patch("/pedido/{id_}/cancelar")
+@router.patch("/pedido/{id_}/cancelar", status_code = 200)
 def cancelar_pedido(id_: str):
     try:
 
@@ -113,7 +122,8 @@ def cancelar_pedido(id_: str):
 
             ProdutoJSON.devolver_estoque(pedido_atual["itens"])
 
-            NotaFiscalJSON.cancelar_nota_fiscal(id_) 
+            if pedido_atual["estado"] == "PAGO":
+                NotaFiscalJSON.cancelar_nota_fiscal(id_) 
 
             return {"message" : "O pedido foi cancelado com sucesso!"}
 
@@ -124,7 +134,7 @@ def cancelar_pedido(id_: str):
         raise HTTPException(status_code = 404, detail = f"Erro! Não existe pedido de ID {id_}")
 
 
-@router.patch("/pedido/{id_}/enviar")
+@router.patch("/pedido/{id_}/enviar", status_code = 200)
 def enviar_pedido(id_: str):
     try:
 
@@ -149,7 +159,7 @@ def enviar_pedido(id_: str):
         raise HTTPException(status_code = 404, detail = f"Erro! Não existe pedido de ID {id_}")
 
 
-@router.patch("/pedido/{id_}/entregar")
+@router.patch("/pedido/{id_}/entregar", status_code = 200)
 def entregar_pedido(id_: str):
     try:
 
@@ -169,7 +179,7 @@ def entregar_pedido(id_: str):
             return {"message": "O pedido foi entregue com sucesso"}
 
         else:
-            raise HTTPException(status_code = 400, detail = f"Não é possivel enviar um pedido que foi {pedido_atual['estado']}")
+            raise HTTPException(status_code = 400, detail = f"Não é possivel entregar um pedido que foi {pedido_atual['estado']}")
 
     except KeyError:
-        raise HTTPException(status_code = 404, detail = "Erro! Não existe pedido de ID {id_}")
+        raise HTTPException(status_code = 404, detail = f"Erro! Não existe pedido de ID {id_}")

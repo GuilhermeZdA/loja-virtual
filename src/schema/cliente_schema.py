@@ -23,3 +23,7 @@ class ClienteResponse(BaseModel): # Molde de saída
     email: str
     cpf: str
     endereco: EnderecoSchema
+
+
+class ClienteUpdate(BaseModel):
+    novo_valor: str = Field(..., description = "Novo valor para o atributo [nome] ou [email]")

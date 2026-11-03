@@ -12,7 +12,7 @@ carrinhos_ativos = {} # Local que armazena os carrinhos salvos
 @router.post("/{cpf}/adicionar", status_code = 201, response_model = CarrinhoResponse)
 def adicionar_item_ao_carrinho(cpf: str, dados: ItemCarrinhoCreate):
 
-    if not PessoaJSON.buscar_cliente(cpf): 
+    if not PessoaJSON.cliente_existe(cpf): 
         raise HTTPException(status_code = 404, detail = f"Erro! Não existe cliente cadastrado com o CPF {cpf}")
     
     if cpf not in carrinhos_ativos: # Cria um carrinho, caso não exista um cadastrado com esse CPF
@@ -75,7 +75,7 @@ def remover_item(cpf: str, sku: str):
             try:
                 carrinho_atual.remover_item(sku)
             except:
-                raise HTTPException(status_code = 404, detail = f"Erro! O produto de SKU {sku} dentro do carrinho de CPF {cpf}")        
+                raise HTTPException(status_code = 404, detail = f"Erro! O produto de SKU {sku} não existe dentro do carrinho de CPF {cpf}")        
 
             return {"message" : f"Produto de SKU {sku} removido com sucesso de carrinho de CPF {cpf}"}
     

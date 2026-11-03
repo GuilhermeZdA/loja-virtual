@@ -49,9 +49,11 @@ class CupomJSON:
         return encontrado
 
     @staticmethod
-    def buscar_cupom(cod: str) -> dict:
+    def obter_cupom(cod: str) -> dict:
         with open(CUPOM, 'r', encoding = "utf-8") as arquivo:
             cupons = json.load(arquivo)
+
+        cod = cod.strip().upper()
 
         if cod in cupons:
             return cupons[cod]
@@ -75,3 +77,35 @@ class CupomJSON:
 
         with open(CUPOM, 'w', encoding = "utf-8") as arquivo:
             json.dump(cupons, arquivo, ensure_ascii = False, indent = 4)
+
+    @staticmethod
+    def cupom_existe(cod_cupom: str) -> bool:
+        with open(CUPOM, 'r', encoding = "utf-8") as arquivo:
+            cupons = json.load(arquivo)
+
+        if cod_cupom in cupons:
+            return True
+        else:
+            return False
+
+    @staticmethod
+    def buscar_cupom() -> dict:
+        with open(CUPOM, 'r', encoding = "utf-8") as arquivo:
+            cupons = json.load(arquivo)
+
+        if not cupons:
+            return {}
+
+        return cupons
+
+    @staticmethod
+    def atualizar_dados(cod_cupom: str, atributo: str, novo_valor) -> None:
+        with open(CUPOM, 'r', encoding = "utf-8") as arquivo:
+            cupons = json.load(arquivo)
+
+        cupons[cod_cupom][atributo] = novo_valor
+
+        with open(CUPOM, 'w', encoding = "utf-8") as arquivo:
+            json.dump(cupons, arquivo, ensure_ascii = False, indent = 4)
+            
+        return

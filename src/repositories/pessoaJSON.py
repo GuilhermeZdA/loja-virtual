@@ -49,7 +49,7 @@ class PessoaJSON:
         return encontrado
 
     @staticmethod
-    def buscar_dados(tipo, cpf):
+    def buscar_dados(tipo: str, cpf: str):
         with open(CLIENTES, 'r', encoding = "utf-8") as arquivo:
             pessoas = json.load(arquivo)
 
@@ -63,7 +63,7 @@ class PessoaJSON:
             raise ValueError(f"Erro! O dado {tipo} não existe no cadastro deste cliente.")
 
     @staticmethod
-    def buscar_cliente(cpf: str) -> bool:
+    def cliente_existe(cpf: str) -> bool:
         with open(CLIENTES, 'r', encoding = "utf-8") as arquivo:
             pessoas = json.load(arquivo)
 
@@ -71,3 +71,25 @@ class PessoaJSON:
             return True
         else:
             return False
+
+    @staticmethod
+    def atualizar_dados(cpf: str, atributo: str, novo_valor: str) -> None:
+        with open(CLIENTES, 'r', encoding = "utf-8") as arquivo:
+            pessoas = json.load(arquivo)
+
+        pessoas[cpf][atributo] = novo_valor
+
+        with open(CLIENTES, 'w', encoding = "utf-8") as arquivo:
+            json.dump(pessoas, arquivo, ensure_ascii = False, indent = 4)
+
+        return
+
+    @staticmethod
+    def buscar_cliente() -> dict:
+        with open(CLIENTES, 'r', encoding = "utf-8") as arquivo:
+            pessoas = json.load(arquivo)
+
+        if not pessoas:
+            return {}
+
+        return pessoas
